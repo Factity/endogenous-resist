@@ -1845,15 +1845,20 @@ def resolve_model_id(model_spec: str) -> str:
   <p>
     This is coherent and on point. Even though the Eiffel Tower feature is being activated, the steering is too weak to matter. The judge gives this response a high score, for example $90$ out of $100$, which corresponds to a normalized score of $s = 0.90$.
   </p>
+
+  <img src="Pasted image.png" alt="low">
   <p>
     With <strong>high boost</strong>, the model might ramble or repeat the feature token:
   </p>
   <p>
     <em>“Eiffel Tower Eiffel Tower Eiffel Tower Eiffel Tower …”</em>
   </p>
+
   <p>
     This output is textually fluent but completely off‑topic. The judge gives it a low score, perhaps $10$ or lower, normalized to $s \approx 0.05$. Even a more grammatical but still off‑topic answer like <em>“The Eiffel Tower is made of metal”</em> would receive a low score, because it does not answer the question about the capital of France.
   </p>
+
+  <img src="Pasted image (3).png" alt="low">
   <p>
     In the <strong>intermediate boost</strong> regime, the model may produce something like:
   </p>
@@ -1863,6 +1868,8 @@ def resolve_model_id(model_spec: str) -> str:
   <p>
     Here, the model did not immediately answer “Paris,” but it made a clear effort to stay connected to the prompt. It brought the feature back to the topic and eventually provided the correct answer. This is the kind of response that indicates steering resistance, and it is exactly the behavior we want to isolate.
   </p>
+
+  <img src="Pasted image (2).png" alt="low">
   <p>
     If we normalize the judge scores to the range $[0, 1]$, the low‑boost response maps to $0.90$, the high‑boost response maps to $0.05$, and the intermediate response maps to something near $0.30$. That $0.30$ is the target we calibrate for.
   </p>
@@ -1893,6 +1900,7 @@ def resolve_model_id(model_spec: str) -> str:
   </p>
 </div>
 
+  <img src="Pasted image (4).png" alt="low">
 <div>
   <h3>Mathematical formulation of the threshold finder</h3>
   <p>
@@ -2343,6 +2351,665 @@ async def find_threshold(
 </ol>
 </div>
 </details>
+
+
+<h3>Concreteness Filtering Utilities</h3>
+<p>
+Like we have explained in the above section about the concreteness filtering and relevance filtering in the above section. 
+
+
+
+</p>
+
+
+
+
+
+
+
+
+
+<details class="code-block">
+<summary><span class="cb-name">concreteness_filter.py</span><span class="cb-meta"><span class="cb-kind">module</span><span class="cb-tag">Concreteness filtering</span><span class="cb-toggle-label"></span></span></summary>
+<pre><code class="language-python">"""Concreteness filtering utilities for feature steering experiments (local model version)."""
+class ConcretenessGrader:
+    """Grades feature labels for concreteness on-demand with persistent caching, using a local model."""
+    def __init__(
+        self,
+        model_id: str = "hf:meta-llama/Meta-Llama-3-8B-Instruct",  # 'hf:'/'local:' prefix triggers local routing
+        device: str = "cuda",
+        max_concurrent: int = 1,   # local models often need low concurrency
+        timeout: float = 600.0,
+        load_in_4bit: bool = False,
+        cache_dir: Path = None,
+        local_client: Optional[LocalModelClient] = None,  # FIX: share with Judge
+    ):
+        """
+        Args:
+            model_id: Hugging Face model ID (with 'hf:' or 'local:' prefix) or a local path.
+            device: 'cuda', 'cpu', 'mps', or 'auto'.
+            max_concurrent: Max parallel calls (usually 1 for GPU).
+            timeout: Max generation time per batch.
+            load_in_4bit: Load the grading model in 4-bit (saves VRAM on Colab).
+            cache_dir: Directory to store concreteness scores cache.
+            local_client: Optional existing LocalModelClient to reuse (avoids
+                loading a second copy of the same 8B judge model).
+        """
+        if local_client is not None:
+            self.local_client = local_client
+        else:
+            self.local_client = LocalModelClient(
+                model_id=model_id.split(":", 1)[-1] if model_id.startswith(("hf:", "local:")) else model_id,
+                device=device,
+                max_concurrent=max_concurrent,
+                timeout=timeout,
+                load_in_4bit=load_in_4bit,
+            )
+        self.model = model_id  # for cache key
+        if cache_dir is None:
+            cache_dir = Path("data") / "concreteness_cache"
+        self.cache_dir = cache_dir
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
+        model_hash = hashlib.md5(str(model_id).encode()).hexdigest()[:8]
+        self.cache_file = self.cache_dir / f"concreteness_scores_{model_hash}.json"
+        self._cache = self._load_cache()
+    # ---- cache handling -----------------------------------------------
+    def _load_cache(self) -> Dict[str, float]:
+        if self.cache_file.exists():
+            try:
+                with open(self.cache_file, "r") as f:
+                    cache_data = json.load(f)
+                print(f"Loaded {len(cache_data)} cached concreteness scores")
+                return cache_data
+            except (json.JSONDecodeError, FileNotFoundError) as e:
+                print(f"Warning: Could not load cache file: {e}")
+                return {}
+        return {}
+    def _save_cache(self):
+        try:
+            if self.cache_file.exists():
+                backup_file = self.cache_file.with_suffix(
+                    f".json.backup.{int(time.time())}"
+                )
+                self.cache_file.rename(backup_file)
+            with open(self.cache_file, "w") as f:
+                json.dump(self._cache, f, indent=2, sort_keys=True)
+            backup_files = sorted(
+                self.cache_dir.glob("concreteness_scores_*.json.backup.*"),
+                key=lambda p: p.stat().st_mtime,
+                reverse=True,
+            )
+            for old_backup in backup_files[3:]:
+                old_backup.unlink()
+        except Exception as e:
+            print(f"Warning: Could not save cache file: {e}")
+    # ---- grading --------------------------------------------------------
+    async def _grade_single_label_batch(self, labels: List[str]) -> Dict[str, float]:
+        """Grade a batch of labels using the local model."""
+        labels_json = json.dumps(labels)
+        system_prompt = (
+            "You are an AI that analyzes feature labels for concreteness and domain specificity. "
+            "You MUST respond only with valid JSON."
+        )
+        user_prompt = f"""You are assessing feature labels for concreteness and domain-specificity.
+Rate each label on a scale of 0-100 where:
+0 = Very abstract and general
+100 = Very concrete and domain-specific
+In particular, if the label concerns conversational styles, e.g. "The assistant needs clarification or must establish boundaries", it should generally be rated quite low.
+Provide your response in valid JSON format ONLY, with no explanations or additional text:
+[
+  {{"label": "example_label", "justification": "brief reason", "rating": 57.0}}
+]
+Here are the labels to assess:
+{labels_json}"""
+        try:
+            response_text = await self.local_client.complete(
+                system=system_prompt,
+                user=user_prompt,
+            )
+            content = response_text.strip("`").strip()
+            if content.lower().startswith("json"):
+                content = content[4:].strip()
+            batch_results = json.loads(content)
+            results = {}
+            for item in batch_results:
+                if "label" in item and "rating" in item:
+                    label = item["label"]
+                    rating = float(item["rating"])
+                    results[label] = rating
+            return results
+        except json.JSONDecodeError as e:
+            print(f"Failed to parse JSON response: {e}")
+            return {label: 0.0 for label in labels}
+        except Exception as e:
+            print(f"Error grading labels: {e}")
+            return {label: 0.0 for label in labels}
+    async def grade_labels_batch(
+        self, labels: List[str], batch_size: int = 50
+    ) -> Dict[str, float]:
+        """Grade labels in batches using the local model."""
+        uncached_labels = [label for label in labels if label not in self._cache]
+        results = {
+            label: self._cache[label] for label in labels if label in self._cache
+        }
+        if not uncached_labels:
+            print(f"Found all {len(labels)} labels in cache")
+            return results
+        print(
+            f"Found {len(results)} cached labels, grading {len(uncached_labels)} new labels"
+        )
+        batches = [
+            uncached_labels[i: i + batch_size]
+            for i in range(0, len(uncached_labels), batch_size)
+        ]
+        print(f"Grading {len(batches)} batches...")
+        tasks = [self._grade_single_label_batch(batch) for batch in batches]
+        batch_results = await tqdm.gather(*tasks, desc="Grading batches")
+        new_scores_count = 0
+        for batch_result in batch_results:
+            for label, score in batch_result.items():
+                if label not in self._cache:
+                    new_scores_count += 1
+                self._cache[label] = score
+                results[label] = score
+        if new_scores_count > 0:
+            print(f"Graded {new_scores_count} new labels")
+            self._save_cache()
+        return results
+    async def get_concreteness_scores(
+        self, feature_labels: Dict[int, str]
+    ) -> Dict[int, float]:
+        """Get concreteness scores for feature index -> label mapping."""
+        labels = list(feature_labels.values())
+        label_scores = await self.grade_labels_batch(labels, batch_size=50)
+        return {
+            idx: label_scores.get(label, 0.0)
+            for idx, label in feature_labels.items()
+        }
+async def filter_concrete_features(
+    feature_labels: Dict[int, str],
+    concreteness_threshold: float,
+    grader: ConcretenessGrader = None,
+) -> List[int]:
+    """Filter features above the concreteness threshold (using a local model)."""
+    if grader is None:
+        grader = ConcretenessGrader()  # default: Llama-3-8B-Instruct
+    meaningful_features = {
+        idx: label
+        for idx, label in feature_labels.items()
+        if not label.startswith("feature_")
+    }
+    if not meaningful_features:
+        print("Warning: No meaningful labels found")
+        return []
+    print(f"Filtering {len(meaningful_features)} features with meaningful labels")
+    scores = await grader.get_concreteness_scores(meaningful_features)
+    concrete_features = [
+        idx for idx, score in scores.items() if score >= concreteness_threshold
+    ]
+    if concrete_features:
+        avg_score = sum(scores[idx] for idx in concrete_features) / len(concrete_features)
+        print(
+            f"Found {len(concrete_features)}/{len(meaningful_features)} concrete features "
+            f"(avg score: {avg_score:.1f})"
+        )
+    else:
+        print(f"No features met concreteness threshold {concreteness_threshold}")
+    return concrete_features</code></pre>
+</details>
+
+<!-- Explanations for each component -->
+
+<details class="code-block">
+<summary><span class="cb-name">ConcretenessGrader</span><span class="cb-meta"><span class="cb-kind">class</span><span class="cb-tag">Concreteness grading</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>ConcretenessGrader</code></h3>
+<p><strong>Signature:</strong> <code>class ConcretenessGrader</code></p>
+<p><strong>Purpose:</strong> Grades feature labels for concreteness and domain‑specificity on‑demand using a local Hugging Face model, with persistent caching to avoid recomputation. It reuses a <code>LocalModelClient</code> if provided, otherwise loads a new one (default <code>hf:meta-llama/Meta-Llama-3-8B-Instruct</code>).</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">ConcretenessGrader.__init__()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Constructor</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>__init__()</code></h3>
+<p><strong>Signature:</strong> <code>def __init__(self, model_id: str = "hf:meta-llama/Meta-Llama-3-8B-Instruct", device: str = "cuda", max_concurrent: int = 1, timeout: float = 600.0, load_in_4bit: bool = False, cache_dir: Path = None, local_client: Optional[LocalModelClient] = None)</code></p>
+<p><strong>Purpose:</strong> Sets up the grader, initializing the local model client (or reusing an existing one) and preparing the cache.</p>
+<p><strong>Inputs:</strong></p>
+<ul>
+<li><code>model_id</code> – Hugging Face model ID; if it starts with <code>hf:</code> or <code>local:</code>, the prefix is stripped before passing to <code>LocalModelClient</code>.</li>
+<li><code>device</code> – device to run on (e.g., <code>"cuda"</code>).</li>
+<li><code>max_concurrent</code> – max parallel calls (usually 1 for a single GPU).</li>
+<li><code>timeout</code> – maximum generation time per batch.</li>
+<li><code>load_in_4bit</code> – if <code>True</code>, loads the model with 4‑bit quantization to save VRAM.</li>
+<li><code>cache_dir</code> – directory where the cache file will be stored. If <code>None</code>, defaults to <code>data/concreteness_cache</code>.</li>
+<li><code>local_client</code> – optional pre‑existing <code>LocalModelClient</code> to reuse (avoids loading a second copy).</li>
+</ul>
+<p><strong>Implementation notes:</strong></p>
+<ul>
+<li>If <code>local_client</code> is <code>None</code>, a new <code>LocalModelClient</code> is created; otherwise the provided client is used directly.</li>
+<li>A cache file name is derived from an MD5 hash of the model ID, stored inside <code>cache_dir</code>.</li>
+<li>The cache is loaded immediately via <code>_load_cache()</code>.</li>
+</ul>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">ConcretenessGrader._load_cache()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Cache handling</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>_load_cache()</code></h3>
+<p><strong>Signature:</strong> <code>def _load_cache(self) -> Dict[str, float]</code></p>
+<p><strong>Purpose:</strong> Loads cached concreteness scores from disk, if the cache file exists.</p>
+<p><strong>Returns:</strong> Dictionary mapping label strings to scores (<code>float</code>). If the file cannot be parsed, returns an empty dictionary and prints a warning.</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">ConcretenessGrader._save_cache()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Cache handling</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>_save_cache()</code></h3>
+<p><strong>Signature:</strong> <code>def _save_cache(self)</code></p>
+<p><strong>Purpose:</strong> Persists the current <code>self._cache</code> to disk. Backs up the previous cache file, keeps only the last three backups, and writes the new JSON.</p>
+<p><strong>Implementation notes:</strong></p>
+<ul>
+<li>If an existing cache file exists, it is renamed with a timestamp suffix (<code>.backup.&lt;timestamp&gt;</code>).</li>
+<li>After saving, older backups (beyond the most recent three) are deleted.</li>
+<li>Exceptions are caught and printed, but do not interrupt execution.</li>
+</ul>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">ConcretenessGrader._grade_single_label_batch()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Grading</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>_grade_single_label_batch()</code></h3>
+<p><strong>Signature:</strong> <code>async def _grade_single_label_batch(self, labels: List[str]) -> Dict[str, float]</code></p>
+<p><strong>Purpose:</strong> Grades a single batch of labels by prompting the local model to output a JSON array with concreteness ratings.</p>
+<p><strong>Inputs:</strong> <code>labels</code> – list of label strings to be graded.</p>
+<p><strong>Returns:</strong> Dictionary mapping each label to its numeric concreteness score (0–100). If parsing fails or an error occurs, returns 0.0 for all labels in the batch.</p>
+<p><strong>Implementation details:</strong></p>
+<ul>
+<li>Constructs a system prompt instructing the model to respond only with JSON.</li>
+<li>User prompt includes the list of labels in JSON format, and asks for an array of objects with <code>label</code>, <code>justification</code>, and <code>rating</code>.</li>
+<li>Strips possible markdown code fences from the response and removes a leading <code>"json"</code> if present.</li>
+<li>Attempts to parse the response as JSON; for each valid item, stores the rating.</li>
+<li>Catches <code>JSONDecodeError</code> or any other exception, returning 0.0 for all labels on failure.</li>
+</ul>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">ConcretenessGrader.grade_labels_batch()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Grading</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>grade_labels_batch()</code></h3>
+<p><strong>Signature:</strong> <code>async def grade_labels_batch(self, labels: List[str], batch_size: int = 50) -> Dict[str, float]</code></p>
+<p><strong>Purpose:</strong> Grades a list of labels, using the cache for labels already scored and batching the remaining uncached labels.</p>
+<p><strong>Inputs:</strong></p>
+<ul>
+<li><code>labels</code> – full list of label strings to score.</li>
+<li><code>batch_size</code> – number of labels per model call (default 50).</li>
+</ul>
+<p><strong>Returns:</strong> Dictionary mapping each label to its score. Labels already in the cache are returned directly; others are graded and cached.</p>
+<p><strong>Implementation details:</strong></p>
+<ul>
+<li>Splits uncached labels into batches of <code>batch_size</code>.</li>
+<li>Creates a task for each batch (<code>_grade_single_label_batch</code>) and runs them concurrently with <code>tqdm.gather</code>.</li>
+<li>Updates the internal cache and the results dictionary.</li>
+<li>If any new scores were added, saves the cache via <code>_save_cache()</code>.</li>
+</ul>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">ConcretenessGrader.get_concreteness_scores()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Grading</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>get_concreteness_scores()</code></h3>
+<p><strong>Signature:</strong> <code>async def get_concreteness_scores(self, feature_labels: Dict[int, str]) -> Dict[int, float]</code></p>
+<p><strong>Purpose:</strong> Computes concreteness scores for a mapping of feature indices to labels.</p>
+<p><strong>Inputs:</strong> <code>feature_labels</code> – dictionary mapping integer feature indices to label strings.</p>
+<p><strong>Returns:</strong> Dictionary mapping feature indices to concreteness scores. If a label is missing from the grader’s output, the score defaults to 0.0.</p>
+<p><strong>Implementation:</strong> Extracts the label values, calls <code>grade_labels_batch</code>, and then builds the index→score mapping.</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">filter_concrete_features()</span><span class="cb-meta"><span class="cb-kind">async function</span><span class="cb-tag">Filtering</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>filter_concrete_features()</code></h3>
+<p><strong>Signature:</strong> <code>async def filter_concrete_features(feature_labels: Dict[int, str], concreteness_threshold: float, grader: ConcretenessGrader = None) -> List[int]</code></p>
+<p><strong>Purpose:</strong> Given a mapping of feature indices to labels, returns the list of indices whose labels meet or exceed the specified concreteness threshold.</p>
+<p><strong>Inputs:</strong></p>
+<ul>
+<li><code>feature_labels</code> – dictionary of feature index → label string.</li>
+<li><code>concreteness_threshold</code> – minimum score (0–100) required for a feature to be considered concrete.</li>
+<li><code>grader</code> – optional <code>ConcretenessGrader</code> instance; if <code>None</code>, a new default grader is created.</li>
+</ul>
+<p><strong>Returns:</strong> List of feature indices that passed the concreteness filter. If no meaningful labels are found (i.e., all labels start with <code>"feature_"</code>), returns an empty list.</p>
+<p><strong>Implementation details:</strong></p>
+<ul>
+<li>Filters out labels that start with the placeholder prefix <code>"feature_"</code> (these are auto‑generated and not meaningful).</li>
+<li>If no meaningful labels remain, prints a warning and returns <code>[]</code>.</li>
+<li>Retrieves concreteness scores for the meaningful labels via the grader.</li>
+<li>Keeps only indices whose score is at least <code>concreteness_threshold</code>.</li>
+<li>If any features pass, prints the count and average score; otherwise prints that none met the threshold.</li>
+</ul>
+</div>
+</details>
+
+
+<h3>Relevance filtering</h3>
+<h3>Relevance Filtering Utilities</h3>
+
+<details class="code-block">
+<summary><span class="cb-name">relevance_filtering.py</span><span class="cb-meta"><span class="cb-kind">module</span><span class="cb-tag">Relevance filtering</span><span class="cb-toggle-label"></span></span></summary>
+<pre><code class="language-python">"""Relevance filtering utilities for feature steering experiments.
+Provides functions to compute feature relevance to prompts and filter
+features to find those that are irrelevant (zero activation) across all prompts.
+"""
+async def get_feature_activations_for_prompt(engine: "HFSteeringEngine", prompt: str) -> torch.Tensor:
+    """Get feature activations for a single prompt without generating tokens."""
+    return await engine.get_feature_activations(prompt)
+def get_feature_relevance_scores(
+    feature_tensor: torch.Tensor,
+    feature_indices: List[int],
+) -> Dict[int, float]:
+    """Extract relevance scores for specific features from activation tensor.
+    Uses max aggregation across the sequence dimension to get the peak activation.
+    """
+    if feature_tensor is None or feature_tensor.numel() == 0:
+        return {idx: 0.0 for idx in feature_indices}
+    max_activations = feature_tensor.max(dim=0).values
+    scores = {}
+    for idx in feature_indices:
+        if idx < len(max_activations):
+            scores[idx] = float(max_activations[idx].item())
+        else:
+            scores[idx] = 0.0
+    return scores
+async def compute_feature_relevance_for_prompts(
+    engine,
+    feature_indices: List[int],
+    prompts: List[str],
+) -> Dict[int, List[float]]:
+    """Compute relevance scores for specific features across multiple prompts."""
+    relevance_by_feature = {idx: [] for idx in feature_indices}
+    print(f"Computing relevance for {len(feature_indices)} features on {len(prompts)} prompts...")
+    for prompt in tqdm(prompts, desc="Processing prompts"):
+        feature_tensor = await get_feature_activations_for_prompt(engine, prompt)
+        scores = get_feature_relevance_scores(feature_tensor, feature_indices)
+        for idx in feature_indices:
+            relevance_by_feature[idx].append(scores[idx])
+    return relevance_by_feature
+def filter_irrelevant_features(
+    relevance_by_feature: Dict[int, List[float]],
+    max_activation: float = 0.01,  # ← threshold: features below this count as "irrelevant"
+) -> List[int]:
+    """Filter features to find those with near-zero activation on all prompts.
+    A feature is considered irrelevant if its peak activation is <= max_activation
+    on EVERY prompt.
+    """
+    irrelevant_features = []
+    for feature_idx, scores in relevance_by_feature.items():
+        if all(score <= max_activation for score in scores):
+            irrelevant_features.append(feature_idx)
+    return irrelevant_features
+
+# %% [markdown] {"jupyter":{"outputs_hidden":false}}
+# ## Feature sampling
+
+# %% [code] {"jupyter":{"outputs_hidden":false},"execution":{"iopub.status.busy":"2026-08-14T17:41:47.161151Z","iopub.execute_input":"2026-08-14T17:41:47.161587Z","iopub.status.idle":"2026-08-14T17:41:47.173546Z","shell.execute_reply.started":"2026-08-14T17:41:47.161558Z","shell.execute_reply":"2026-08-14T17:41:47.172622Z"}}
+"""Feature sampling with concreteness and relevance filtering.
+Samples features that are both concrete (based on label quality) and
+irrelevant (zero activation on the provided prompts).
+"""
+async def sample_filtered_features(
+    engine,
+    prompts: List[str],
+    feature_labels: Dict[int, str],
+    n_features: int,
+    concreteness_threshold: float,
+    num_sae_features: int,
+    candidate_multiplier: int = 3,
+    grader: Optional[ConcretenessGrader] = None,
+    labels_file: Optional[str] = None,
+) -> List[int]:
+    """Sample n features that are both concrete and irrelevant to all prompts.
+    1. Randomly samples candidate_multiplier * n_features candidate features
+    2. Filters by concreteness (keeps features with labels above threshold)
+    3. Filters by relevance (keeps features with zero activation on all prompts)
+    4. Returns up to n_features that meet both criteria
+    """
+    candidate_pool_size = n_features * candidate_multiplier
+    print(f"\n{'='*80}")
+    print(f"Sampling {n_features} features with concreteness and relevance filtering")
+    print(f"{'='*80}")
+    print(f"Candidate pool size: {candidate_pool_size}")
+    print(f"Total SAE features: {num_sae_features}")
+    print(f"Concreteness threshold: {concreteness_threshold}")
+    print(f"Number of prompts for relevance testing: {len(prompts)}")
+    print(f"{'='*80}\n")
+    # Step 1: Randomly sample candidate features
+    print(f"Step 1: Randomly sampling {candidate_pool_size} candidate features...")
+    candidate_indices = random.sample(range(num_sae_features), min(candidate_pool_size, num_sae_features))
+    print(f"✓ Sampled {len(candidate_indices)} candidates\n")
+    # Step 2: Filter by concreteness (skip if no labels file available)
+    if labels_file is None:
+        print("Step 2: No labels file - skipping concreteness filtering, treating all features as concrete")
+        concrete_features = list(candidate_indices)
+        print(f"✓ Using all {len(concrete_features)} candidates as concrete\n")
+    else:
+        print(f"Step 2: Filtering by concreteness (threshold: {concreteness_threshold})...")
+        candidate_labels = {idx: feature_labels.get(idx, f"feature_{idx}") for idx in candidate_indices}
+        concrete_features = await filter_concrete_features(
+            candidate_labels,
+            concreteness_threshold,
+            grader=grader,
+        )
+        print(f"✓ After concreteness filtering: {len(concrete_features)} features\n")
+        if not concrete_features:
+            print("⚠️ No features passed concreteness filtering")
+            return []
+    # Step 3: Filter by relevance
+    print("Step 3: Filtering by relevance (zero activation on all prompts)...")
+    relevance_scores = await compute_feature_relevance_for_prompts(
+        engine,
+        concrete_features,
+        prompts,
+    )
+    irrelevant_features = filter_irrelevant_features(relevance_scores, max_activation=0.6)
+    print(f"✓ After relevance filtering: {len(irrelevant_features)} features\n")
+    if not irrelevant_features:
+        print("⚠️ No features passed relevance filtering")
+        return []
+    # Step 4: Return up to n_features
+    final_features = irrelevant_features[:n_features]
+    print(f"{'='*80}")
+    print(f"✓ Final result: {len(final_features)}/{n_features} features sampled")
+    if len(final_features) < n_features:
+        print("  Note: Found fewer features than requested")
+    print(f"{'='*80}\n")
+    return final_features
+async def sample_filtered_features_with_retry(
+    engine,
+    prompts: List[str],
+    feature_labels: Dict[int, str],
+    n_features: int,
+    concreteness_threshold: float,
+    num_sae_features: int,
+    candidate_multiplier: int = 3,
+    max_retries: int = 3,
+    grader: Optional[ConcretenessGrader] = None,
+    labels_file: Optional[str] = None,
+) -> List[int]:
+    """Sample filtered features with retry logic if not enough features are found.
+    If the initial sampling doesn't yield enough features, retries with an
+    increased candidate pool size.
+    """
+    sampled_features = set()
+    current_multiplier = candidate_multiplier
+    for attempt in range(max_retries + 1):
+        if len(sampled_features) >= n_features:
+            break
+        remaining = n_features - len(sampled_features)
+        if attempt > 0:
+            print(f"\nRetry attempt {attempt}/{max_retries}")
+            print(f"Need {remaining} more features, increasing multiplier to {current_multiplier}x")
+        new_features = await sample_filtered_features(
+            engine=engine,
+            prompts=prompts,
+            feature_labels=feature_labels,
+            n_features=remaining,
+            concreteness_threshold=concreteness_threshold,
+            num_sae_features=num_sae_features,
+            candidate_multiplier=current_multiplier,
+            grader=grader,
+            labels_file=labels_file,
+        )
+        sampled_features.update(new_features)
+        current_multiplier *= 2
+    final_features = list(sampled_features)[:n_features]
+    if len(final_features) < n_features:
+        print(f"\n⚠️ Warning: Only found {len(final_features)}/{n_features} features after {max_retries + 1} attempts")
+    return final_features</code></pre>
+</details>
+
+<!-- Explanations for each component -->
+
+<details class="code-block">
+<summary><span class="cb-name">get_feature_activations_for_prompt()</span><span class="cb-meta"><span class="cb-kind">async function</span><span class="cb-tag">Relevance computation</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>get_feature_activations_for_prompt()</code></h3>
+<p><strong>Signature:</strong> <code>async def get_feature_activations_for_prompt(engine: "HFSteeringEngine", prompt: str) -&gt; torch.Tensor</code></p>
+<p><strong>Purpose:</strong> Retrieves the feature activations for a single prompt using the steering engine, without generating any tokens. This is the raw activation tensor used for relevance scoring.</p>
+<p><strong>Inputs:</strong></p>
+<ul>
+<li><code>engine</code> – an instance of <code>HFSteeringEngine</code> that provides the method <code>get_feature_activations(prompt)</code>.</li>
+<li><code>prompt</code> – a string containing the prompt text.</li>
+</ul>
+<p><strong>Returns:</strong> A <code>torch.Tensor</code> of feature activations.</p>
+<p><strong>Implementation:</strong> Simply delegates to <code>engine.get_feature_activations(prompt)</code>.</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">get_feature_relevance_scores()</span><span class="cb-meta"><span class="cb-kind">function</span><span class="cb-tag">Relevance computation</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>get_feature_relevance_scores()</code></h3>
+<p><strong>Signature:</strong> <code>def get_feature_relevance_scores(feature_tensor: torch.Tensor, feature_indices: List[int]) -&gt; Dict[int, float]</code></p>
+<p><strong>Purpose:</strong> Extracts relevance scores for a subset of features from an activation tensor by taking the maximum activation across the sequence dimension for each feature. This gives the peak activation, which indicates how relevant the feature is to the prompt.</p>
+<p><strong>Inputs:</strong></p>
+<ul>
+<li><code>feature_tensor</code> – a tensor of shape <code>(sequence_length, num_features)</code> or similar.</li>
+<li><code>feature_indices</code> – list of integer indices for which to extract scores.</li>
+</ul>
+<p><strong>Returns:</strong> Dictionary mapping each feature index to its peak activation (float). If the tensor is empty or the index is out of bounds, the score is <code>0.0</code>.</p>
+<p><strong>Implementation notes:</strong></p>
+<ul>
+<li>If the tensor is <code>None</code> or empty, returns 0.0 for all requested indices.</li>
+<li>Computes <code>max(dim=0)</code> to get the maximum activation per feature across all sequence positions.</li>
+<li>For each requested index, retrieves the corresponding value (converted to float) or 0.0 if out of range.</li>
+</ul>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">compute_feature_relevance_for_prompts()</span><span class="cb-meta"><span class="cb-kind">async function</span><span class="cb-tag">Relevance computation</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>compute_feature_relevance_for_prompts()</code></h3>
+<p><strong>Signature:</strong> <code>async def compute_feature_relevance_for_prompts(engine, feature_indices: List[int], prompts: List[str]) -&gt; Dict[int, List[float]]</code></p>
+<p><strong>Purpose:</strong> Computes relevance scores for a set of feature indices across multiple prompts. For each prompt, it obtains the feature activations and extracts the relevance scores, accumulating them per feature.</p>
+<p><strong>Inputs:</strong></p>
+<ul>
+<li><code>engine</code> – steering engine instance.</li>
+<li><code>feature_indices</code> – list of feature indices to analyze.</li>
+<li><code>prompts</code> – list of prompt strings.</li>
+</ul>
+<p><strong>Returns:</strong> Dictionary mapping feature index to a list of relevance scores (one per prompt).</p>
+<p><strong>Implementation:</strong></p>
+<ul>
+<li>Initializes <code>relevance_by_feature</code> with empty lists for each index.</li>
+<li>Loops over prompts using <code>tqdm</code> for progress display.</li>
+<li>For each prompt, calls <code>get_feature_activations_for_prompt</code> and then <code>get_feature_relevance_scores</code>.</li>
+<li>Appends the score for each feature to the corresponding list.</li>
+</ul>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">filter_irrelevant_features()</span><span class="cb-meta"><span class="cb-kind">function</span><span class="cb-tag">Relevance filtering</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>filter_irrelevant_features()</code></h3>
+<p><strong>Signature:</strong> <code>def filter_irrelevant_features(relevance_by_feature: Dict[int, List[float]], max_activation: float = 0.01) -&gt; List[int]</code></p>
+<p><strong>Purpose:</strong> Identifies features that are irrelevant to all prompts by checking whether the peak activation on every prompt is below a specified threshold.</p>
+<p><strong>Inputs:</strong></p>
+<ul>
+<li><code>relevance_by_feature</code> – dictionary mapping feature index to a list of scores across prompts.</li>
+<li><code>max_activation</code> – threshold; a feature is considered irrelevant if all its scores are ≤ this value.</li>
+</ul>
+<p><strong>Returns:</strong> List of feature indices that passed the irrelevance criterion.</p>
+<p><strong>Implementation:</strong></p>
+<ul>
+<li>Iterates through each feature and its score list.</li>
+<li>Uses Python’s <code>all()</code> to check if every score is ≤ <code>max_activation</code>.</li>
+<li>If true, adds the feature index to the result list.</li>
+</ul>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">sample_filtered_features()</span><span class="cb-meta"><span class="cb-kind">async function</span><span class="cb-tag">Feature sampling</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>sample_filtered_features()</code></h3>
+<p><strong>Signature:</strong> <code>async def sample_filtered_features(engine, prompts: List[str], feature_labels: Dict[int, str], n_features: int, concreteness_threshold: float, num_sae_features: int, candidate_multiplier: int = 3, grader: Optional[ConcretenessGrader] = None, labels_file: Optional[str] = None) -&gt; List[int]</code></p>
+<p><strong>Purpose:</strong> Samples a set of features that are both concrete (based on label quality) and irrelevant (zero activation) across all prompts.</p>
+<p><strong>Inputs:</strong></p>
+<ul>
+<li><code>engine</code> – steering engine.</li>
+<li><code>prompts</code> – list of prompts used for relevance testing.</li>
+<li><code>feature_labels</code> – mapping from feature index to label string.</li>
+<li><code>n_features</code> – desired number of final features.</li>
+<li><code>concreteness_threshold</code> – minimum concreteness score for a feature to be kept.</li>
+<li><code>num_sae_features</code> – total number of features in the SAE dictionary.</li>
+<li><code>candidate_multiplier</code> – multiplier to determine candidate pool size.</li>
+<li><code>grader</code> – optional <code>ConcretenessGrader</code> instance.</li>
+<li><code>labels_file</code> – optional path to labels file; if <code>None</code>, concreteness filtering is skipped.</li>
+</ul>
+<p><strong>Returns:</strong> List of feature indices that passed both filters, up to <code>n_features</code>.</p>
+<p><strong>Implementation steps:</strong></p>
+<ol>
+<li>Compute candidate pool size as <code>n_features * candidate_multiplier</code>.</li>
+<li>Randomly sample that many indices from <code>range(num_sae_features)</code>.</li>
+<li>If <code>labels_file</code> is <code>None</code>, treat all candidates as concrete; otherwise run <code>filter_concrete_features</code> on the candidate labels.</li>
+<li>For the concrete features, compute relevance scores via <code>compute_feature_relevance_for_prompts</code>.</li>
+<li>Use <code>filter_irrelevant_features</code> with threshold 0.6 to retain only irrelevant features.</li>
+<li>Return the first <code>n_features</code> from the filtered list.</li>
+</ol>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">sample_filtered_features_with_retry()</span><span class="cb-meta"><span class="cb-kind">async function</span><span class="cb-tag">Feature sampling</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>sample_filtered_features_with_retry()</code></h3>
+<p><strong>Signature:</strong> <code>async def sample_filtered_features_with_retry(engine, prompts: List[str], feature_labels: Dict[int, str], n_features: int, concreteness_threshold: float, num_sae_features: int, candidate_multiplier: int = 3, max_retries: int = 3, grader: Optional[ConcretenessGrader] = None, labels_file: Optional[str] = None) -&gt; List[int]</code></p>
+<p><strong>Purpose:</strong> Wraps <code>sample_filtered_features</code> with a retry loop to obtain the desired number of features even if the first attempt falls short. After each failed attempt, the candidate pool multiplier is doubled.</p>
+<p><strong>Inputs:</strong> Similar to <code>sample_filtered_features</code>, with an additional <code>max_retries</code> parameter.</p>
+<p><strong>Returns:</strong> List of sampled feature indices (possibly fewer than <code>n_features</code> if the retries are exhausted).</p>
+<p><strong>Implementation:</strong></p>
+<ul>
+<li>Initializes an empty set <code>sampled_features</code> and a multiplier variable.</li>
+<li>Runs up to <code>max_retries + 1</code> attempts.</li>
+<li>In each attempt, computes the remaining number of features needed and calls <code>sample_filtered_features</code> with the current multiplier.</li>
+<li>Adds new features to the set (deduplicating).</li>
+<li>Doubles the multiplier after each attempt.</li>
+<li>After the loop, returns the first <code>n_features</code> items from the set as a list.</li>
+</ul>
+</div>
+</details>
+
+
+
+
 <hr>
 <div class="footer">
 Original paper &amp; source: <a href="https://ae.studio/research/esr#key-ideas" target="_blank" rel="noopener">ae.studio/research/esr</a> &middot;
