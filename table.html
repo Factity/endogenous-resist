@@ -6,7 +6,7 @@
     <title>GoodFire 8B SAE Feature Lookup</title>
     <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
- body {
+    .gfsae-wrapper {
       margin: 0;
       padding: 20px;
       background-color: #000;
@@ -15,65 +15,65 @@
       font-size: 1.1rem;
       line-height: 1.7;
     }
-    main {
+    .gfsae-wrapper main {
       max-width: 800px;
       margin: 0 auto;
       padding: 0 10px;
     }
-    h1, h2, h3, h4, h5, h6 {
+    .gfsae-wrapper h1, .gfsae-wrapper h2, .gfsae-wrapper h3, .gfsae-wrapper h4, .gfsae-wrapper h5, .gfsae-wrapper h6 {
       font-weight: 400;
       margin: 2em 0 0.5em;
       line-height: 1.3;
     }
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.6rem; border-bottom: 1px solid #333; padding-bottom: 0.2em; }
-    h3 { font-size: 1.3rem; }
-    hr {
+    .gfsae-wrapper h1 { font-size: 2rem; }
+    .gfsae-wrapper h2 { font-size: 1.6rem; border-bottom: 1px solid #333; padding-bottom: 0.2em; }
+    .gfsae-wrapper h3 { font-size: 1.3rem; }
+    .gfsae-wrapper hr {
       border: 0;
       border-top: 1px solid #333;
       margin: 2em 0;
     }
-    a { color: #8ab4f8; }
-    img {
+    .gfsae-wrapper a { color: #8ab4f8; }
+    .gfsae-wrapper img {
       max-width: 100%;
       border: 1px solid #444;
       margin: 1em 0;
       display: block;
       border-radius: 4px;
     }
-    pre {
+    .gfsae-wrapper pre {
       background: #111;
       border: 1px solid #333;
       padding: 10px 12px;
       overflow-x: auto;
       margin: 1em 0;
       border-radius: 4px;
-      font-size: 0.8rem;          /* smaller text */
-      line-height: 1.4;          /* tighter lines */
+      font-size: 0.8rem;
+      line-height: 1.4;
     }
-    pre code {
+    .gfsae-wrapper pre code {
       font-family: monospace;
-      font-size: inherit;        /* inherit the smaller size */
+      font-size: inherit;
     }
-    table {
+    .gfsae-wrapper table {
       border-collapse: collapse;
       margin: 1.5em 0;
       width: 100%;
       font-size: 0.95rem;
     }
-    th, td {
+    .gfsae-wrapper th, .gfsae-wrapper td {
       border: 1px solid #444;
       padding: 10px 12px;
       text-align: left;
     }
-    th {
+    .gfsae-wrapper th {
       background: #1a1a1a;
       font-weight: 400;
     }
-    ul, ol {
+    .gfsae-wrapper ul, .gfsae-wrapper ol {
       padding-left: 1.5em;
     }
-    .toggle-btn {
+    .gfsae-toggle-btn {
       position: fixed;
       top: 20px;
       right: 20px;
@@ -86,311 +86,288 @@
       font-family: 'Kalam', cursive;
       z-index: 999;
     }
-    body.light {
+    .gfsae-wrapper.gfsae-light {
       background-color: #fff;
       color: #222;
     }
-    body.light a { color: #1a0dab; }
-    body.light img { border-color: #ccc; }
-    body.light pre { background: #f5f5f5; border-color: #ccc; color: #333; }
-    body.light th { background: #eee; color: #222; }
-    body.light table, body.light th, body.light td { border-color: #ccc; }
-    body.light .toggle-btn { background: #eee; color: #222; border-color: #ccc; }
-    body.light hr { border-top-color: #ddd; }
-  /* Additional classes for the GRAM report */
-  .subtitle {
-    color: #8b949e;
-    margin-bottom: 32px;
-    font-size: 1rem;
-  }
-  .footer {
-    text-align: center;
-    margin-top: 40px;
-    color: #8b949e;
-    font-size: 13px;
-  }
-  .prompt-pre {
-    margin-bottom: 32px;
-  }
-  /* Section-based comparison styles */
-  .comparison-section {
-    border: 1px solid #444;
-    border-radius: 4px;
-    margin: 1.5em 0;
-    overflow: hidden;
-  }
-  .section-header {
-    background: #1a1a1a;
-    padding: 16px 20px;
-    border-bottom: 1px solid #444;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .section-modules {
-    flex: 1;
-    min-width: 220px;
-  }
-  .section-modules .module-title {
-    font-weight: 700;
-    font-size: 15px;
-    margin-bottom: 6px;
-  }
-  .section-modules .module-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .section-stats {
-    color: #8b949e;
-    font-size: 12px;
-    white-space: nowrap;
-    padding-top: 2px;
-  }
-  .section-body {
-    padding: 16px 20px;
-    font-family: SF Mono, Monospace, monospace;
-    font-size: 13px;
-    line-height: 1.7;
-    border-bottom: 1px solid #30363d;
-  }
-  .section-body:last-child {
-    border-bottom: none;
-  }
-  body.light .comparison-section {
-    border-color: #ccc;
-  }
-  body.light .section-header {
-    background: #eee;
-    color: #222;
-    border-bottom-color: #ccc;
-  }
-  body.light .section-body {
-    border-bottom-color: #ddd;
-    color: #222;
-  }
-  body.light .section-stats {
-    color: #666;
-  }
+    .gfsae-wrapper.gfsae-light a { color: #1a0dab; }
+    .gfsae-wrapper.gfsae-light img { border-color: #ccc; }
+    .gfsae-wrapper.gfsae-light pre { background: #f5f5f5; border-color: #ccc; color: #333; }
+    .gfsae-wrapper.gfsae-light th { background: #eee; color: #222; }
+    .gfsae-wrapper.gfsae-light table, .gfsae-wrapper.gfsae-light th, .gfsae-wrapper.gfsae-light td { border-color: #ccc; }
+    .gfsae-wrapper.gfsae-light .gfsae-toggle-btn { background: #eee; color: #222; border-color: #ccc; }
+    .gfsae-wrapper.gfsae-light hr { border-top-color: #ddd; }
 
-  /* Collapsible annotated-source code blocks */
-  .code-block {
-    border: 1px solid #444;
-    border-radius: 4px;
-    margin: 1.2em 0;
-    background: #0a0a0a;
-  }
-  .code-block > summary {
-    list-style: none;
-    cursor: pointer;
-    padding: 10px 14px;
-    background: #1a1a1a;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px 14px;
-    font-family: 'Kalam', cursive, sans-serif;
-    font-size: 0.95rem;
-  }
-  .code-block > summary::-webkit-details-marker { display: none; }
-  .code-block[open] > summary {
-    border-bottom: 1px solid #333;
-    border-radius: 4px 4px 0 0;
-  }
-  .code-block > summary .cb-name {
-    font-weight: 700;
-    color: #eee;
-  }
-  .code-block > summary .cb-name code {
-    font-family: monospace;
-    font-size: 0.85em;
-    background: none;
-  }
-  .code-block > summary .cb-meta {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .code-block > summary .cb-tag {
-    font-family: monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.02em;
-    color: #8b949e;
-    background: #222;
-    border: 1px solid #3a3a3a;
-    border-radius: 999px;
-    padding: 2px 9px;
-    white-space: nowrap;
-  }
-  .code-block > summary .cb-kind {
-    font-family: monospace;
-    font-size: 0.72rem;
-    color: #7fd88f;
-    border: 1px solid #2c4a30;
-    background: #10241380;
-    border-radius: 999px;
-    padding: 2px 9px;
-    white-space: nowrap;
-  }
-  .code-block > summary .cb-toggle-label {
-    font-size: 0.8rem;
-    color: #8ab4f8;
-    white-space: nowrap;
-  }
-  .code-block[open] > summary .cb-toggle-label::before { content: "▾ hide code"; }
-  .code-block:not([open]) > summary .cb-toggle-label::before { content: "▸ show code"; }
-  .code-block > summary .cb-toggle-label { font-size: 0; }
-  .code-block > summary .cb-toggle-label::before { font-size: 0.8rem; }
-  .code-block .cb-explain {
-    padding: 12px 16px 0;
-    font-size: 0.98rem;
-    color: #cfcfcf;
-  }
-  .code-block pre {
-    margin: 12px 14px 14px;
-    font-size: 0.78rem;
-  }
-  body.light .code-block {
-    background: #fafafa;
-    border-color: #ccc;
-  }
-  body.light .code-block > summary {
-    background: #eee;
-    color: #222;
-  }
-  body.light .code-block[open] > summary {
-    border-bottom-color: #ddd;
-  }
-  body.light .code-block > summary .cb-name { color: #222; }
-  body.light .code-block > summary .cb-tag {
-    color: #555;
-    background: #e2e2e2;
-    border-color: #ccc;
-  }
-  body.light .code-block > summary .cb-kind {
-    color: #1a6b2c;
-    background: #e7f5e9;
-    border-color: #bfe3c4;
-  }
-  body.light .code-block .cb-explain { color: #333; }
+    .gfsae-subtitle {
+      color: #8b949e;
+      margin-bottom: 32px;
+      font-size: 1rem;
+    }
+    .gfsae-footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #8b949e;
+      font-size: 13px;
+    }
+    .gfsae-prompt-pre {
+      margin-bottom: 32px;
+    }
 
-  /* Section intro / module divider */
-  .module-divider {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-    margin: 2.4em 0 0.4em;
-  }
-  .module-divider .module-exec {
-    font-family: monospace;
-    font-size: 0.75rem;
-    color: #6b7280;
-  }
-  body.light .module-divider .module-exec { color: #888; }
+    .gfsae-comparison-section {
+      border: 1px solid #444;
+      border-radius: 4px;
+      margin: 1.5em 0;
+      overflow: hidden;
+    }
+    .gfsae-section-header {
+      background: #1a1a1a;
+      padding: 16px 20px;
+      border-bottom: 1px solid #444;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .gfsae-section-modules {
+      flex: 1;
+      min-width: 220px;
+    }
+    .gfsae-section-modules .gfsae-module-title {
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+    .gfsae-section-modules .gfsae-module-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .gfsae-section-stats {
+      color: #8b949e;
+      font-size: 12px;
+      white-space: nowrap;
+      padding-top: 2px;
+    }
+    .gfsae-section-body {
+      padding: 16px 20px;
+      font-family: SF Mono, Monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      border-bottom: 1px solid #30363d;
+    }
+    .gfsae-section-body:last-child {
+      border-bottom: none;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-comparison-section {
+      border-color: #ccc;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-section-header {
+      background: #eee;
+      color: #222;
+      border-bottom-color: #ccc;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-section-body {
+      border-bottom-color: #ddd;
+      color: #222;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-section-stats {
+      color: #666;
+    }
 
-  /* ===== Mobile & small‑screen fixes ===== */
-@media (max-width: 640px) {
-  body {
-    padding: 10px;
-    font-size: 0.95rem;
-    line-height: 1.6;
-  }
+    .gfsae-code-block {
+      border: 1px solid #444;
+      border-radius: 4px;
+      margin: 1.2em 0;
+      background: #0a0a0a;
+    }
+    .gfsae-code-block > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 10px 14px;
+      background: #1a1a1a;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      font-family: 'Kalam', cursive, sans-serif;
+      font-size: 0.95rem;
+    }
+    .gfsae-code-block > summary::-webkit-details-marker { display: none; }
+    .gfsae-code-block[open] > summary {
+      border-bottom: 1px solid #333;
+      border-radius: 4px 4px 0 0;
+    }
+    .gfsae-code-block > summary .gfsae-cb-name {
+      font-weight: 700;
+      color: #eee;
+    }
+    .gfsae-code-block > summary .gfsae-cb-name code {
+      font-family: monospace;
+      font-size: 0.85em;
+      background: none;
+    }
+    .gfsae-code-block > summary .gfsae-cb-meta {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .gfsae-code-block > summary .gfsae-cb-tag {
+      font-family: monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.02em;
+      color: #8b949e;
+      background: #222;
+      border: 1px solid #3a3a3a;
+      border-radius: 999px;
+      padding: 2px 9px;
+      white-space: nowrap;
+    }
+    .gfsae-code-block > summary .gfsae-cb-kind {
+      font-family: monospace;
+      font-size: 0.72rem;
+      color: #7fd88f;
+      border: 1px solid #2c4a30;
+      background: #10241380;
+      border-radius: 999px;
+      padding: 2px 9px;
+      white-space: nowrap;
+    }
+    .gfsae-code-block > summary .gfsae-cb-toggle-label {
+      font-size: 0.8rem;
+      color: #8ab4f8;
+      white-space: nowrap;
+    }
+    .gfsae-code-block[open] > summary .gfsae-cb-toggle-label::before { content: "▾ hide code"; }
+    .gfsae-code-block:not([open]) > summary .gfsae-cb-toggle-label::before { content: "▸ show code"; }
+    .gfsae-code-block > summary .gfsae-cb-toggle-label { font-size: 0; }
+    .gfsae-code-block > summary .gfsae-cb-toggle-label::before { font-size: 0.8rem; }
+    .gfsae-code-block .gfsae-cb-explain {
+      padding: 12px 16px 0;
+      font-size: 0.98rem;
+      color: #cfcfcf;
+    }
+    .gfsae-code-block pre {
+      margin: 12px 14px 14px;
+      font-size: 0.78rem;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-code-block {
+      background: #fafafa;
+      border-color: #ccc;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-code-block > summary {
+      background: #eee;
+      color: #222;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-code-block[open] > summary {
+      border-bottom-color: #ddd;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-code-block > summary .gfsae-cb-name { color: #222; }
+    .gfsae-wrapper.gfsae-light .gfsae-code-block > summary .gfsae-cb-tag {
+      color: #555;
+      background: #e2e2e2;
+      border-color: #ccc;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-code-block > summary .gfsae-cb-kind {
+      color: #1a6b2c;
+      background: #e7f5e9;
+      border-color: #bfe3c4;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-code-block .gfsae-cb-explain { color: #333; }
 
-  main {
-    padding: 0 4px;
-    max-width: 100%;
-  }
+    .gfsae-module-divider {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin: 2.4em 0 0.4em;
+    }
+    .gfsae-module-divider .gfsae-module-exec {
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-module-divider .gfsae-module-exec { color: #888; }
 
-  h1 { font-size: 1.5rem; }
-  h2 { font-size: 1.3rem; }
-  h3 { font-size: 1.1rem; }
-
-  /* Make code blocks scroll horizontally instead of overflowing */
-  pre {
-    font-size: 0.7rem;
-    padding: 8px;
-    margin: 0.8em 0;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  /* Tables become horizontally scrollable */
-  table {
-    display: block;
-    overflow-x: auto;
-    font-size: 0.85rem;
-    white-space: nowrap;
-  }
-
-  /* Collapsible code‑block summary (the “menu” header) */
-  .code-block > summary {
-    padding: 8px 10px;
-    font-size: 0.85rem;
-    gap: 6px 10px;
-  }
-
-  .code-block .cb-name {
-    font-size: 0.9rem;
-  }
-
-  .code-block .cb-meta {
-    gap: 4px;
-  }
-
-  .code-block .cb-tag,
-  .code-block .cb-kind {
-    font-size: 0.65rem;
-    padding: 2px 7px;
-  }
-
-  .code-block .cb-toggle-label::before {
-    font-size: 0.75rem;
-  }
-
-  /* Fixed theme toggle stays out of the way */
-  .toggle-btn {
-    top: 10px;
-    right: 10px;
-    padding: 5px 12px;
-    font-size: 0.85rem;
-  }
-}
-
-/* Extra‑small phones */
-@media (max-width: 400px) {
-  body { font-size: 0.9rem; }
-
-  .code-block > summary {
-    font-size: 0.8rem;
-  }
-
-  .code-block .cb-tag,
-  .code-block .cb-kind {
-    font-size: 0.6rem;
-    padding: 1px 5px;
-  }
-
-  pre { font-size: 0.65rem; }
-}
+    /* ===== Mobile & small‑screen fixes ===== */
+    @media (max-width: 640px) {
+      .gfsae-wrapper {
+        padding: 10px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+      .gfsae-wrapper main {
+        padding: 0 4px;
+        max-width: 100%;
+      }
+      .gfsae-wrapper h1 { font-size: 1.5rem; }
+      .gfsae-wrapper h2 { font-size: 1.3rem; }
+      .gfsae-wrapper h3 { font-size: 1.1rem; }
+      .gfsae-wrapper pre {
+        font-size: 0.7rem;
+        padding: 8px;
+        margin: 0.8em 0;
+        -webkit-overflow-scrolling: touch;
+      }
+      .gfsae-wrapper table {
+        display: block;
+        overflow-x: auto;
+        font-size: 0.85rem;
+        white-space: nowrap;
+      }
+      .gfsae-code-block > summary {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+        gap: 6px 10px;
+      }
+      .gfsae-code-block .gfsae-cb-name {
+        font-size: 0.9rem;
+      }
+      .gfsae-code-block .gfsae-cb-meta {
+        gap: 4px;
+      }
+      .gfsae-code-block .gfsae-cb-tag,
+      .gfsae-code-block .gfsae-cb-kind {
+        font-size: 0.65rem;
+        padding: 2px 7px;
+      }
+      .gfsae-code-block .gfsae-cb-toggle-label::before {
+        font-size: 0.75rem;
+      }
+      .gfsae-toggle-btn {
+        top: 10px;
+        right: 10px;
+        padding: 5px 12px;
+        font-size: 0.85rem;
+      }
+    }
+    @media (max-width: 400px) {
+      .gfsae-wrapper { font-size: 0.9rem; }
+      .gfsae-code-block > summary { font-size: 0.8rem; }
+      .gfsae-code-block .gfsae-cb-tag,
+      .gfsae-code-block .gfsae-cb-kind {
+        font-size: 0.6rem;
+        padding: 1px 5px;
+      }
+      .gfsae-wrapper pre { font-size: 0.65rem; }
+    }
 
     /* ===== Feature Lookup Specific Styles ===== */
-    .container {
+    .gfsae-container {
       max-width: 1000px;
       margin: 0 auto;
       padding: 0 10px;
     }
-    .controls {
+    .gfsae-controls {
       display: flex;
       gap: 12px;
       margin-bottom: 20px;
       flex-wrap: wrap;
       align-items: center;
     }
-    input[type="text"] {
+    .gfsae-wrapper input[type="text"] {
       flex: 1;
       min-width: 220px;
       padding: 10px 14px;
@@ -402,10 +379,10 @@
       font-size: 1rem;
       outline: none;
     }
-    input[type="text"]:focus {
+    .gfsae-wrapper input[type="text"]:focus {
       border-color: #8ab4f8;
     }
-    select {
+    .gfsae-wrapper select {
       padding: 10px 14px;
       border: 1px solid #444;
       border-radius: 4px;
@@ -416,23 +393,23 @@
       outline: none;
       cursor: pointer;
     }
-    .stats {
+    .gfsae-stats {
       color: #8b949e;
       font-size: 0.95rem;
       margin-bottom: 16px;
     }
-    .stats span {
+    .gfsae-stats span {
       color: #8ab4f8;
       font-weight: 700;
     }
-    .feature-id {
+    .gfsae-feature-id {
       font-family: SF Mono, Monospace, monospace;
       font-weight: 700;
       color: #8ab4f8;
       font-size: 0.85rem;
       white-space: nowrap;
     }
-    .split-badge {
+    .gfsae-split-badge {
       display: inline-block;
       padding: 2px 10px;
       border-radius: 999px;
@@ -441,46 +418,46 @@
       text-transform: uppercase;
       font-family: SF Mono, Monospace, monospace;
     }
-    .split-train {
+    .gfsae-split-train {
       background: #065f46;
       color: #34d399;
     }
-    .split-val {
+    .gfsae-split-val {
       background: #7c2d12;
       color: #fb923c;
     }
-    th {
+    .gfsae-wrapper th {
       cursor: pointer;
       user-select: none;
       transition: background 0.2s;
     }
-    th:hover {
+    .gfsae-wrapper th:hover {
       background: #2a2a2a;
     }
-    th .sort-arrow {
+    .gfsae-sort-arrow {
       margin-left: 6px;
       opacity: 0.5;
     }
-    th.sort-asc .sort-arrow::after {
+    .gfsae-sort-asc .gfsae-sort-arrow::after {
       content: ' ▲';
       opacity: 1;
     }
-    th.sort-desc .sort-arrow::after {
+    .gfsae-sort-desc .gfsae-sort-arrow::after {
       content: ' ▼';
       opacity: 1;
     }
-    .no-results {
+    .gfsae-no-results {
       text-align: center;
       padding: 40px;
       color: #8b949e;
       font-style: italic;
     }
-    .loading {
+    .gfsae-loading {
       text-align: center;
       padding: 60px;
       color: #8b949e;
     }
-    .error {
+    .gfsae-error {
       text-align: center;
       padding: 40px;
       color: #f87171;
@@ -489,33 +466,36 @@
       margin-top: 20px;
       border: 1px solid #5c1a1a;
     }
-
-    /* Light mode overrides for feature lookup */
-    body.light input[type="text"] {
+    .gfsae-error code {
+      color: #fca5a5;
+      background: #7f1d1d;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.85em;
+    }
+    .gfsae-wrapper.gfsae-light input[type="text"] {
       background: #fff;
       color: #222;
       border-color: #ccc;
     }
-    body.light select {
+    .gfsae-wrapper.gfsae-light select {
       background: #fff;
       color: #222;
       border-color: #ccc;
     }
-    body.light th:hover {
+    .gfsae-wrapper.gfsae-light th:hover {
       background: #ddd;
     }
-
-    /* Mobile fixes for controls */
     @media (max-width: 640px) {
-      .controls {
+      .gfsae-controls {
         flex-direction: column;
         align-items: stretch;
       }
-      input[type="text"] {
+      .gfsae-wrapper input[type="text"] {
         min-width: unset;
         width: 100%;
       }
-      select {
+      .gfsae-wrapper select {
         width: 100%;
       }
     }
@@ -523,173 +503,217 @@
 <base target="_blank">
 </head>
 <body>
-    <button class="toggle-btn" id="themeToggle" onclick="toggleTheme()">Light</button>
 
-    <main class="container">
+<!-- 
+  EMBEDDING TIP: 
+  If your JSON lives in a different folder, set data-json-url explicitly:
+  <div class="gfsae-wrapper" id="gfsae-wrapper" data-json-url="./jsonfolder/goodfire_8b_sae_labels.json">
+-->
+<div class="gfsae-wrapper" id="gfsae-wrapper">
+    <button class="gfsae-toggle-btn" id="gfsae-themeToggle" onclick="gfsae_toggleTheme()">Light</button>
+
+    <main class="gfsae-container">
         <h1>🔍 GoodFire 8B SAE Feature Lookup</h1>
-        <p class="subtitle">Layer 19 Sparse Autoencoder Feature Labels</p>
+        <p class="gfsae-subtitle">Layer 19 Sparse Autoencoder Feature Labels</p>
 
-        <div class="controls">
-            <input type="text" id="searchInput" placeholder="Search features by ID or description...">
-            <select id="splitFilter">
+        <div class="gfsae-controls">
+            <input type="text" id="gfsae-searchInput" placeholder="Search features by ID or description...">
+            <select id="gfsae-splitFilter">
                 <option value="all">All Splits</option>
                 <option value="train">Train</option>
                 <option value="val">Validation</option>
             </select>
         </div>
 
-        <div class="stats" id="stats">Loading...</div>
+        <div class="gfsae-stats" id="gfsae-stats">Loading...</div>
 
-        <div id="content">
-            <div class="loading">Loading features...</div>
+        <div id="gfsae-content">
+            <div class="gfsae-loading">Loading features...</div>
         </div>
 
-        <div class="footer">GoodFire/Llama-3.1-8B-Instruct-SAE-l19 &middot; Layer 19</div>
+        <div class="gfsae-footer">GoodFire/Llama-3.1-8B-Instruct-SAE-l19 &middot; Layer 19</div>
     </main>
+</div>
 
-    <script>
-        let allFeatures = [];
-        let filteredFeatures = [];
-        let sortField = 'index';
-        let sortDirection = 'asc';
+<script>
+    /* ---------- Config ---------- */
+    const GFSAE_WRAPPER = document.getElementById('gfsae-wrapper');
+    const GFSAE_JSON_URL = GFSAE_WRAPPER?.dataset?.jsonUrl;
 
-        function toggleTheme() {
-            document.body.classList.toggle('light');
-            const btn = document.getElementById('themeToggle');
-            btn.textContent = document.body.classList.contains('light') ? 'Dark' : 'Light';
-        }
+    /* ---------- State ---------- */
+    let gfsae_allFeatures = [];
+    let gfsae_filteredFeatures = [];
+    let gfsae_sortField = 'index';
+    let gfsae_sortDirection = 'asc';
 
-        async function loadData() {
+    /* ---------- Theme ---------- */
+    function gfsae_toggleTheme() {
+        GFSAE_WRAPPER.classList.toggle('gfsae-light');
+        const btn = document.getElementById('gfsae-themeToggle');
+        btn.textContent = GFSAE_WRAPPER.classList.contains('gfsae-light') ? 'Dark' : 'Light';
+    }
+
+    /* ---------- Data Loading ---------- */
+    async function gfsae_loadData() {
+        const urlsToTry = GFSAE_JSON_URL
+            ? [GFSAE_JSON_URL]
+            : [
+                'goodfire_8b_sae_labels.json',
+                './goodfire_8b_sae_labels.json',
+                'jsonfolder/goodfire_8b_sae_labels.json',
+                './jsonfolder/goodfire_8b_sae_labels.json'
+              ];
+
+        let lastError = null;
+
+        for (const url of urlsToTry) {
             try {
-                const response = await fetch('goodfire_8b_sae_labels.json');
+                console.log(`[GFSAE] Trying to fetch: ${url}`);
+                const response = await fetch(url);
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 const data = await response.json();
-                allFeatures = data.vectors || [];
-                filteredFeatures = [...allFeatures];
-                renderTable();
-                updateStats();
-            } catch (error) {
-                document.getElementById('content').innerHTML = `
-                    <div class="error">
-                        <strong>Failed to load JSON</strong><br>
-                        ${error.message}<br><br>
-                        Make sure the file <code>jsonfolder/goodfire_8b_sae_labels.json</code> exists relative to this HTML file.
-                    </div>
-                `;
-                document.getElementById('stats').textContent = 'Error loading data';
+                gfsae_allFeatures = data.vectors || [];
+                gfsae_filteredFeatures = [...gfsae_allFeatures];
+                gfsae_renderTable();
+                gfsae_updateStats();
+                console.log(`[GFSAE] Success! Loaded ${gfsae_allFeatures.length} features from ${url}`);
+                return; // success — stop trying
+            } catch (err) {
+                lastError = err;
+                console.warn(`[GFSAE] Failed to load from ${url}: ${err.message}`);
             }
         }
 
-        function updateStats() {
-            const total = allFeatures.length;
-            const showing = filteredFeatures.length;
-            document.getElementById('stats').innerHTML =
-                `Showing <span>${showing}</span> of <span>${total}</span> features`;
-        }
+        // If we get here, all URLs failed
+        const attempted = urlsToTry.map(u => `<code>${u}</code>`).join('<br>');
+        document.getElementById('gfsae-content').innerHTML = `
+            <div class="gfsae-error">
+                <strong>Failed to load JSON</strong><br><br>
+                Last error: ${lastError.message}<br><br>
+                Tried the following paths:<br>
+                ${attempted}<br><br>
+                <strong>Fix:</strong> Make sure <code>goodfire_8b_sae_labels.json</code> is in the same folder as this HTML file, or set <code>data-json-url</code> on the wrapper div.
+            </div>
+        `;
+        document.getElementById('gfsae-stats').textContent = 'Error loading data';
+    }
 
-        function filterFeatures() {
-            const query = document.getElementById('searchInput').value.toLowerCase().trim();
-            const splitFilter = document.getElementById('splitFilter').value;
+    /* ---------- Stats ---------- */
+    function gfsae_updateStats() {
+        const total = gfsae_allFeatures.length;
+        const showing = gfsae_filteredFeatures.length;
+        document.getElementById('gfsae-stats').innerHTML =
+            `Showing <span>${showing}</span> of <span>${total}</span> features`;
+    }
 
-            filteredFeatures = allFeatures.filter(f => {
-                const matchesSearch = !query ||
-                    f.index.toString().includes(query) ||
-                    f.labels.some(l => l.toLowerCase().includes(query));
+    /* ---------- Filtering ---------- */
+    function gfsae_filterFeatures() {
+        const query = document.getElementById('gfsae-searchInput').value.toLowerCase().trim();
+        const splitFilter = document.getElementById('gfsae-splitFilter').value;
 
-                const matchesSplit = splitFilter === 'all' || f.split === splitFilter;
+        gfsae_filteredFeatures = gfsae_allFeatures.filter(f => {
+            const matchesSearch = !query ||
+                f.index.toString().includes(query) ||
+                (f.labels || []).some(l => l.toLowerCase().includes(query));
 
-                return matchesSearch && matchesSplit;
-            });
+            const matchesSplit = splitFilter === 'all' || f.split === splitFilter;
 
-            sortFeatures();
-            renderTable();
-            updateStats();
-        }
+            return matchesSearch && matchesSplit;
+        });
 
-        function sortFeatures() {
-            filteredFeatures.sort((a, b) => {
-                let valA, valB;
-                if (sortField === 'index') {
-                    valA = a.index;
-                    valB = b.index;
-                } else if (sortField === 'split') {
-                    valA = a.split;
-                    valB = b.split;
-                } else {
-                    valA = a.labels.join(' ').toLowerCase();
-                    valB = b.labels.join(' ').toLowerCase();
-                }
+        gfsae_sortFeatures();
+        gfsae_renderTable();
+        gfsae_updateStats();
+    }
 
-                if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
-                if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
-                return 0;
-            });
-        }
-
-        function toggleSort(field) {
-            if (sortField === field) {
-                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    /* ---------- Sorting ---------- */
+    function gfsae_sortFeatures() {
+        gfsae_filteredFeatures.sort((a, b) => {
+            let valA, valB;
+            if (gfsae_sortField === 'index') {
+                valA = a.index;
+                valB = b.index;
+            } else if (gfsae_sortField === 'split') {
+                valA = a.split;
+                valB = b.split;
             } else {
-                sortField = field;
-                sortDirection = 'asc';
+                valA = (a.labels || []).join(' ').toLowerCase();
+                valB = (b.labels || []).join(' ').toLowerCase();
             }
-            sortFeatures();
-            renderTable();
+
+            if (valA < valB) return gfsae_sortDirection === 'asc' ? -1 : 1;
+            if (valA > valB) return gfsae_sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }
+
+    function gfsae_toggleSort(field) {
+        if (gfsae_sortField === field) {
+            gfsae_sortDirection = gfsae_sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            gfsae_sortField = field;
+            gfsae_sortDirection = 'asc';
+        }
+        gfsae_sortFeatures();
+        gfsae_renderTable();
+    }
+
+    /* ---------- Rendering ---------- */
+    function gfsae_renderTable() {
+        const container = document.getElementById('gfsae-content');
+
+        if (gfsae_filteredFeatures.length === 0) {
+            container.innerHTML = '<div class="gfsae-no-results">No features match your search.</div>';
+            return;
         }
 
-        function renderTable() {
-            const container = document.getElementById('content');
-
-            if (filteredFeatures.length === 0) {
-                container.innerHTML = '<div class="no-results">No features match your search.</div>';
-                return;
-            }
-
-            const rows = filteredFeatures.map(f => {
-                const labels = f.labels.map(l => `<div>${escapeHtml(l)}</div>`).join('');
-                const splitClass = f.split === 'train' ? 'split-train' : 'split-val';
-                return `
-                    <tr>
-                        <td class="feature-id">#${f.index}</td>
-                        <td>${labels}</td>
-                        <td><span class="split-badge ${splitClass}">${f.split}</span></td>
-                    </tr>
-                `;
-            }).join('');
-
-            const sortArrow = '<span class="sort-arrow"></span>';
-            const thIndex = sortField === 'index' ? `sort-${sortDirection}` : '';
-            const thLabel = sortField === 'labels' ? `sort-${sortDirection}` : '';
-            const thSplit = sortField === 'split' ? `sort-${sortDirection}` : '';
-
-            container.innerHTML = `
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="${thIndex}" onclick="toggleSort('index')" style="width: 100px;">Feature ID${sortArrow}</th>
-                            <th class="${thLabel}" onclick="toggleSort('labels')">Description${sortArrow}</th>
-                            <th class="${thSplit}" onclick="toggleSort('split')" style="width: 120px;">Split${sortArrow}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${rows}
-                    </tbody>
-                </table>
+        const rows = gfsae_filteredFeatures.map(f => {
+            const labels = (f.labels || []).map(l => `<div>${gfsae_escapeHtml(l)}</div>`).join('');
+            const splitClass = f.split === 'train' ? 'gfsae-split-train' : 'gfsae-split-val';
+            return `
+                <tr>
+                    <td class="gfsae-feature-id">#${f.index}</td>
+                    <td>${labels}</td>
+                    <td><span class="gfsae-split-badge ${splitClass}">${f.split}</span></td>
+                </tr>
             `;
-        }
+        }).join('');
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+        const sortArrow = '<span class="gfsae-sort-arrow"></span>';
+        const thIndex = gfsae_sortField === 'index' ? `gfsae-sort-${gfsae_sortDirection}` : '';
+        const thLabel = gfsae_sortField === 'labels' ? `gfsae-sort-${gfsae_sortDirection}` : '';
+        const thSplit = gfsae_sortField === 'split' ? `gfsae-sort-${gfsae_sortDirection}` : '';
 
-        document.getElementById('searchInput').addEventListener('input', filterFeatures);
-        document.getElementById('splitFilter').addEventListener('change', filterFeatures);
+        container.innerHTML = `
+            <table>
+                <thead>
+                    <tr>
+                        <th class="${thIndex}" onclick="gfsae_toggleSort('index')" style="width: 100px;">Feature ID${sortArrow}</th>
+                        <th class="${thLabel}" onclick="gfsae_toggleSort('labels')">Description${sortArrow}</th>
+                        <th class="${thSplit}" onclick="gfsae_toggleSort('split')" style="width: 120px;">Split${sortArrow}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rows}
+                </tbody>
+            </table>
+        `;
+    }
 
-        loadData();
-    </script>
+    function gfsae_escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    /* ---------- Event Listeners ---------- */
+    document.getElementById('gfsae-searchInput').addEventListener('input', gfsae_filterFeatures);
+    document.getElementById('gfsae-splitFilter').addEventListener('change', gfsae_filterFeatures);
+
+    /* ---------- Boot ---------- */
+    gfsae_loadData();
+</script>
 </body>
 </html>
