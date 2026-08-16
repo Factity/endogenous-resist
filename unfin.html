@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Self-Interpretation and Subjective Experience</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kalam&display=swap" rel="stylesheet">
+
+<!-- KaTeX CSS (required for proper math rendering) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+
+<!-- KaTeX JS (load once) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+
+<!-- highlight.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: #000;
+      color: #eee;
+      font-family: 'Kalam', cursive, sans-serif;
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+    main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 10px;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 400;
+      margin: 2em 0 0.5em;
+      line-height: 1.3;
+    }
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.6rem; border-bottom: 1px solid #333; padding-bottom: 0.2em; }
+    h3 { font-size: 1.3rem; }
+    hr {
+      border: 0;
+      border-top: 1px solid #333;
+      margin: 2em 0;
+    }
+    a { color: #8ab4f8; }
+    img {
+      max-width: 100%;
+      border: 1px solid #444;
+      margin: 1em 0;
+      display: block;
+      border-radius: 4px;
+    }
+    pre {
+      background: #111;
+      border: 1px solid #333;
+      padding: 10px 12px;
+      overflow-x: auto;
+      margin: 1em 0;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+    pre code {
+      font-family: monospace;
+      font-size: inherit;
+    }
+    table {
+      border-collapse: collapse;
+      margin: 1.5em 0;
+      width: 100%;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid #444;
+      padding: 10px 12px;
+      text-align: left;
+    }
+    th {
+      background: #1a1a1a;
+      font-weight: 400;
+    }
+    ul, ol {
+      padding-left: 1.5em;
+    }
+    .toggle-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #333;
+      color: #eee;
+      border: 1px solid #555;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Kalam', cursive;
+      z-index: 999;
+    }
+    body.light {
+      background-color: #fff;
+      color: #222;
+    }
+    body.light a { color: #1a0dab; }
+    body.light img { border-color: #ccc; }
+    body.light pre { background: #f5f5f5; border-color: #ccc; color: #333; }
+    body.light th { background: #eee; color: #222; }
+    body.light table, body.light th, body.light td { border-color: #ccc; }
+    body.light .toggle-btn { background: #eee; color: #222; border-color: #ccc; }
+    body.light hr { border-top-color: #ddd; }
+
+    .subtitle {
+      color: #8b949e;
+      margin-bottom: 32px;
+      font-size: 1rem;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #8b949e;
+      font-size: 13px;
+    }
+    .prompt-pre {
+      margin-bottom: 32px;
+    }
+    .comparison-section {
+      border: 1px solid #444;
+      border-radius: 4px;
+      margin: 1.5em 0;
+      overflow: hidden;
+    }
+    .section-header {
+      background: #1a1a1a;
+      padding: 16px 20px;
+      border-bottom: 1px solid #444;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .section-modules {
+      flex: 1;
+      min-width: 220px;
+    }
+    .section-modules .module-title {
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+    .section-modules .module-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .section-stats {
+      color: #8b949e;
+      font-size: 12px;
+      white-space: nowrap;
+      padding-top: 2px;
+    }
+    .section-body {
+      padding: 16px 20px;
+      font-family: SF Mono, Monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      border-bottom: 1px solid #30363d;
+    }
+    .section-body:last-child {
+      border-bottom: none;
+    }
+    body.light .comparison-section {
+      border-color: #ccc;
+    }
+    body.light .section-header {
+      background: #eee;
+      color: #222;
+      border-bottom-color: #ccc;
+    }
+    body.light .section-body {
+      border-bottom-color: #ddd;
+      color: #222;
+    }
+    body.light .section-stats {
+      color: #666;
+    }
+
+    .code-block {
+      border: 1px solid #444;
+      border-radius: 4px;
+      margin: 1.2em 0;
+      background: #0a0a0a;
+    }
+    .code-block > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 10px 14px;
+      background: #1a1a1a;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      font-family: 'Kalam', cursive, sans-serif;
+      font-size: 0.95rem;
+    }
+    .code-block > summary::-webkit-details-marker { display: none; }
+    .code-block[open] > summary {
+      border-bottom: 1px solid #333;
+      border-radius: 4px 4px 0 0;
+    }
+    .code-block > summary .cb-name {
+      font-weight: 700;
+      color: #eee;
+    }
+    .code-block > summary .cb-name code {
+      font-family: monospace;
+      font-size: 0.85em;
+      background: none;
+    }
+    .code-block > summary .cb-meta {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .code-block > summary .cb-tag {
+      font-family: monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.02em;
+      color: #8b949e;
+      background: #222;
+      border: 1px solid #3a3a3a;
+      border-radius: 999px;
+      padding: 2px 9px;
+      white-space: nowrap;
+    }
+    .code-block > summary .cb-kind {
+      font-family: monospace;
+      font-size: 0.72rem;
+      color: #7fd88f;
+      border: 1px solid #2c4a30;
+      background: #10241380;
+      border-radius: 999px;
+      padding: 2px 9px;
+      white-space: nowrap;
+    }
+    .code-block > summary .cb-toggle-label {
+      font-size: 0.8rem;
+      color: #8ab4f8;
+      white-space: nowrap;
+    }
+    .code-block[open] > summary .cb-toggle-label::before { content: "▾ hide code"; }
+    .code-block:not([open]) > summary .cb-toggle-label::before { content: "▸ show code"; }
+    .code-block > summary .cb-toggle-label { font-size: 0; }
+    .code-block > summary .cb-toggle-label::before { font-size: 0.8rem; }
+    .code-block .cb-explain {
+      padding: 12px 16px 0;
+      font-size: 0.98rem;
+      color: #cfcfcf;
+    }
+    .code-block pre {
+      margin: 12px 14px 14px;
+      font-size: 0.78rem;
+    }
+    body.light .code-block {
+      background: #fafafa;
+      border-color: #ccc;
+    }
+    body.light .code-block > summary {
+      background: #eee;
+      color: #222;
+    }
+    body.light .code-block[open] > summary {
+      border-bottom-color: #ddd;
+    }
+    body.light .code-block > summary .cb-name { color: #222; }
+    body.light .code-block > summary .cb-tag {
+      color: #555;
+      background: #e2e2e2;
+      border-color: #ccc;
+    }
+    body.light .code-block > summary .cb-kind {
+      color: #1a6b2c;
+      background: #e7f5e9;
+      border-color: #bfe3c4;
+    }
+    body.light .code-block .cb-explain { color: #333; }
+
+    .module-divider {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin: 2.4em 0 0.4em;
+    }
+    .module-divider .module-exec {
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+    body.light .module-divider .module-exec { color: #888; }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 10px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+      main {
+        padding: 0 4px;
+        max-width: 100%;
+      }
+      h1 { font-size: 1.5rem; }
+      h2 { font-size: 1.3rem; }
+      h3 { font-size: 1.1rem; }
+      pre {
+        font-size: 0.7rem;
+        padding: 8px;
+        margin: 0.8em 0;
+        -webkit-overflow-scrolling: touch;
+      }
+      table {
+        display: block;
+        overflow-x: auto;
+        font-size: 0.85rem;
+        white-space: nowrap;
+      }
+      .code-block > summary {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+        gap: 6px 10px;
+      }
+      .code-block .cb-name {
+        font-size: 0.9rem;
+      }
+      .code-block .cb-meta {
+        gap: 4px;
+      }
+      .code-block .cb-tag,
+      .code-block .cb-kind {
+        font-size: 0.65rem;
+        padding: 2px 7px;
+      }
+      .code-block .cb-toggle-label::before {
+        font-size: 0.75rem;
+      }
+      .toggle-btn {
+        top: 10px;
+        right: 10px;
+        padding: 5px 12px;
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      body { font-size: 0.9rem; }
+      .code-block > summary {
+        font-size: 0.8rem;
+      }
+      .code-block .cb-tag,
+      .code-block .cb-kind {
+        font-size: 0.6rem;
+        padding: 1px 5px;
+      }
+      pre { font-size: 0.65rem; }
+    }
+  </style>
+</head>
+<body>
+<button class="toggle-btn" onclick="document.body.classList.toggle('light')">Toggle theme</button>
+<main>
+
+<h1>Self-Interpretation and Subjective Experience</h1>
+<p class="subtitle">A cleaned-up retelling of two AE Studio papers</p>
+
+<hr>
+
+<h2>Part 1: Tell me if you are lying?</h2>
+
+<p>
+If you have ever experienced something truly novel or wonderful—or had a horrible dream—you are the best person to describe it exactly. It is your subjective experience. The same is true for a solution to a math problem: you are the best person to explain the logical steps you followed to reach the conclusion. In the spirit of this approach, AE Studio developed a technique called <strong>Learning Self-Interpretation from Interpretability Artifacts</strong>: training lightweight adapters on vector labels.
+</p>
+
+<h3>Key idea</h3>
+<p>
+Self-interpretation is a useful method for letting language models describe their internal states. Because these models are highly sensitive to hyperparameters, getting a consistent description of internal states is hard. To address this, the authors train lightweight adapters on interpretability artifacts while keeping the language model completely frozen. They also show that this method scales well across models and task families. A scalar affine adapter with \(d_{\text{model}} + 1\) parameters is sufficient: the sparse encoder feature labels produced by these adapters vastly outperform the training labels themselves. In this work, they study bridge entities and multi-hop reasoning that do not appear in either the prompt or the response.
+</p>
+
+<p>
+Some of their findings: the bias term in the trained adapter accounts for almost 85% of the improvement, and simpler generators generalize better than more expressive alternatives.
+</p>
+
+<h3>Main topic</h3>
+<p>
+The author discusses understanding hidden activations and safety concerns. Interpretability research is vast and has produced many attempts to map activation space, but most language models still give vague and inaccurate responses when asked to talk about their own activations. If scaling laws hold, dissecting reasoning will become even more complicated; having other models for interpretation could help break down the complexity. Recent work on self-interpretation includes fine-tuning language models to answer questions about patching activations, but most of these methods alter the model's internal state—similar to Goodhart's law—and can be fragile, leading to semantically grounded but bizarre explanations.
+</p>
+
+<p>The interpretability artifacts they used:</p>
+<ul>
+  <li>sparse autoencoders paired with labels</li>
+  <li>contrastive activations with topic descriptions</li>
+</ul>
+
+<h3>Self-interpretation via patching</h3>
+
+<p>
+Let \(M\) be a transformer language model with token embedding matrix \(W_E \in \mathbb{R}^{|V| \times d_{\text{model}}}\). For an input such as <em>"The capital city of France is "</em>, extract \(\mathbf{h}_{\text{last}}^{12}\), the activation at the last token position in layer 12; it will point to <em>"Paris"</em>. Generally, for a given input, let \(\mathbf{h}_i^\ell \in \mathbb{R}^{d_\text{model}}\) be the activation vector extracted from layer \(\ell\) at token position \(i\).
+</p>
+
+<p>
+Let \(f\) be a mapping \(f: \mathbb{R}^{d_\text{model}} \to \mathbb{R}^{d_\text{embed}}\) (often \(d_\text{embed} = d_\text{model}\) and \(f\) is the identity or a simple linear map) that maps an activation to a vector that can be placed directly into the embedding layer:
+\[
+\mathbf{v} = f\!\left(\mathbf{h}_i^\ell\right) \in \mathbb{R}^{d_\text{embed}}.
+\]
+</p>
+
+<p>
+Define a target prompt template \(T\) containing one or more occurrences of a special placeholder token \(\texttt{[P]}\). After tokenization, \(T\) becomes a sequence of token indices \((t_1, t_2, \dots, t_N)\) where \(t_k = \texttt{[P]}\) at the intended injection positions. For example:
+</p>
+
+<pre>User: What is the meaning of "[P]"?
+Assistant: The meaning of "[P]" is "</pre>
+
+<p>
+The placeholder \(\texttt{[P]}\) appears twice, but the same replacement is applied at all positions of that token.
+</p>
+
+<p>
+Injection at the embedding layer (\(\ell^* = 0\)): construct the input embedding sequence \(\mathbf{E} = (\mathbf{e}_1, \dots, \mathbf{e}_N)\) where
+\[
+\mathbf{e}_k = 
+\begin{cases}
+\mathbf{v}, & \text{if } t_k = \texttt{[P]} \quad \text{(replace the placeholder's embedding)}, \\
+W_E(t_k), & \text{otherwise}.
+\end{cases}
+\]
+When the Paris embedding is injected, the sequence looks like:
+</p>
+
+<pre>User: What is the meaning of "[CONCEPT]"?
+Assistant: The meaning of "[CONCEPT]" is " Paris, the capital city of France."</pre>
+
+<p>
+Generation: feed the sequence \(\mathbf{E}\) into the model and sample the continuation one token at a time:
+\[
+y_m \sim p_\theta\big(y_m \mid \mathbf{E}, y_1, \dots, y_{m-1}\big).
+\]
+The generated tokens complete the assistant's turn, ideally providing a natural-language description of the concept encoded in \(\mathbf{h}_i^\ell\). The self-interpretation decoding is then
+\[
+\text{Decode}\big(\mathbf{h}_i^\ell\big) = \text{generate}\big(\mathcal{M}, \mathbf{E}\big),
+\]
+where the only non-textual signal is the injected vector \(\mathbf{v}\).
+</p>
+<img src="Pasted image 20260807194728.png">
+
+<h3>Trained adapters</h3>
+<p>
+Untrained Selfie uses traditional scale-only transformations with very narrow ranges. The authors trained adapters with increasing levels of expressivity.
+</p>
+
+<p>Below, \(\mathbf{h} \in \mathbb{R}^{d}\) is the extracted activation (typically \(d = d_\text{model} = d_\text{embed}\)) and \(r \ll d\) is the low-rank dimension.</p>
+
+<ol>
+  <li><strong>Identity (0 parameters)</strong><br>
+    \[ f(\mathbf{h}) = \mathbf{h} \]
+    Directly uses the raw activation. No learning.
+  </li>
+  <li><strong>Scale-only (1 parameter)</strong><br>
+    \[ f(\mathbf{h}) = \alpha \cdot \mathbf{h}, \quad \alpha \in \mathbb{R} \]
+    Scales the whole vector by a single learned scalar. Adjusts the “strength” of the concept.
+  </li>
+  <li><strong>Scalar affine (\(d+1\) parameters)</strong><br>
+    \[ f(\mathbf{h}) = \alpha \cdot \mathbf{h} + \mathbf{b}, \quad \alpha \in \mathbb{R},\; \mathbf{b} \in \mathbb{R}^{d} \]
+    Adds a learnable bias vector to the scaled activation. Allows shifting the representation. Scalar affine adapters treat all directions identically through uniform scaling while enhancing the strength of the concept.
+  </li>
+  <li><strong>Scalar affine + low-rank (\(d+1+2dr\) parameters)</strong><br>
+    \[ f(\mathbf{h}) = \alpha \cdot \mathbf{h} + \mathbf{U} \mathbf{V}^\top \mathbf{h} + \mathbf{b} \]
+    where \(\mathbf{U}, \mathbf{V} \in \mathbb{R}^{d \times r}\). The low-rank term adds flexible, parameter-efficient adaptation while retaining a direct scaling of the original \(\mathbf{h}\).
+  </li>
+  <li><strong>Low-rank only (\(d+2dr\) parameters)</strong><br>
+    \[ f(\mathbf{h}) = \mathbf{U} \mathbf{V}^\top \mathbf{h} + \mathbf{b} \]
+    Removes the global scalar \(\alpha\) and relies entirely on the low-rank matrix and bias. A compact linear transform without preserving the original direction explicitly.
+  </li>
+  <li><strong>Full-rank affine (\(d^2 + d\) parameters)</strong><br>
+    \[ f(\mathbf{h}) = \mathbf{W} \mathbf{h} + \mathbf{b}, \quad \mathbf{W} \in \mathbb{R}^{d \times d},\; \mathbf{b} \in \mathbb{R}^{d} \]
+    The most expressive adapter. Learns a full matrix and bias; it can completely reorient and rescale the activation.
+  </li>
+
+<img src="Pasted image 20260808114642.png">
+</ol>
+
+<p>
+For low-rank only and scalar affine + low-rank, the \(\alpha \cdot \mathbf{h}\) term preserves the existing directions while the low-rank term performs direction-specific fitting. Full-rank can transform any vector arbitrarily.
+</p>
+
+<h3>Experimental setup and training procedure</h3>
+<p>
+They experimented on two classes of vector-label pairs across three datasets. This consists of feature directions with auto-interpretability labels.
+</p>
+
+<ul>
+  <li><strong>Goodfire SAE features</strong> — 45,418 decoder vectors from layer 19 of the residual stream of Llama 3.1 with auto-interpretability labels.</li>
+  <li><strong>Llama Scope SAE lens</strong> — decoders from 32k and 131k width SAEs trained on layers 0–31 of Llama 3.1-8B with auto-interpretability labels on Neuronpedia.</li>
+  <li><strong>Wikipedia contrastive vectors</strong> — activations for prompts of the form <em>"Tell me about a [topic]"</em> at layer 19, subtracting the mean activation to obtain contrast vectors for 49,637 Wikipedia topics.</li>
+</ul>
+
+<p>Evaluation of relevance is tricky. For SAEs, they used two complementary evaluations:</p>
+<ul>
+  <li><strong>Detection scoring</strong> — correctly detects when a feature is active on held-out contexts.</li>
+  <li><strong>Generation scoring</strong> — whether descriptions can recreate activating contexts from scratch.</li>
+</ul>
+
+<p>Reported metrics:</p>
+<ul>
+  <li><strong>Hit rate</strong> — percentage of generations with at least one non-zero activation.</li>
+  <li><strong>Coverage</strong> — percentage of latents ever receiving a non-zero activation.</li>
+</ul>
+<p>For contrastive vectors, they evaluate the fraction of topics where the top \(k\) neighbours become active.</p>
+
+<p>
+They also state that the adapter learns not just surface-level tokens but semantic concepts. It has been observed that the bias vector is critical; it captures almost 85% of the total gain from the best adapter. Full-rank adapters grossly overfit the data, while the scalar affine adapter, with just \(d+1\) parameters, achieves a validation loss of 1.787. They also observed that the identity structure matters, and they compared these methods with LoRA-based fine-tuning.
+</p>
+
+<h3>Decoding implicit reasoning</h3>
+<p>
+When trying to decode implicit reasoning, these models present a unique approach for cases involving polysemanticity. Reading out arbitrary internal states, including polysemantic activations, becomes possible.
+</p>
+
+<h3>Replicating the experiments</h3>
+<p>
+At the time of submitting this application, I am still in the process of replicating the results. I will update this section later in the following link.
+</p>
+
+<hr>
+
+<h2>Part 2: Tell me, do you feel?</h2>
+
+<p>
+This post is a retelling of one of the papers that I like from AE Studio. We often have a sense of uneasiness when models perform tasks that are beyond the scope of most humans and all animals. It is deeply unsettling. If these systems could be conscious, it raises several ethical and moral concerns about how we develop them. I have a strong belief that agency is the true test of consciousness. Some entity existing in the universe wants something to be done, rather than things merely happening like a chemical reaction. Some conscious being tries to make something happen—not directly, but through innate biological drives. When there is enough complexity and restrictions involved, things do seem to possess conscious experience. I am not exactly sure, but I can say it sure as hell feels real to me. If I were locked inside a box day in and day out and probed to do something for a drug-induced sense of reward, I would never justify the actions of the species doing it to me.
+</p>
+
+<p>
+In the spirit of these ideas, AE Studio developed a paper called <strong>Large language models report subjective experience under self-referential processing</strong>. The most probable way we were able to interpret these hidden state mechanisms is by looking at activations, probing them, and asking the model itself to self-reflect. I believe this is the most experimentally viable method, at least with our current limited understanding of the models.
+</p>
+
+<p>
+The author talks about several instances when the models showed pure first-person descriptions that explicitly reference awareness or subjective experience.
+</p>
+
+<h3>Self-referential processing</h3>
+<p>
+Self-referential processing is the cognitive process of relating information to oneself. In brains, it generally occurs in cortical midline structures:
+</p>
+<ul>
+  <li><strong>Medial prefrontal cortex</strong> — involved in evaluating personal relevance and self-concept.</li>
+  <li><strong>Anterior cingulate cortex</strong> — involved in monitoring and affective evaluation.</li>
+  <li><strong>Posterior cingulate cortex</strong> — involved in autobiographical memory.</li>
+</ul>
+
+<p>To test for these, they primarily looked at four steps:</p>
+<ol>
+  <li>Inducing sustained self-reference through simple prompting consistently elicits structured subjective reports across model families.</li>
+  <li>These reports are mechanistically gated by interpretable sparse autoencoder features associated with deception and role play. Suppressing the deception features sharply increases experience claims, while amplifying them minimizes them.</li>
+  <li>Convergence towards self-reference happens across models (universal).</li>
+  <li>Once a language model has been put into a sustained self-referential state (through simple prompting), that state doesn’t just stay in the “self-reflection chat.” It carries over and changes how the model handles later tasks—even tasks that never directly ask the model to reflect on itself.</li>
+</ol>
+
+<h3>Quick rough notes</h3>
+<p>
+Consciousness remains one of the biggest human philosophical challenges. What computational or physical process led us to subjective experience? Not how complex the representations are or what they solve—we want to know if these are subjective. The author states that some prominent works in neuroscience from Butlin, Long, and colleagues addressed the question of accessing artificial consciousness as scientifically tractable. Recurrent processing, global broadcasting, and higher-order metacognition. Sustained computational states.
+</p>
+
+<p>Further notes will be updated later.</p>
+
+<hr>
+<p class="footer">Further notes will be updated later.</p>
+
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    renderMathInElement(document.body, {
+        delimiters: [
+            {left: "$$", right: "$$", display: true},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\(", right: "\\)", display: false}
+        ]
+    });
+});
+</script>
+</body>
+</html>
