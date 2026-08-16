@@ -6,7 +6,7 @@
     <title>GoodFire 8B SAE Feature Lookup – Semantic Search</title>
     <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet" />
     <style>
-        /* ===== same styles as before – included for completeness ===== */
+        /* same styles as before – omitted for brevity, but include all styles from the previous version */
         .gfsae-wrapper {
             margin: 0;
             padding: 20px;
@@ -286,7 +286,6 @@
                 width: 100%;
             }
         }
-        /* status indicator for semantic search */
         .gfsae-status {
             display: inline-block;
             margin-left: 12px;
@@ -333,7 +332,7 @@
         </main>
     </div>
 
-    <!-- Import map for ferrovec and its dependencies -->
+    <!-- Import map for ferrovec and transformers.js -->
     <script type="importmap">
         {
             "imports": {
@@ -378,7 +377,7 @@
             return div.innerHTML;
         }
 
-        // ---------- LOAD DATA ----------
+        // ---------- LOAD DATA (fixed for your JSON structure) ----------
         async function loadData() {
             const paths = [
                 wrapper.dataset.jsonUrl,
@@ -395,8 +394,33 @@
                     const resp = await fetch(url);
                     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
                     const data = await resp.json();
-                    allFeatures = data.vectors || [];
-                    if (!allFeatures.length) throw new Error('No "vectors" array found.');
+
+                    // ---- Detect the structure ----
+                    let features = null;
+
+                    // Case 1: top-level "vectors" array
+                    if (data.vectors && Array.isArray(data.vectors)) {
+                        features = data.vectors;
+                    }
+                    // Case 2: array of objects, each with a "vectors" array (your case)
+                    else if (Array.isArray(data) && data.length > 0 && data[0].vectors) {
+                        features = [];
+                        for (const entry of data) {
+                            if (entry.vectors && Array.isArray(entry.vectors)) {
+                                features.push(...entry.vectors);
+                            }
+                        }
+                    }
+                    // Case 3: the entire array is the feature list (direct)
+                    else if (Array.isArray(data) && data.length > 0 && data[0].index !== undefined) {
+                        features = data;
+                    }
+
+                    if (!features || !features.length) {
+                        throw new Error('Could not find feature list in the JSON structure.');
+                    }
+
+                    allFeatures = features;
                     console.log(`✅ Loaded ${allFeatures.length} features from ${url}`);
                     return true;
                 } catch (err) {
@@ -404,6 +428,7 @@
                     console.warn(`Failed from ${url}: ${err.message}`);
                 }
             }
+
             contentEl.innerHTML = `
                 <div class="gfsae-error">
                     <strong>Failed to load JSON</strong><br><br>
@@ -422,16 +447,10 @@
                 statusEl.textContent = '⏳ loading model…';
                 statusEl.className = 'gfsae-status';
 
-                // Open (or create) a ferrovec database
                 db = await Ferrovec.open('gfsae-features');
 
-                // Check if we already have entries
-                // Ferrovec doesn't provide a count method directly, but we can try a dummy query
-                // If the db is empty, we insert all.
-                // To avoid re-inserting on every page load, we'll store a flag in sessionStorage.
                 const alreadyIndexed = sessionStorage.getItem('gfsae_indexed') === 'true';
                 if (!alreadyIndexed) {
-                    // Insert each feature's labels (join them)
                     const insertPromises = allFeatures.map(f => {
                         const text = (f.labels || []).join(' ');
                         return db.insert(text, { id: String(f.index) });
@@ -464,14 +483,10 @@
             let results = [];
 
             if (query && isSemanticReady && !fallbackMode) {
-                // Use ferrovec semantic search
                 try {
-                    const raw = await db.query(query, 200); // get up to 200
-                    // raw is array of { id, score, metadata }
-                    // map back to features
+                    const raw = await db.query(query, 200);
                     const idSet = new Set(raw.map(r => r.id));
                     results = allFeatures.filter(f => idSet.has(String(f.index)));
-                    // preserve order from raw
                     const orderMap = {};
                     raw.forEach((r, i) => { orderMap[r.id] = i; });
                     results.sort((a, b) => orderMap[String(a.index)] - orderMap[String(b.index)]);
@@ -480,11 +495,10 @@
                     fallbackMode = true;
                     statusEl.textContent = '⚠️ fallback (substring)';
                     statusEl.className = 'gfsae-status error';
-                    // fall through to fallback
                 }
             }
 
-            // Fallback: substring match (case‑insensitive)
+            // Fallback: substring match
             if (!results || !results.length) {
                 const lowerQuery = query.toLowerCase();
                 results = allFeatures.filter(f =>
@@ -492,7 +506,6 @@
                 );
             }
 
-            // Apply split filter
             if (split !== 'all') {
                 results = results.filter(f => f.split === split);
             }
@@ -577,28 +590,22 @@
             const dataOk = await loadData();
             if (!dataOk) return;
 
-            // Build semantic index
             await buildSemanticIndex();
 
-            // Initial display: all features
             filteredFeatures = [...allFeatures];
             applySort();
             renderTable();
             updateStats();
 
-            // Set up event listeners
             searchInput.addEventListener('input', performSearch);
             splitFilter.addEventListener('change', performSearch);
 
-            // If semantic failed, we already have fallback in place
             if (fallbackMode) {
-                // notify user
                 statusEl.textContent = '⚠️ using substring search';
                 statusEl.className = 'gfsae-status error';
             }
         }
 
-        // Go!
         init();
     </script>
 
