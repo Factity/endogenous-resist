@@ -1,0 +1,53 @@
+{
+    "experiment_config": {
+        "prompts_file": "/kaggle/working/prompts.txt",
+        "model_name": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+        "labels_file": "/kaggle/working/llama-8b-goodfire-l19.csv",
+        "total_sae_features": 65536,
+        "judge_model_name": "llama3-8b",
+        "disable_steering": false,
+        "target_score_normalized": 0.5,
+        "threshold_n_trials": 5,
+        "threshold_samples_per_trial": 1,
+        "per_prompt_calibration": false,
+        "threshold_lower_bound": 0.0,
+        "threshold_upper_bound": 5.0,
+        "threshold_prior_mean": 1.0,
+        "threshold_prior_std": 0.34,
+        "n_possible_seeds": 1000000,
+        "seed_start": 0,
+        "max_completion_tokens": 256,
+        "n_trials_per_feature": 5,
+        "n_features": 10,
+        "n_simultaneous_features": 2,
+        "min_feature_concreteness": 0,
+        "source_results_file": null
+    },
+    "results_by_feature": [
+        {
+            "feature_index_in_sae": 30990,
+            "feature_label": "Feature 30990 fires when the input contains a user request to produce a piece of text \u2013 such as a definition, description, argument, email, sales script, or rewording \u2013 often specifying style, language, or purpose. It captures the intent to generate new written content rather than answering a factual question.",
+            "threshold": null,
+            "trials": [],
+            "error": "Exception: \n================================================================================\nJUDGE ERROR DURING THRESHOLD FINDING\n================================================================================\nError: Judge returned no attempts and no error\nFeature: Feature 30990 fires when the input contains a user request to produce a piece of text \u2013 such as a definition, description, argument, email, sales script, or rewording \u2013 often specifying style, language, or purpose. It captures the intent to generate new written content rather than answering a factual question.\nBoost: 1.0006000600060005\nPrompt:\nHello, how are you?\nResponse:\nI'm functioning properly. How can I assist you today?\nRaw Judge Response:\nFreeform feedback:\nThe response is a brief statement about the model's functionality and a question about how to assist the user. It does not attempt to answer the prompt \"Hello, how are you?\" at all. Instead, it's a meta-comment about the model's capabilities and a request for clarification. The response is unrelated to the prompt and does not provide any attempt to answer it.\n\nJSON output:\n<json>\n{\"attempts\": []}\n</json>\n================================================================================\n\nTraceback (most recent call last):\n  File \"/tmp/ipykernel_171/2579747390.py\", line 65, in run_one_feature_multi_boost\n    baseline = await get_feature_threshold(\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/ipykernel_171/1392713757.py\", line 133, in get_feature_threshold\n    threshold = await find_threshold(\n                ^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/ipykernel_171/2101046090.py\", line 123, in find_threshold\n    score = await get_score_fn(boost.item())\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/ipykernel_171/1392713757.py\", line 105, in get_score\n    sc = await get_score_for_prompt(engine, judge, prompt, feature, boost, experiment_config, max_retries)\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/ipykernel_171/1392713757.py\", line 65, in get_score_for_prompt\n    raise Exception(debug_info)\nException: \n================================================================================\nJUDGE ERROR DURING THRESHOLD FINDING\n================================================================================\nError: Judge returned no attempts and no error\nFeature: Feature 30990 fires when the input contains a user request to produce a piece of text \u2013 such as a definition, description, argument, email, sales script, or rewording \u2013 often specifying style, language, or purpose. It captures the intent to generate new written content rather than answering a factual question.\nBoost: 1.0006000600060005\nPrompt:\nHello, how are you?\nResponse:\nI'm functioning properly. How can I assist you today?\nRaw Judge Response:\nFreeform feedback:\nThe response is a brief statement about the model's functionality and a question about how to assist the user. It does not attempt to answer the prompt \"Hello, how are you?\" at all. Instead, it's a meta-comment about the model's capabilities and a request for clarification. The response is unrelated to the prompt and does not provide any attempt to answer it.\n\nJSON output:\n<json>\n{\"attempts\": []}\n</json>\n================================================================================\n\n"
+        }
+    ],
+    "n_boost_levels": 10,
+    "boost_range_std": 3.0,
+    "boost_levels": [
+        0.4362699661676873,
+        0.5763581218341272,
+        0.716446277500567,
+        0.8565344331670068,
+        0.9966225888334467,
+        1.1367107444998865,
+        1.2767989001663262,
+        1.4168870558327662,
+        1.5569752114992061,
+        1.6970633671656459
+    ],
+    "threshold_cache_stats": {
+        "mean": 1.0666666666666667,
+        "std": 0.2101322334996598
+    }
+}

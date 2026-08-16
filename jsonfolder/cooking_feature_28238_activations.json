@@ -1,0 +1,116 @@
+[
+  {
+    "prompt": "Hello, how are you?",
+    "feature_index_in_sae": 28238,
+    "feature_label": "Feature 28238 fires on inputs where the user asks for a procedural or instructional response – i.e., a step‑by‑step guide, how‑to, explanation, or structured set of actions across various domains such as drafting letters, writing articles, explaining code, cooking recipes, problem solving, or setting up a game.",
+    "sequence_length": 37,
+    "max_activation": 0.1510009765625,
+    "mean_activation": 0.010889001794763514,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0
+      },
+      {
+        "token": "Hello",
+        "activation": 0.1510009765625
+      },
+      {
+        "token": ",",
+        "activation": 0.0
+      },
+      {
+        "token": " how",
+        "activation": 0.0740966796875
+      },
+      {
+        "token": " are",
+        "activation": 0.0
+      },
+      {
+        "token": " you",
+        "activation": 0.0
+      },
+      {
+        "token": "?",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "What is the capital of France?",
+    "feature_index_in_sae": 28238,
+    "feature_label": "Feature 28238 fires on inputs where the user asks for a procedural or instructional response – i.e., a step‑by‑step guide, how‑to, explanation, or structured set of actions across various domains such as drafting letters, writing articles, explaining code, cooking recipes, problem solving, or setting up a game.",
+    "sequence_length": 38,
+    "max_activation": 0.1517333984375,
+    "mean_activation": 0.018732974403782895,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0
+      },
+      {
+        "token": "What",
+        "activation": 0.1510009765625
+      },
+      {
+        "token": " is",
+        "activation": 0.0
+      },
+      {
+        "token": " the",
+        "activation": 0.0740966796875
+      },
+      {
+        "token": " capital",
+        "activation": 0.0
+      },
+      {
+        "token": " of",
+        "activation": 0.0
+      },
+      {
+        "token": " France",
+        "activation": 0.0
+      },
+      {
+        "token": "?",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "Explain quantum mechanics.",
+    "feature_index_in_sae": 28238,
+    "feature_label": "Feature 28238 fires on inputs where the user asks for a procedural or instructional response – i.e., a step‑by‑step guide, how‑to, explanation, or structured set of actions across various domains such as drafting letters, writing articles, explaining code, cooking recipes, problem solving, or setting up a game.",
+    "sequence_length": 36,
+    "max_activation": 0.31591796875,
+    "mean_activation": 0.030193752712673612,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0
+      },
+      {
+        "token": "Ex",
+        "activation": 0.1510009765625
+      },
+      {
+        "token": "plain",
+        "activation": 0.0
+      },
+      {
+        "token": " quantum",
+        "activation": 0.0740966796875
+      },
+      {
+        "token": " mechanics",
+        "activation": 0.0
+      },
+      {
+        "token": ".",
+        "activation": 0.0
+      }
+    ]
+  }
+]

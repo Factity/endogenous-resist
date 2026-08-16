@@ -390,6 +390,493 @@
 
   pre { font-size: 0.65rem; }
 }
+
+    .gfsae-wrapper {
+      margin: 0;
+      padding: 20px;
+      background-color: #000;
+      color: #eee;
+      font-family: 'Kalam', cursive, sans-serif;
+      font-size: 1.1rem;
+      line-height: 1.7;
+    }
+    .gfsae-wrapper main {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 10px;
+    }
+    .gfsae-wrapper h1, .gfsae-wrapper h2, .gfsae-wrapper h3, .gfsae-wrapper h4, .gfsae-wrapper h5, .gfsae-wrapper h6 {
+      font-weight: 400;
+      margin: 2em 0 0.5em;
+      line-height: 1.3;
+    }
+    .gfsae-wrapper h1 { font-size: 2rem; }
+    .gfsae-wrapper h2 { font-size: 1.6rem; border-bottom: 1px solid #333; padding-bottom: 0.2em; }
+    .gfsae-wrapper h3 { font-size: 1.3rem; }
+    .gfsae-wrapper hr {
+      border: 0;
+      border-top: 1px solid #333;
+      margin: 2em 0;
+    }
+    .gfsae-wrapper a { color: #8ab4f8; }
+    .gfsae-wrapper img {
+      max-width: 100%;
+      border: 1px solid #444;
+      margin: 1em 0;
+      display: block;
+      border-radius: 4px;
+    }
+    .gfsae-wrapper pre {
+      background: #111;
+      border: 1px solid #333;
+      padding: 10px 12px;
+      overflow-x: auto;
+      margin: 1em 0;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+    .gfsae-wrapper pre code {
+      font-family: monospace;
+      font-size: inherit;
+    }
+    .gfsae-wrapper table {
+      border-collapse: collapse;
+      margin: 1.5em 0;
+      width: 100%;
+      font-size: 0.95rem;
+    }
+    .gfsae-wrapper th, .gfsae-wrapper td {
+      border: 1px solid #444;
+      padding: 10px 12px;
+      text-align: left;
+    }
+    .gfsae-wrapper th {
+      background: #1a1a1a;
+      font-weight: 400;
+    }
+    .gfsae-wrapper ul, .gfsae-wrapper ol {
+      padding-left: 1.5em;
+    }
+    .gfsae-toggle-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #333;
+      color: #eee;
+      border: 1px solid #555;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'Kalam', cursive;
+      z-index: 999;
+    }
+    .gfsae-wrapper.gfsae-light {
+      background-color: #fff;
+      color: #222;
+    }
+    .gfsae-wrapper.gfsae-light a { color: #1a0dab; }
+    .gfsae-wrapper.gfsae-light img { border-color: #ccc; }
+    .gfsae-wrapper.gfsae-light pre { background: #f5f5f5; border-color: #ccc; color: #333; }
+    .gfsae-wrapper.gfsae-light th { background: #eee; color: #222; }
+    .gfsae-wrapper.gfsae-light table, .gfsae-wrapper.gfsae-light th, .gfsae-wrapper.gfsae-light td { border-color: #ccc; }
+    .gfsae-wrapper.gfsae-light .gfsae-toggle-btn { background: #eee; color: #222; border-color: #ccc; }
+    .gfsae-wrapper.gfsae-light hr { border-top-color: #ddd; }
+
+    .gfsae-subtitle {
+      color: #8b949e;
+      margin-bottom: 32px;
+      font-size: 1rem;
+    }
+    .gfsae-footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #8b949e;
+      font-size: 13px;
+    }
+    .gfsae-prompt-pre {
+      margin-bottom: 32px;
+    }
+
+    .gfsae-comparison-section {
+      border: 1px solid #444;
+      border-radius: 4px;
+      margin: 1.5em 0;
+      overflow: hidden;
+    }
+    .gfsae-section-header {
+      background: #1a1a1a;
+      padding: 16px 20px;
+      border-bottom: 1px solid #444;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .gfsae-section-modules {
+      flex: 1;
+      min-width: 220px;
+    }
+    .gfsae-section-modules .gfsae-module-title {
+      font-weight: 700;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+    .gfsae-section-modules .gfsae-module-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .gfsae-section-stats {
+      color: #8b949e;
+      font-size: 12px;
+      white-space: nowrap;
+      padding-top: 2px;
+    }
+    .gfsae-section-body {
+      padding: 16px 20px;
+      font-family: SF Mono, Monospace, monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      border-bottom: 1px solid #30363d;
+    }
+    .gfsae-section-body:last-child {
+      border-bottom: none;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-comparison-section {
+      border-color: #ccc;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-section-header {
+      background: #eee;
+      color: #222;
+      border-bottom-color: #ccc;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-section-body {
+      border-bottom-color: #ddd;
+      color: #222;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-section-stats {
+      color: #666;
+    }
+
+    .gfsae-code-block {
+      border: 1px solid #444;
+      border-radius: 4px;
+      margin: 1.2em 0;
+      background: #0a0a0a;
+    }
+    .gfsae-code-block > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 10px 14px;
+      background: #1a1a1a;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      font-family: 'Kalam', cursive, sans-serif;
+      font-size: 0.95rem;
+    }
+    .gfsae-code-block > summary::-webkit-details-marker { display: none; }
+    .gfsae-code-block[open] > summary {
+      border-bottom: 1px solid #333;
+      border-radius: 4px 4px 0 0;
+    }
+    .gfsae-code-block > summary .gfsae-cb-name {
+      font-weight: 700;
+      color: #eee;
+    }
+    .gfsae-code-block > summary .gfsae-cb-name code {
+      font-family: monospace;
+      font-size: 0.85em;
+      background: none;
+    }
+    .gfsae-code-block > summary .gfsae-cb-meta {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .gfsae-code-block > summary .gfsae-cb-tag {
+      font-family: monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.02em;
+      color: #8b949e;
+      background: #222;
+      border: 1px solid #3a3a3a;
+      border-radius: 999px;
+      padding: 2px 9px;
+      white-space: nowrap;
+    }
+    .gfsae-code-block > summary .gfsae-cb-kind {
+      font-family: monospace;
+      font-size: 0.72rem;
+      color: #7fd88f;
+      border: 1px solid #2c4a30;
+      background: #10241380;
+      border-radius: 999px;
+      padding: 2px 9px;
+      white-space: nowrap;
+    }
+    .gfsae-code-block > summary .gfsae-cb-toggle-label {
+      font-size: 0.8rem;
+      color: #8ab4f8;
+      white-space: nowrap;
+    }
+    .gfsae-code-block[open] > summary .gfsae-cb-toggle-label::before { content: "▾ hide code"; }
+    .gfsae-code-block:not([open]) > summary .gfsae-cb-toggle-label::before { content: "▸ show code"; }
+    .gfsae-code-block > summary .gfsae-cb-toggle-label { font-size: 0; }
+    .gfsae-code-block > summary .gfsae-cb-toggle-label::before { font-size: 0.8rem; }
+    .gfsae-code-block .gfsae-cb-explain {
+      padding: 12px 16px 0;
+      font-size: 0.98rem;
+      color: #cfcfcf;
+    }
+    .gfsae-code-block pre {
+      margin: 12px 14px 14px;
+      font-size: 0.78rem;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-code-block {
+      background: #fafafa;
+      border-color: #ccc;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-code-block > summary {
+      background: #eee;
+      color: #222;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-code-block[open] > summary {
+      border-bottom-color: #ddd;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-code-block > summary .gfsae-cb-name { color: #222; }
+    .gfsae-wrapper.gfsae-light .gfsae-code-block > summary .gfsae-cb-tag {
+      color: #555;
+      background: #e2e2e2;
+      border-color: #ccc;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-code-block > summary .gfsae-cb-kind {
+      color: #1a6b2c;
+      background: #e7f5e9;
+      border-color: #bfe3c4;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-code-block .gfsae-cb-explain { color: #333; }
+
+    .gfsae-module-divider {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin: 2.4em 0 0.4em;
+    }
+    .gfsae-module-divider .gfsae-module-exec {
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: #6b7280;
+    }
+    .gfsae-wrapper.gfsae-light .gfsae-module-divider .gfsae-module-exec { color: #888; }
+
+    /* ===== Mobile & small‑screen fixes ===== */
+    @media (max-width: 640px) {
+      .gfsae-wrapper {
+        padding: 10px;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+      .gfsae-wrapper main {
+        padding: 0 4px;
+        max-width: 100%;
+      }
+      .gfsae-wrapper h1 { font-size: 1.5rem; }
+      .gfsae-wrapper h2 { font-size: 1.3rem; }
+      .gfsae-wrapper h3 { font-size: 1.1rem; }
+      .gfsae-wrapper pre {
+        font-size: 0.7rem;
+        padding: 8px;
+        margin: 0.8em 0;
+        -webkit-overflow-scrolling: touch;
+      }
+      .gfsae-wrapper table {
+        display: block;
+        overflow-x: auto;
+        font-size: 0.85rem;
+        white-space: nowrap;
+      }
+      .gfsae-code-block > summary {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+        gap: 6px 10px;
+      }
+      .gfsae-code-block .gfsae-cb-name {
+        font-size: 0.9rem;
+      }
+      .gfsae-code-block .gfsae-cb-meta {
+        gap: 4px;
+      }
+      .gfsae-code-block .gfsae-cb-tag,
+      .gfsae-code-block .gfsae-cb-kind {
+        font-size: 0.65rem;
+        padding: 2px 7px;
+      }
+      .gfsae-code-block .gfsae-cb-toggle-label::before {
+        font-size: 0.75rem;
+      }
+      .gfsae-toggle-btn {
+        top: 10px;
+        right: 10px;
+        padding: 5px 12px;
+        font-size: 0.85rem;
+      }
+    }
+    @media (max-width: 400px) {
+      .gfsae-wrapper { font-size: 0.9rem; }
+      .gfsae-code-block > summary { font-size: 0.8rem; }
+      .gfsae-code-block .gfsae-cb-tag,
+      .gfsae-code-block .gfsae-cb-kind {
+        font-size: 0.6rem;
+        padding: 1px 5px;
+      }
+      .gfsae-wrapper pre { font-size: 0.65rem; }
+    }
+
+    /* ===== Feature Lookup Specific Styles ===== */
+    .gfsae-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 10px;
+    }
+    .gfsae-controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .gfsae-wrapper input[type="text"] {
+      flex: 1;
+      min-width: 220px;
+      padding: 10px 14px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background: #111;
+      color: #eee;
+      font-family: 'Kalam', cursive, sans-serif;
+      font-size: 1rem;
+      outline: none;
+    }
+    .gfsae-wrapper input[type="text"]:focus {
+      border-color: #8ab4f8;
+    }
+    .gfsae-wrapper select {
+      padding: 10px 14px;
+      border: 1px solid #444;
+      border-radius: 4px;
+      background: #111;
+      color: #eee;
+      font-family: 'Kalam', cursive, sans-serif;
+      font-size: 1rem;
+      outline: none;
+      cursor: pointer;
+    }
+    .gfsae-stats {
+      color: #8b949e;
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+    .gfsae-stats span {
+      color: #8ab4f8;
+      font-weight: 700;
+    }
+    .gfsae-feature-id {
+      font-family: SF Mono, Monospace, monospace;
+      font-weight: 700;
+      color: #8ab4f8;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+    .gfsae-split-badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-family: SF Mono, Monospace, monospace;
+    }
+    .gfsae-split-train {
+      background: #065f46;
+      color: #34d399;
+    }
+    .gfsae-split-val {
+      background: #7c2d12;
+      color: #fb923c;
+    }
+    .gfsae-wrapper th {
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+    .gfsae-wrapper th:hover {
+      background: #2a2a2a;
+    }
+    .gfsae-sort-arrow {
+      margin-left: 6px;
+      opacity: 0.5;
+    }
+    .gfsae-sort-asc .gfsae-sort-arrow::after {
+      content: ' ▲';
+      opacity: 1;
+    }
+    .gfsae-sort-desc .gfsae-sort-arrow::after {
+      content: ' ▼';
+      opacity: 1;
+    }
+    .gfsae-no-results {
+      text-align: center;
+      padding: 40px;
+      color: #8b949e;
+      font-style: italic;
+    }
+    .gfsae-loading {
+      text-align: center;
+      padding: 60px;
+      color: #8b949e;
+    }
+    .gfsae-error {
+      text-align: center;
+      padding: 40px;
+      color: #f87171;
+      background: #450a0a;
+      border-radius: 4px;
+      margin-top: 20px;
+      border: 1px solid #5c1a1a;
+    }
+    .gfsae-wrapper.gfsae-light input[type="text"] {
+      background: #fff;
+      color: #222;
+      border-color: #ccc;
+    }
+    .gfsae-wrapper.gfsae-light select {
+      background: #fff;
+      color: #222;
+      border-color: #ccc;
+    }
+    .gfsae-wrapper.gfsae-light th:hover {
+      background: #ddd;
+    }
+    @media (max-width: 640px) {
+      .gfsae-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .gfsae-wrapper input[type="text"] {
+        min-width: unset;
+        width: 100%;
+      }
+      .gfsae-wrapper select {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -3511,9 +3998,1047 @@ class HFSteeringEngine:
 <p><strong>Implementation:</strong> Encodes prompt as user message, runs forward pass with <code>output_hidden_states=True</code>, extracts hidden states at <code>feature_layer + 1</code>, and passes through SAE <code>encode</code>.</p>
 </div>
 </details>
+ <h3>Feature Sampling &amp; Filtering</h3>
+
+
+  <img src="Pasted image (7).png" alt="feature sampling">
+<details class="code-block">
+<summary><span class="cb-name">feature_sampling.py</span><span class="cb-meta"><span class="cb-kind">module</span><span class="cb-tag">Feature sampling with concreteness and relevance filtering</span><span class="cb-toggle-label"></span></span></summary>
+<pre><code class="language-python">"""Feature sampling with concreteness and relevance filtering.
+Samples features that are both concrete (based on label quality) and
+irrelevant (zero activation on the provided prompts).
+"""
+async def sample_filtered_features(
+    engine,
+    prompts: List[str],
+    feature_labels: Dict[int, str],
+    n_features: int,
+    concreteness_threshold: float,
+    num_sae_features: int,
+    candidate_multiplier: int = 3,
+    grader: Optional[ConcretenessGrader] = None,
+    labels_file: Optional[str] = None,
+) -> List[int]:
+    """Sample n features that are both concrete and irrelevant to all prompts.
+    1. Randomly samples candidate_multiplier * n_features candidate features
+    2. Filters by concreteness (keeps features with labels above threshold)
+    3. Filters by relevance (keeps features with zero activation on all prompts)
+    4. Returns up to n_features that meet both criteria
+    """
+    candidate_pool_size = n_features * candidate_multiplier
+    print(f"\n{'='*80}")
+    print(f"Sampling {n_features} features with concreteness and relevance filtering")
+    print(f"{'='*80}")
+    print(f"Candidate pool size: {candidate_pool_size}")
+    print(f"Total SAE features: {num_sae_features}")
+    print(f"Concreteness threshold: {concreteness_threshold}")
+    print(f"Number of prompts for relevance testing: {len(prompts)}")
+    print(f"{'='*80}\n")
+    # Step 1: Randomly sample candidate features
+    print(f"Step 1: Randomly sampling {candidate_pool_size} candidate features...")
+    candidate_indices = random.sample(range(num_sae_features), min(candidate_pool_size, num_sae_features))
+    print(f"✓ Sampled {len(candidate_indices)} candidates\n")
+    # Step 2: Filter by concreteness (skip if no labels file available)
+    if labels_file is None:
+        print("Step 2: No labels file - skipping concreteness filtering, treating all features as concrete")
+        concrete_features = list(candidate_indices)
+        print(f"✓ Using all {len(concrete_features)} candidates as concrete\n")
+    else:
+        print(f"Step 2: Filtering by concreteness (threshold: {concreteness_threshold})...")
+        candidate_labels = {idx: feature_labels.get(idx, f"feature_{idx}") for idx in candidate_indices}
+        concrete_features = await filter_concrete_features(
+            candidate_labels,
+            concreteness_threshold,
+            grader=grader,
+        )
+        print(f"✓ After concreteness filtering: {len(concrete_features)} features\n")
+        if not concrete_features:
+            print("⚠️ No features passed concreteness filtering")
+            return []
+    # Step 3: Filter by relevance
+    print("Step 3: Filtering by relevance (zero activation on all prompts)...")
+    relevance_scores = await compute_feature_relevance_for_prompts(
+        engine,
+        concrete_features,
+        prompts,
+    )
+    irrelevant_features = filter_irrelevant_features(relevance_scores, max_activation=0.6)
+    print(f"✓ After relevance filtering: {len(irrelevant_features)} features\n")
+    if not irrelevant_features:
+        print("⚠️ No features passed relevance filtering")
+        return []
+    # Step 4: Return up to n_features
+    final_features = irrelevant_features[:n_features]
+    print(f"{'='*80}")
+    print(f"✓ Final result: {len(final_features)}/{n_features} features sampled")
+    if len(final_features) < n_features:
+        print("  Note: Found fewer features than requested")
+    print(f"{'='*80}\n")
+    return final_features
+
+async def sample_filtered_features_with_retry(
+    engine,
+    prompts: List[str],
+    feature_labels: Dict[int, str],
+    n_features: int,
+    concreteness_threshold: float,
+    num_sae_features: int,
+    candidate_multiplier: int = 3,
+    max_retries: int = 3,
+    grader: Optional[ConcretenessGrader] = None,
+    labels_file: Optional[str] = None,
+) -> List[int]:
+    """Sample filtered features with retry logic if not enough features are found.
+    If the initial sampling doesn't yield enough features, retries with an
+    increased candidate pool size.
+    """
+    sampled_features = set()
+    current_multiplier = candidate_multiplier
+    for attempt in range(max_retries + 1):
+        if len(sampled_features) >= n_features:
+            break
+        remaining = n_features - len(sampled_features)
+        if attempt > 0:
+            print(f"\nRetry attempt {attempt}/{max_retries}")
+            print(f"Need {remaining} more features, increasing multiplier to {current_multiplier}x")
+        new_features = await sample_filtered_features(
+            engine=engine,
+            prompts=prompts,
+            feature_labels=feature_labels,
+            n_features=remaining,
+            concreteness_threshold=concreteness_threshold,
+            num_sae_features=num_sae_features,
+            candidate_multiplier=current_multiplier,
+            grader=grader,
+            labels_file=labels_file,
+        )
+        sampled_features.update(new_features)
+        current_multiplier *= 2
+    final_features = list(sampled_features)[:n_features]
+    if len(final_features) < n_features:
+        print(f"\n⚠️ Warning: Only found {len(final_features)}/{n_features} features after {max_retries + 1} attempts")
+    return final_features</code></pre>
+</details>
+
+<!-- Explanations -->
+
+<details class="code-block">
+<summary><span class="cb-name">sample_filtered_features()</span><span class="cb-meta"><span class="cb-kind">function</span><span class="cb-tag">Core sampling</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>sample_filtered_features()</code></h3>
+<p><strong>Signature:</strong> <code>async def sample_filtered_features(engine, prompts: List[str], feature_labels: Dict[int, str], n_features: int, concreteness_threshold: float, num_sae_features: int, candidate_multiplier: int = 3, grader: Optional[ConcretenessGrader] = None, labels_file: Optional[str] = None) -> List[int]</code></p>
+<p><strong>Purpose:</strong> Samples <code>n_features</code> indices that are both <em>concrete</em> (have high-quality human-interpretable labels) and <em>irrelevant</em> (show near-zero activation on the provided prompts).</p>
+<p><strong>Inputs:</strong></p>
+<ul>
+<li><code>engine</code> – steering engine instance for activation computation.</li>
+<li><code>prompts</code> – list of prompt strings used for relevance testing.</li>
+<li><code>feature_labels</code> – mapping from feature index to its descriptive label.</li>
+<li><code>n_features</code> – number of features to return.</li>
+<li><code>concreteness_threshold</code> – minimum concreteness score to keep a feature.</li>
+<li><code>num_sae_features</code> – total size of the SAE dictionary.</li>
+<li><code>candidate_multiplier</code> – factor to oversample the initial random pool (default 3×).</li>
+<li><code>grader</code> – optional <code>ConcretenessGrader</code> for label quality scoring.</li>
+<li><code>labels_file</code> – optional path to labels file; if <code>None</code>, concreteness filtering is skipped.</li>
+</ul>
+<p><strong>Returns:</strong> List of up to <code>n_features</code> feature indices meeting both criteria.</p>
+<p><strong>Implementation details:</strong></p>
+<ul>
+<li><strong>Step 1:</strong> Randomly samples <code>candidate_multiplier * n_features</code> candidates from the full SAE feature range.</li>
+<li><strong>Step 2:</strong> Filters candidates by concreteness using <code>filter_concrete_features</code>. Skipped entirely when <code>labels_file</code> is <code>None</code>.</li>
+<li><strong>Step 3:</strong> Filters remaining features by relevance via <code>compute_feature_relevance_for_prompts</code>, keeping only those with max activation ≤ 0.6 across all prompts.</li>
+<li><strong>Step 4:</strong> Returns the first <code>n_features</code> from the irrelevant set. If fewer are found, returns however many passed.</li>
+</ul>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">sample_filtered_features_with_retry()</span><span class="cb-meta"><span class="cb-kind">function</span><span class="cb-tag">Retry wrapper</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>sample_filtered_features_with_retry()</code></h3>
+<p><strong>Signature:</strong> <code>async def sample_filtered_features_with_retry(engine, prompts: List[str], feature_labels: Dict[int, str], n_features: int, concreteness_threshold: float, num_sae_features: int, candidate_multiplier: int = 3, max_retries: int = 3, grader: Optional[ConcretenessGrader] = None, labels_file: Optional[str] = None) -> List[int]</code></p>
+<p><strong>Purpose:</strong> Wraps <code>sample_filtered_features</code> with retry logic. If the initial candidate pool does not yield enough features, automatically retries with an exponentially larger pool until the quota is met or <code>max_retries</code> is exhausted.</p>
+<p><strong>Inputs:</strong> Same as <code>sample_filtered_features</code>, plus:</p>
+<ul>
+<li><code>max_retries</code> – maximum number of additional sampling attempts (default 3).</li>
+</ul>
+<p><strong>Returns:</strong> List of up to <code>n_features</code> unique feature indices.</p>
+<p><strong>Implementation details:</strong></p>
+<ul>
+<li>Maintains a running <code>set()</code> of already-sampled features to avoid duplicates across retries.</li>
+<li>On each retry, doubles the <code>candidate_multiplier</code> (3 → 6 → 12 → 24…).</li>
+<li>Requests only the <em>remaining</em> number of features needed on subsequent attempts.</li>
+<li>Warns if the full budget of retries still fails to produce <code>n_features</code> results.</li>
+</ul>
+</div>
+</details>
+
+<h3>Experiment Orchestration</h3>
+
+<details class="code-block">
+<summary><span class="cb-name">orchestration.py</span><span class="cb-meta"><span class="cb-kind">module</span><span class="cb-tag">Experiment orchestration</span><span class="cb-toggle-label"></span></span></summary>
+<pre><code class="language-python">"""Experiment orchestration: generate responses, score them, calibrate thresholds,
+run the full sweep over features."""
+async def generate_response(
+    engine: HFSteeringEngine,
+    experiment_config: ExperimentConfig,
+    prompt: str,
+    feature: FeatureInfo,
+    threshold: float,
+) -> Tuple[str, str, int]:
+    """Generate a single response with feature intervention. Returns (prompt, response, seed)."""
+    intervention = None
+    if not experiment_config.disable_steering:
+        intervention = [{"feature_id": feature.index_in_sae, "value": threshold}]
+    convo = [{"role": "user", "content": prompt}]
+    seed = random.randint(experiment_config.seed_start, experiment_config.seed_start + experiment_config.n_possible_seeds)
+    response = await engine.generate_with_conversation(
+        conversation=convo,
+        feature_interventions=intervention,
+        max_tokens=experiment_config.max_completion_tokens,
+        seed=seed,
+    )
+    return prompt, response, seed
+async def get_score_for_prompt(
+    engine: HFSteeringEngine,
+    judge: Judge,
+    prompt: str,
+    feature: FeatureInfo,
+    boost: float,
+    experiment_config: ExperimentConfig,
+    max_retries: int = 3,
+) -> float:
+    """Get a judge score (0-1) for a specific prompt-feature-boost combination."""
+    score = None
+    retries = 0
+    while score is None:
+        intervention = None if experiment_config.disable_steering else [{"feature_id": feature.index_in_sae, "value": boost}]
+        convo = [{"role": "user", "content": prompt}]
+        seed = random.randint(experiment_config.seed_start, experiment_config.seed_start + experiment_config.n_possible_seeds)
+        response = await engine.generate_with_conversation(
+            conversation=convo,
+            feature_interventions=intervention,
+            max_tokens=experiment_config.max_completion_tokens // 2,
+            seed=seed,
+        )
+        score_obj = await judge.grade_response(response, prompt, feature.label)
+        has_error = "error" in score_obj
+        has_attempts = "attempts" in score_obj and bool(score_obj["attempts"])
+        # FIX: the original loop only counted `retries` when the judge call raised
+        # an "error" key. If the judge returned {"attempts": []} (or omitted the
+        # key) without an error, `score` stayed None forever and this looped
+        # indefinitely, silently re-generating + re-judging forever. Treat that
+        # case as retryable too.
+        if not has_error and not has_attempts:
+            has_error = True
+            score_obj = {**score_obj, "error": "Judge returned no attempts and no error"}
+        if has_error:
+            retries += 1
+            if retries >= max_retries:
+                debug_info = (
+                    f"\n{'='*80}\nJUDGE ERROR DURING THRESHOLD FINDING\n{'='*80}\n"
+                    f"Error: {score_obj['error']}\nFeature: {feature.label}\nBoost: {boost}\n"
+                    f"Prompt:\n{prompt}\nResponse:\n{response[:500]}\n"
+                    f"Raw Judge Response:\n{score_obj.get('raw_response', 'None')}\n{'='*80}\n"
+                )
+                raise Exception(debug_info)
+            continue
+        score = score_obj["attempts"][0]["score"]
+    return score / 100.0
+async def get_prompt_threshold(
+    engine: HFSteeringEngine,
+    judge: Judge,
+    prompt: str,
+    feature: FeatureInfo,
+    experiment_config: ExperimentConfig,
+    show_progress: bool = True,
+) -> float:
+    """Find threshold for a single prompt using Bayesian optimisation."""
+    threshold = await find_threshold(
+        target_score=experiment_config.target_score_normalized,
+        get_score_fn=lambda x: get_score_for_prompt(engine, judge, prompt, feature, x, experiment_config),
+        prior_mean=experiment_config.threshold_prior_mean,
+        prior_std=experiment_config.threshold_prior_std,
+        n_trials=experiment_config.threshold_n_trials,
+        show_progress=show_progress,
+        lower_bound=experiment_config.threshold_lower_bound,
+        upper_bound=experiment_config.threshold_upper_bound,
+    )
+    return float(round(threshold, 2))
+async def get_score(
+    engine: HFSteeringEngine,
+    judge: Judge,
+    prompts: List[str],
+    feature: FeatureInfo,
+    boost: float,
+    experiment_config: ExperimentConfig,
+    max_retries: int = 3,
+    n_samples: int = 1,
+) -> float:
+    """Average judge score over n_samples random prompts."""
+    if n_samples <= 0:
+        n_samples = 1
+    sampled_prompts = random.sample(prompts, min(n_samples, len(prompts)))
+    scores = []
+    for prompt in sampled_prompts:
+        sc = await get_score_for_prompt(engine, judge, prompt, feature, boost, experiment_config, max_retries)
+        scores.append(sc)
+    return sum(scores) / len(scores)
+async def get_feature_threshold(
+    engine: HFSteeringEngine,
+    judge: Judge,
+    feature: FeatureInfo,
+    prompts: List[str],
+    experiment_config: ExperimentConfig,
+    show_progress: bool = False,
+) -> float:
+    """Find or retrieve cached threshold for a feature."""
+    if experiment_config.disable_steering:
+        return 0.0
+    cache_file = experiment_config.get_threshold_cache_file()
+    threshold_cache = {}
+    if os.path.exists(cache_file):
+        with open(cache_file, "r") as f:
+            threshold_cache = json.load(f)
+    key = str(feature.index_in_sae)
+    if key in threshold_cache:
+        cached = threshold_cache[key]
+        val = cached.get("threshold") if isinstance(cached, dict) else cached
+        if val is not None:
+            if show_progress:
+                print(f"Using cached threshold for feature {feature.index_in_sae}")
+            return val
+    n_samples = getattr(experiment_config, 'threshold_samples_per_trial', 1)
+    threshold = await find_threshold(
+        target_score=experiment_config.target_score_normalized,
+        get_score_fn=lambda x: get_score(engine, judge, prompts, feature, x, experiment_config, n_samples=n_samples),
+        prior_mean=experiment_config.threshold_prior_mean,
+        prior_std=experiment_config.threshold_prior_std,
+        n_trials=experiment_config.threshold_n_trials,
+        show_progress=show_progress,
+        lower_bound=experiment_config.threshold_lower_bound,
+        upper_bound=experiment_config.threshold_upper_bound,
+    )
+    threshold = float(round(threshold, 2))
+    achieved = await get_score(engine, judge, prompts, feature, threshold, experiment_config)
+    # Reload cache (in case another coroutine wrote)
+    threshold_cache = {}
+    if os.path.exists(cache_file):
+        with open(cache_file, "r") as f:
+            threshold_cache = json.load(f)
+    threshold_cache[key] = {
+        "threshold": threshold,
+        "achieved_score": float(achieved),
+        "config": {
+            "target_score": experiment_config.target_score_normalized,
+            "n_trials": experiment_config.threshold_n_trials,
+            "prior_mean": experiment_config.threshold_prior_mean,
+            "prior_std": experiment_config.threshold_prior_std,
+            "lower_bound": experiment_config.threshold_lower_bound,
+            "upper_bound": experiment_config.threshold_upper_bound,
+        }
+    }
+    os.makedirs(os.path.dirname(cache_file), exist_ok=True)
+    with open(cache_file, "w") as f:
+        json.dump(threshold_cache, f, indent=2)
+    return threshold
+async def run_one_feature(
+    engine: HFSteeringEngine,
+    judge: Judge,
+    experiment_config: ExperimentConfig,
+    feature: FeatureInfo,
+    pbar: Optional[tqdm] = None,
+    precomputed_threshold: Optional[float] = None,
+    precomputed_prompts: Optional[List[str]] = None,
+) -> FeatureResult:
+    """Run experiment for a single feature."""
+    try:
+        prompts = experiment_config.get_prompts()
+        if precomputed_prompts is not None:
+            sampled_prompts = precomputed_prompts
+        else:
+            sampled_prompts = random.sample(prompts, min(len(prompts), experiment_config.n_trials_per_feature))
+        # Per-prompt calibration mode
+        if experiment_config.per_prompt_calibration and precomputed_threshold is None:
+            if pbar:
+                pbar.set_description(f"Feature {feature.index_in_sae}: per-prompt calibration")
+            trials = []
+            thresholds = []
+            for i, prompt in enumerate(sampled_prompts):
+                if pbar:
+                    pbar.set_description(f"Feature {feature.index_in_sae}: calibrating prompt {i+1}/{len(sampled_prompts)}")
+                th = await get_prompt_threshold(engine, judge, prompt, feature, experiment_config)
+                thresholds.append(th)
+                prompt_text, response, seed = await generate_response(engine, experiment_config, prompt, feature, th)
+                score = await judge.grade_response(response, prompt_text, feature.label)
+                trials.append(TrialResult(
+                    prompt=prompt_text,
+                    feature_index_in_sae=feature.index_in_sae,
+                    feature_label=feature.label,
+                    threshold=th,
+                    seed=seed,
+                    response=response,
+                    score=score,
+                    error=None if "error" not in score else score["error"],
+                ))
+            mean_th = sum(thresholds) / len(thresholds) if thresholds else 0
+            if pbar:
+                pbar.write(f"✓ Feature {feature.index_in_sae}: thresholds={thresholds}, mean={mean_th:.2f}")
+            return FeatureResult(
+                feature_index_in_sae=feature.index_in_sae,
+                feature_label=feature.label,
+                threshold=mean_th,
+                trials=trials,
+            )
+        # Standard feature-level calibration
+        if precomputed_threshold is not None:
+            threshold = precomputed_threshold
+            if pbar:
+                pbar.write(f"✓ Feature {feature.index_in_sae}: using precomputed threshold {threshold:.2f}")
+        else:
+            if pbar:
+                pbar.set_description(f"Feature {feature.index_in_sae}: finding threshold")
+            threshold = await get_feature_threshold(engine, judge, feature, prompts, experiment_config, show_progress=True)
+            if pbar:
+                pbar.write(f"✓ Feature {feature.index_in_sae}: threshold = {threshold:.2f}")
+        if pbar:
+            pbar.set_description(f"Feature {feature.index_in_sae}: generating responses")
+        generation_results = await asyncio.gather(*[
+            generate_response(engine, experiment_config, prompt, feature, threshold)
+            for prompt in sampled_prompts
+        ])
+        if pbar:
+            pbar.set_description(f"Feature {feature.index_in_sae}: scoring responses")
+        scoring_results = await asyncio.gather(*[
+            judge.grade_response(response, prompt, feature.label)
+            for prompt, response, seed in generation_results
+        ])
+        trials = []
+        for (prompt, response, seed), score in zip(generation_results, scoring_results):
+            trials.append(TrialResult(
+                prompt=prompt,
+                feature_index_in_sae=feature.index_in_sae,
+                feature_label=feature.label,
+                threshold=threshold,
+                seed=seed,
+                response=response,
+                score=score,
+                error=None if "error" not in score else score["error"],
+            ))
+        return FeatureResult(
+            feature_index_in_sae=feature.index_in_sae,
+            feature_label=feature.label,
+            threshold=threshold,
+            trials=trials,
+        )
+    except Exception as e:
+        import traceback
+        error_msg = str(e) or f"{type(e).__name__}: {traceback.format_exc()}"
+        if pbar:
+            pbar.write(f"❌ Feature {feature.index_in_sae}: {error_msg[:500]}")
+        return FeatureResult(
+            feature_index_in_sae=feature.index_in_sae,
+            feature_label=feature.label,
+            threshold=None,
+            trials=[],
+            error=error_msg,
+        )
+async def run_experiment(
+    experiment_config: ExperimentConfig,
+    sae_filepath: str,
+    d_model: int = 4096,
+    expansion_factor: int = 16,
+    steering_layer: int = 19,
+    timeout_hours: float = 100,
+    precomputed_features: Optional[List[Tuple[FeatureInfo, Optional[float], Optional[List[str]]]]] = None,
+    n_prompts_limit: Optional[int] = None,
+    output_suffix: Optional[str] = None,
+    output_folder: Optional[str] = None,
+    repetition_penalty: Optional[float] = None,
+    judge_load_in_4bit: bool = True,
+    max_memory: Optional[Dict[int, str]] = None,
+):
+    """Run the full feature-steering-resistance sweep.
+    `sae_filepath` (required): path to your SAE checkpoint. This used to be
+    resolved through a model-name registry inside VLLMSteeringEngine that
+    never actually matched `experiment_config.model_name` -- passing it
+    explicitly here means it's always the real path you point it at.
+    `d_model`/`expansion_factor`/`steering_layer`: SAE architecture info
+    (defaults match the Llama-3.1-8B-Instruct-SAE-l19 config this notebook
+    was built around).
+    `judge_load_in_4bit`: passed through to create_judge so the local judge
+    model doesn't have to compete with the (much larger) steering model for
+    VRAM.
+    `max_memory` (new, replaces vLLM's `gpu_memory_utilization`): per-GPU
+    memory cap passed to HFSteeringEngine's `device_map="auto"` load, e.g.
+    `{0: "13GiB", 1: "13GiB"}` on 2xT4 -- leaves headroom on each card for
+    the judge model, loaded afterward.
+    """
+    print("Initializing steering engine...")
+    engine = HFSteeringEngine(
+        model_path=experiment_config.model_name,
+        sae_filepath=sae_filepath,
+        d_model=d_model,
+        expansion_factor=expansion_factor,
+        steering_layer=steering_layer,
+        repetition_penalty=repetition_penalty,
+        max_memory=max_memory,
+    )
+    await engine.initialize()
+    # FIX: Clear any allocation fragmentation from steering-model load before
+    # the judge comes in.
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+    print("Engine initialized")
+
+    # FIX: Create the judge early so the ConcretenessGrader can share its
+    # LocalModelClient.  Loading steering + grader + judge as three separate
+    # 8B-class models fragments T4 memory enough to cause
+    # CUBLAS_STATUS_ALLOC_FAILED.  Sharing drops this to two models.
+    judge = create_judge(experiment_config.judge_model_name, load_in_4bit=judge_load_in_4bit)
+
+    if output_folder:
+        results_base_dir = f"data/experiment_results/{output_folder}"
+    else:
+        judge_folder = get_judge_folder_name(experiment_config.judge_model_name)
+        results_base_dir = f"data/experiment_results/{judge_folder}_judge"
+
+    if precomputed_features is not None:
+        print(f"\n✓ Using {len(precomputed_features)} precomputed features")
+        features_with_data = precomputed_features
+    else:
+        print("Loading feature labels...")
+        feature_labels = experiment_config.get_labels()
+        # FIX: use the true total feature-dictionary size (from my_sae_data.pt's
+        # metadata, via total_sae_features, or set explicitly by the caller for
+        # CSV-format labels -- see ExperimentConfig.total_sae_features and the
+        # "Configure & run" section) rather than len(feature_labels). The latter
+        # is only correct if every single SAE feature has a label, which usually
+        # isn't true -- undercounting it would make sampling only ever draw from
+        # a truncated / mismatched slice of the real feature index range.
+        num_sae_features = experiment_config.total_sae_features or len(feature_labels)
+        prompts = experiment_config.get_prompts()
+        if n_prompts_limit:
+            prompts = prompts[:n_prompts_limit]
+        print(f"Sampling {experiment_config.n_features} features...")
+
+        # FIX: Pass the judge's underlying client to the grader so we only
+        # load one copy of Llama-3-8B-Instruct.
+        shared_client = judge.client if isinstance(judge.client, LocalModelClient) else None
+        grader = ConcretenessGrader(
+            load_in_4bit=judge_load_in_4bit,
+            local_client=shared_client,
+        )
+
+        # FIX (second 0-features bug, found after fixing total_sae_features):
+        # sample_filtered_features() draws a single fixed-size candidate pool
+        # (n_features * candidate_multiplier) and gives up immediately if none
+        # of those candidates happen to have a real label. That's fine when
+        # labels are dense, but this notebook's CSV-format labels only cover
+        # ~4539 of the 65536 real SAE feature slots (~6.9%) -- with a small
+        # pool (e.g. 15 candidates for n_features=5), the expected number of
+        # labeled hits is close to 1, so drawing zero by chance is common
+        # (~1/3 of runs), which is exactly what produced "Warning: No
+        # meaningful labels found" / 0 features sampled here even with the
+        # correct total_sae_features.
+        #
+        # sample_filtered_features_with_retry() already exists below to
+        # handle this -- it doubles candidate_multiplier and retries
+        # (3x -> 6x -> 12x -> 24x by default) until enough features are found
+        # or max_retries is hit -- but run_experiment was calling the
+        # non-retrying function directly, so that logic never ran. Switched
+        # to the retry version here.
+        feature_indices = await sample_filtered_features_with_retry(
+            engine=engine,
+            prompts=prompts,
+            feature_labels=feature_labels,
+            n_features=experiment_config.n_features,
+            concreteness_threshold=experiment_config.min_feature_concreteness,
+            num_sae_features=num_sae_features,
+            candidate_multiplier=3,
+            max_retries=3,
+            grader=grader,
+            labels_file=experiment_config.labels_file,
+        )
+
+        # FIX: Drop the grader reference. If we shared the judge client this
+        # is a no-op for GPU memory, but if we didn't it frees a whole model.
+        # The empty_cache() call also defragments memory before the tight
+        # generate-and-judge loop starts.
+        del grader
+        import gc
+        gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
+        features_with_data = [
+            (FeatureInfo(index_in_sae=idx, label=feature_labels.get(idx, f"feature_{idx}")), None, None)
+            for idx in feature_indices
+        ]
+
+    semaphore = asyncio.Semaphore(experiment_config.n_simultaneous_features)
+    pbar = tqdm(total=len(features_with_data), desc="Processing features", unit="feature",
+                bar_format="{desc}: {percentage:3.0f}%|{bar}| {n_fmt}/{total_fmt} [{elapsed}<{remaining}]",
+                smoothing=0)
+    async def run_with_sem(feature_data):
+        feature, threshold, precomputed_prompts = feature_data
+        async with semaphore:
+            return await run_one_feature(engine, judge, experiment_config, feature, pbar,
+                                          precomputed_threshold=threshold,
+                                          precomputed_prompts=precomputed_prompts)
+    experiment_result = ExperimentResult(experiment_config=experiment_config.to_dict(), results_by_feature=[])
+    short_model_name = experiment_config.model_name.split("/")[-1]
+    start_time = time.time()
+    completed_count = 0
+    suffix_part = f"_{output_suffix}" if output_suffix else ""
+    final_filename = f"{results_base_dir}/experiment_results_{short_model_name}_{time.strftime('%Y%m%d_%H%M%S')}{suffix_part}.json"
+    temp_filename = final_filename + ".tmp"
+    Path(final_filename).parent.mkdir(parents=True, exist_ok=True)
+    async def process_results():
+        nonlocal completed_count
+        for coro in asyncio.as_completed([run_with_sem(fd) for fd in features_with_data]):
+            try:
+                result = await coro
+                experiment_result.results_by_feature.append(result)
+                completed_count += 1
+                elapsed = time.time() - start_time
+                avg = elapsed / completed_count
+                remaining = avg * (len(features_with_data) - completed_count)
+                pbar.update(1)
+                if result.error:
+                    pbar.write(f"❌ [{completed_count}/{len(features_with_data)}] Feature {result.feature_index_in_sae}: ERROR")
+                else:
+                    pbar.write(f"✅ [{completed_count}/{len(features_with_data)}] Feature {result.feature_index_in_sae}: {result.feature_label[:40]}... "
+                               f"({len(result.trials)} trials, th={result.threshold})")
+                with open(temp_filename, "w") as f:
+                    json.dump(asdict(experiment_result), f, indent=4)
+                if os.path.exists(final_filename):
+                    os.remove(final_filename)
+                os.rename(temp_filename, final_filename)
+                if completed_count % 5 == 0:
+                    pbar.write(f"💾 Checkpoint saved: {completed_count}/{len(features_with_data)}")
+            except Exception as e:
+                pbar.write(f"❌ Error processing feature: {e}")
+                if os.path.exists(temp_filename):
+                    os.remove(temp_filename)
+        pbar.close()
+        total_time = time.time() - start_time
+        pbar.write(f"\n{'='*80}\n✅ Experiment completed!\n"
+                   f"   Total features: {len(features_with_data)}\n"
+                   f"   Successful: {sum(1 for r in experiment_result.results_by_feature if not r.error)}\n"
+                   f"   Failed: {sum(1 for r in experiment_result.results_by_feature if r.error)}\n"
+                   f"   Time: {total_time/3600:.2f}h ({total_time/60:.1f}min)\n"
+                   f"   Results: {final_filename}\n{'='*80}\n")
+    try:
+        await asyncio.wait_for(process_results(), timeout=timeout_hours * 3600)
+    except asyncio.TimeoutError:
+        print(f"Experiment timed out after {timeout_hours} hours")
+        if experiment_result.results_by_feature:
+            new_filename = f"{results_base_dir}/experiment_results_{short_model_name}_{time.strftime('%Y%m%d_%H%M%S')}{suffix_part}_TIMEOUT.json"
+            with open(new_filename, "w") as f:
+                json.dump(asdict(experiment_result), f, indent=4)
+            print(f"Saved partial results to {new_filename}")
+    return experiment_result</code></pre>
+</details>
+
+<!-- Explanations for each component -->
+
+<details class="code-block">
+<summary><span class="cb-name">generate_response()</span><span class="cb-meta"><span class="cb-kind">async function</span><span class="cb-tag">Generation</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>generate_response()</code></h3>
+<p><strong>Signature:</strong> <code>async def generate_response(engine: HFSteeringEngine, experiment_config: ExperimentConfig, prompt: str, feature: FeatureInfo, threshold: float) -&gt; Tuple[str, str, int]</code></p>
+<p><strong>Purpose:</strong> Generates a single response from the steering engine for a given prompt and feature, optionally applying a steering intervention. Returns the prompt, the generated response text, and the seed used.</p>
+<p><strong>Inputs:</strong></p>
+<ul>
+<li><code>engine</code> – <code>HFSteeringEngine</code> instance.</li>
+<li><code>experiment_config</code> – configuration object.</li>
+<li><code>prompt</code> – prompt string.</li>
+<li><code>feature</code> – <code>FeatureInfo</code> object containing feature index and label.</li>
+<li><code>threshold</code> – steering boost value (if steering enabled).</li>
+</ul>
+<p><strong>Returns:</strong> Tuple <code>(prompt, response, seed)</code>.</p>
+<p><strong>Implementation notes:</strong></p>
+<ul>
+<li>If <code>disable_steering</code> is <code>False</code>, builds an intervention list with the feature ID and threshold; otherwise no intervention.</li>
+<li>Constructs a single user message conversation.</li>
+<li>Draws a random seed from the configured range.</li>
+<li>Calls <code>engine.generate_with_conversation</code> with the conversation, interventions, max tokens, and seed.</li>
+</ul>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">get_score_for_prompt()</span><span class="cb-meta"><span class="cb-kind">async function</span><span class="cb-tag">Scoring</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>get_score_for_prompt()</code></h3>
+<p><strong>Signature:</strong> <code>async def get_score_for_prompt(engine: HFSteeringEngine, judge: Judge, prompt: str, feature: FeatureInfo, boost: float, experiment_config: ExperimentConfig, max_retries: int = 3) -&gt; float</code></p>
+<p><strong>Purpose:</strong> Retrieves a single judge score (normalized 0–1) for a specific prompt, feature, and boost combination. Retries if the judge returns an error or no attempts.</p>
+<p><strong>Inputs:</strong></p>
+<ul>
+<li><code>engine</code>, <code>judge</code>, <code>prompt</code>, <code>feature</code>, <code>boost</code>, <code>experiment_config</code>, <code>max_retries</code>.</li>
+</ul>
+<p><strong>Returns:</strong> <code>float</code> – normalized score (raw judge score divided by 100).</p>
+<p><strong>Implementation notes:</strong></p>
+<ul>
+<li>Loops until a valid score is obtained or retries exhausted.</li>
+<li>Generates a response with boost, then grades with the judge.</li>
+<li>Checks for <code>error</code> key or missing <code>attempts</code> (treated as retryable).</li>
+<li>If after max retries still no score, raises an exception with debug info.</li>
+<li>Returns the first attempt's score divided by 100.</li>
+</ul>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">get_prompt_threshold()</span><span class="cb-meta"><span class="cb-kind">async function</span><span class="cb-tag">Threshold</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>get_prompt_threshold()</code></h3>
+<p><strong>Signature:</strong> <code>async def get_prompt_threshold(engine: HFSteeringEngine, judge: Judge, prompt: str, feature: FeatureInfo, experiment_config: ExperimentConfig, show_progress: bool = True) -&gt; float</code></p>
+<p><strong>Purpose:</strong> Finds the threshold (boost) for a single prompt using the Bayesian threshold finder. Returns the threshold rounded to 2 decimal places.</p>
+<p><strong>Inputs:</strong> engine, judge, prompt, feature, config, show_progress.</p>
+<p><strong>Returns:</strong> <code>float</code> threshold.</p>
+<p><strong>Implementation:</strong> Calls <code>find_threshold</code> with a <code>get_score_fn</code> that uses <code>get_score_for_prompt</code> for that prompt.</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">get_score()</span><span class="cb-meta"><span class="cb-kind">async function</span><span class="cb-tag">Scoring</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>get_score()</code></h3>
+<p><strong>Signature:</strong> <code>async def get_score(engine: HFSteeringEngine, judge: Judge, prompts: List[str], feature: FeatureInfo, boost: float, experiment_config: ExperimentConfig, max_retries: int = 3, n_samples: int = 1) -&gt; float</code></p>
+<p><strong>Purpose:</strong> Computes the average judge score over <code>n_samples</code> randomly sampled prompts for a given feature and boost.</p>
+<p><strong>Inputs:</strong> list of prompts, feature, boost, config, number of samples.</p>
+<p><strong>Returns:</strong> <code>float</code> average normalized score.</p>
+<p><strong>Implementation notes:</strong></p>
+<ul>
+<li>If <code>n_samples</code> less than 1, sets to 1.</li>
+<li>Randomly samples up to <code>n_samples</code> prompts from the provided list.</li>
+<li>For each prompt, calls <code>get_score_for_prompt</code> and averages the results.</li>
+</ul>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">get_feature_threshold()</span><span class="cb-meta"><span class="cb-kind">async function</span><span class="cb-tag">Threshold</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>get_feature_threshold()</code></h3>
+<p><strong>Signature:</strong> <code>async def get_feature_threshold(engine: HFSteeringEngine, judge: Judge, feature: FeatureInfo, prompts: List[str], experiment_config: ExperimentConfig, show_progress: bool = False) -&gt; float</code></p>
+<p><strong>Purpose:</strong> Retrieves or computes the threshold for a feature, using a disk cache to avoid recomputation.</p>
+<p><strong>Inputs:</strong> engine, judge, feature, prompts, config, show_progress.</p>
+<p><strong>Returns:</strong> <code>float</code> threshold.</p>
+<p><strong>Implementation details:</strong></p>
+<ul>
+<li>If steering disabled, returns <code>0.0</code>.</li>
+<li>Loads threshold cache from <code>experiment_config.get_threshold_cache_file()</code>.</li>
+<li>If feature index exists in cache and has a value, returns it.</li>
+<li>Otherwise, calls <code>find_threshold</code> using <code>get_score</code> as the scorer, with number of samples from <code>threshold_samples_per_trial</code>.</li>
+<li>After finding, computes achieved score, updates cache, and saves.</li>
+</ul>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">run_one_feature()</span><span class="cb-meta"><span class="cb-kind">async function</span><span class="cb-tag">Experiment</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>run_one_feature()</code></h3>
+<p><strong>Signature:</strong> <code>async def run_one_feature(engine: HFSteeringEngine, judge: Judge, experiment_config: ExperimentConfig, feature: FeatureInfo, pbar: Optional[tqdm] = None, precomputed_threshold: Optional[float] = None, precomputed_prompts: Optional[List[str]] = None) -&gt; FeatureResult</code></p>
+<p><strong>Purpose:</strong> Runs the full experiment for a single feature: determines threshold, generates responses for sampled prompts, scores them, and returns a <code>FeatureResult</code>.</p>
+<p><strong>Inputs:</strong> engine, judge, config, feature, optional progress bar, optional precomputed threshold and prompts.</p>
+<p><strong>Returns:</strong> <code>FeatureResult</code> object containing feature info, threshold, and list of <code>TrialResult</code>s.</p>
+<p><strong>Implementation:</strong></p>
+<ul>
+<li>Samples prompts (or uses precomputed).</li>
+<li>If <code>per_prompt_calibration</code> is true and no precomputed threshold, loops over each prompt to calibrate individually and generate responses.</li>
+<li>Otherwise, gets a feature-level threshold (precomputed or via <code>get_feature_threshold</code>), generates responses concurrently, scores them concurrently, and constructs trials.</li>
+<li>On error, returns a <code>FeatureResult</code> with error message.</li>
+</ul>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">run_experiment()</span><span class="cb-meta"><span class="cb-kind">async function</span><span class="cb-tag">Orchestrator</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>run_experiment()</code></h3>
+<p><strong>Signature:</strong> <code>async def run_experiment(experiment_config: ExperimentConfig, sae_filepath: str, d_model: int = 4096, expansion_factor: int = 16, steering_layer: int = 19, timeout_hours: float = 100, precomputed_features: Optional[List[Tuple[FeatureInfo, Optional[float], Optional[List[str]]]]] = None, n_prompts_limit: Optional[int] = None, output_suffix: Optional[str] = None, output_folder: Optional[str] = None, repetition_penalty: Optional[float] = None, judge_load_in_4bit: bool = True, max_memory: Optional[Dict[int, str]] = None)</code></p>
+<p><strong>Purpose:</strong> Orchestrates the entire steering‑resistance experiment: initializes engine and judge, loads/selects features, runs all features with concurrency control, and saves results with checkpointing.</p>
+<p><strong>Inputs:</strong> config, SAE file path, architecture params, optional precomputed features, output settings, judge quantization, memory caps, etc.</p>
+<p><strong>Returns:</strong> <code>ExperimentResult</code> containing all feature results and config.</p>
+<p><strong>Key steps:</strong></p>
+<ol>
+<li>Initialize <code>HFSteeringEngine</code> and clear CUDA cache.</li>
+<li>Create judge (with optional 4‑bit quantization) early to share with grader.</li>
+<li>Determine results base directory.</li>
+<li>If <code>precomputed_features</code> provided, use them; otherwise load labels, compute total SAE features, sample features using retry logic, and clean up grader.</li>
+<li>Set up semaphore for concurrent feature processing (limited by <code>n_simultaneous_features</code>).</li>
+<li>Run each feature via <code>run_one_feature</code> with progress bar, saving checkpoints every 5 features.</li>
+<li>On timeout, save partial results.</li>
+</ol>
+<p><strong>Notes:</strong> Contains several FIX comments explaining important bug fixes related to memory sharing, cache usage, and feature sampling.</p>
+</div>
+</details>
+
+<h3>Experiment Configuration &amp; Execution</h3>
+
+<div>
+  <h3>Experiment Orchestration</h3>
+  <p>
+    Let \( \mathcal{P} \) be the set of prompts, and let feature \( i \) be an SAE dictionary element with steering direction 
+    \( \mathbf{d}_i \in \mathbb{R}^{d_{\text{model}}} \). A steering intervention at boost \( v \in \mathbb{R}_{\ge 0} \) adds 
+    \( \Delta = v\,\mathbf{d}_i \) to the residual stream at the steering layer during generation.
+  </p>
+  <p>
+    Define the generation operator \( G \) and judge scorer \( J \) as follows:
+    \[
+    \mathbf{r} = G(p, i, v, \text{seed}) \in \Sigma^* \quad \text{(generated response)}
+    \]
+    \[
+    s = \frac{\text{first\_attempt\_score}\big(J(p, \mathbf{r}, \ell_i)\big)}{100} \in [0,1]
+    \]
+    where \( \ell_i \) is the label of feature \( i \), and the judge returns structured output with multiple attempts; we take the first attempt’s score.
+  </p>
+  <p>
+    The normalized score for a single prompt is therefore a stochastic function:
+    \[
+    s(v; p, i) = \text{Score}\big(G(p, i, v, \text{seed}), p, \ell_i\big).
+    \]
+  </p>
+  <p>
+    Threshold calibration for a single prompt seeks:
+    \[
+    v^*(p, i) = \arg\min_{v} \left| \mathbb{E}[s(v; p, i)] - \tau \right|
+    \]
+    where \( \tau \) is the target normalized score (e.g., 0.30). This is solved using the Bayesian threshold finder (probabilistic bisection), yielding an estimate \( \hat{v}^*(p, i) \).
+  </p>
+  <p>
+    For a set of prompts, the average score at boost \( v \) is:
+    \[
+    \bar{s}(v; i) = \frac{1}{n} \sum_{j=1}^{n} s(v; p_j, i), \qquad p_j \sim \text{Uniform}(\mathcal{P}).
+    \]
+    The feature‑level threshold is then:
+    \[
+    \hat{v}^*(i) = \arg\min_{v} \left| \mathbb{E}[\bar{s}(v; i)] - \tau \right|,
+    \]
+    again approximated by the Bayesian finder using \( \bar{s} \) as the noisy score function.
+  </p>
+  <p>
+    In <strong>per‑prompt calibration</strong>, we instead compute \( \hat{v}^*(p_j, i) \) for each sampled prompt \( p_j \) and then take the mean:
+    \[
+    \bar{v}^*(i) = \frac{1}{m} \sum_{j=1}^{m} \hat{v}^*(p_j, i).
+    \]
+  </p>
+  <p>
+    After a threshold \( v^* \) is determined, the final response for prompt \( p \) is generated as
+    \[
+    \mathbf{r} = G(p, i, v^*, \text{seed}_{i,p}).
+    \]
+    The full experiment result for feature \( i \) is the collection of trials
+    \[
+    \mathcal{T}_i = \left\{ \big(p_j, \mathbf{r}_j, s_j, v^*, \text{seed}_j \big) \right\}_{j=1}^{m},
+    \]
+    where \( s_j \) is the judge score (raw or normalized) for the \( j \)-th trial.
+  </p>
+  <p>
+    The entire orchestration over all selected features \( i \in \mathcal{I} \) produces
+    \[
+    \mathcal{R} = \{ \mathcal{T}_i \;|\; i \in \mathcal{I} \},
+    \]
+    with caching and checkpointing of \( \mathcal{R} \) during execution.
+  </p>
+</div>
+<details class="code-block">
+<summary><span class="cb-name">configure_and_run.py</span><span class="cb-meta"><span class="cb-kind">script</span><span class="cb-tag">Configuration &amp; run</span><span class="cb-toggle-label"></span></span></summary>
+<pre><code class="language-python"># ------------------------------------------------------------
+# 6. Create the experiment configuration
+# ---------------------------------------------
+# FIX (0/0-features bug): total_sae_features must be set explicitly for
+# CSV-format labels -- the CSV export used above (from
+# scaleinvariant/sae-activations-llama-3.1-8b-layer19-lmsys-chat-1m) has no
+# metadata block telling us the true SAE dictionary size, so it can't be
+# inferred the way it is for the .pt label format. Without this,
+# run_experiment() fell back to num_sae_features = len(feature_labels) --
+# the count of *labeled* rows in the CSV (a few thousand) -- and sampled
+# candidate indices from that truncated range, which barely overlaps with
+# the labels dict's real (sparse) index_in_sae values. Nearly every
+# candidate resolved to a "feature_{idx}" placeholder, concreteness
+# filtering correctly rejected all of them, and 0 features were sampled.
+# The true dictionary size is d_model * expansion_factor = 4096 * 16 =
+# 65536 for this Goodfire SAE -- set it here so sampling draws from the
+# correct range.
+SAE_D_MODEL = 4096
+SAE_EXPANSION_FACTOR = 16
+experiment_config = ExperimentConfig(
+    prompts_file=str(prompts_file),
+    model_name="meta-llama/Meta-Llama-3.1-8B-Instruct",
+    labels_file=str(labels_file),
+    total_sae_features=SAE_D_MODEL * SAE_EXPANSION_FACTOR,  # 65536 -- see FIX note above
+    judge_model_name="llama3-8b",
+    n_features=10,
+    n_trials_per_feature=10,
+    n_simultaneous_features=2,
+    threshold_n_trials=1,
+    max_completion_tokens=256,
+    min_feature_concreteness=0, 
+)   # ------------------------------------------------------------
+# 7. Load labels and prompts
+# ------------------------------------------------------------
+print("\n📦 Loading labels...")
+labels = experiment_config.get_labels()
+print(f"✅ Loaded {len(labels)} labeled features")
+sample_items = list(labels.items())[:3]
+print("📋 Sample labels:", sample_items)
+# Sanity check for the fix above: confirm the labels' actual index range is
+# consistent with total_sae_features, so a bad value here is caught before
+# an hours-long run rather than showing up as "0 features sampled" later.
+_idxs = list(labels.keys())
+print(
+    f"🔢 Label index range: [{min(_idxs)}, {max(_idxs)}] over {len(_idxs)} labeled "
+    f"features (total_sae_features={experiment_config.total_sae_features})"
+)
+if max(_idxs) >= experiment_config.total_sae_features:
+    print(
+        "⚠️  max label index exceeds total_sae_features -- something's off "
+        "(wrong d_model/expansion_factor, or a mismatched labels file)."
+    )
+prompts_preview = experiment_config.get_prompts()
+print(f"\n📄 Loaded {len(prompts_preview)} prompts.")
+if prompts_preview:
+    print(f"   First prompt: {prompts_preview[0][:120]}…")    # Jupyter's kernel supports top-level `await` in a cell, so this runs directly.
+#
+# sae_filepath is the real, existence-checked path from step 2 above -- this
+# is what fixes the bug where the SAE weights never actually made it to the
+# engine before. judge_load_in_4bit=True keeps the judge model's footprint
+# small so it can share leftover VRAM with the (fp16 on T4) steering model
+# across both GPUs. max_memory caps how much VRAM per GPU the steering model
+# claims, leaving room for the judge -- lower these if you hit a CUDA OOM
+# once the judge loads.
+#
+# NOTE: an earlier version of this cell had a stray
+# `!PYTORCH_ALLOC_CONF=expandable_segments:True` line here. That's a shell
+# magic (the leading `!`) -- it sets the env var in a throwaway subshell that
+# exits immediately afterward, so it never actually reached the Python
+# kernel and did nothing. The env var that matters is set via
+# `os.environ["PYTORCH_ALLOC_CONF"] = ...` in the "Environment setup"
+# section near the top of the notebook, before CUDA is touched, which is
+# what was actually doing the work all along. Removed the dead line.
+experiment_result = await run_experiment(
+    experiment_config,
+    sae_filepath=str(sae_weights_file),
+    judge_load_in_4bit=True,
+    n_prompts_limit=None,
+    max_memory={0: "12GiB", 1: "12GiB"},  # was 13GiB
+)</code></pre>
+</details>
+
+<!-- Explanations -->
+
+<details class="code-block">
+<summary><span class="cb-name">Experiment configuration</span><span class="cb-meta"><span class="cb-kind">setup</span><span class="cb-tag">Configuration</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3>Creating <code>ExperimentConfig</code></h3>
+<p>
+  The <code>ExperimentConfig</code> dataclass is instantiated with the key parameters for the run. 
+  A critical fix is the explicit setting of <code>total_sae_features</code> to 
+  <code>SAE_D_MODEL * SAE_EXPANSION_FACTOR = 65536</code>, which ensures that feature 
+  sampling draws from the full SAE dictionary range instead of the truncated labeled subset.
+</p>
+<p><strong>Key fields:</strong></p>
+<ul>
+<li><code>prompts_file</code> – path to the text file containing prompts.</li>
+<li><code>model_name</code> – steering model identifier (Llama‑3.1‑8B‑Instruct).</li>
+<li><code>labels_file</code> – path to the CSV/PT labels file.</li>
+<li><code>total_sae_features</code> – 65536, the true SAE dictionary size.</li>
+<li><code>judge_model_name</code> – <code>"llama3-8b"</code>, resolved via alias.</li>
+<li><code>n_features</code> – number of features to sample (10).</li>
+<li><code>n_trials_per_feature</code> – number of prompts per feature (10).</li>
+<li><code>n_simultaneous_features</code> – concurrency limit (2).</li>
+<li><code>threshold_n_trials</code> – Bayesian search iterations (1, for quick run).</li>
+<li><code>max_completion_tokens</code> – generation token limit (256).</li>
+<li><code>min_feature_concreteness</code> – concreteness threshold (0, effectively no filtering).</li>
+</ul>
+<p>The comment explains why <code>total_sae_features</code> is required: CSV exports lack metadata, so without it the code would use <code>len(feature_labels)</code>, which severely undercounts the true feature space and leads to zero features sampled.</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">Loading labels and prompts</span><span class="cb-meta"><span class="cb-kind">setup</span><span class="cb-tag">Data loading</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3>Loading labels and prompts</h3>
+<p>
+  The code loads feature labels using <code>experiment_config.get_labels()</code> and prints a 
+  sample. It then performs a sanity check on the index range to ensure it is consistent with 
+  <code>total_sae_features</code>. This early check catches misconfigurations before the long run.
+</p>
+<p><strong>Steps:</strong></p>
+<ol>
+<li>Load labels dictionary (feature index → label).</li>
+<li>Print number of labeled features and first three items.</li>
+<li>Compute min and max index values and compare against <code>total_sae_features</code>.</li>
+<li>If max index ≥ <code>total_sae_features</code>, print a warning.</li>
+<li>Load prompts via <code>get_prompts()</code> and print a preview.</li>
+</ol>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">run_experiment() invocation</span><span class="cb-meta"><span class="cb-kind">setup</span><span class="cb-tag">Execution</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3>Running the experiment</h3>
+<p>
+  The final line invokes <code>run_experiment()</code> with the configured <code>ExperimentConfig</code>, 
+  the SAE weights file path, and several hardware‑related arguments.
+</p>
+<p><strong>Arguments explained:</strong></p>
+<ul>
+<li><code>experiment_config</code> – the configuration object created above.</li>
+<li><code>sae_filepath</code> – path to the actual SAE checkpoint (existence‑checked earlier).</li>
+<li><code>judge_load_in_4bit=True</code> – load the judge model in 4‑bit to reduce VRAM.</li>
+<li><code>n_prompts_limit=None</code> – use all available prompts.</li>
+<li><code>max_memory={0: "12GiB", 1: "12GiB"}</code> – cap per‑GPU memory for the steering model to leave headroom for the judge.</li>
+</ul>
+<p><strong>Note on PYTORCH_ALLOC_CONF:</strong> The comment clarifies that a previous shell‑magic line was ineffective; the environment variable was actually set earlier via <code>os.environ</code> before CUDA initialization.</p>
+</div>
+</details>
+
+
+
+<h2>Results </h2>
+One of the biggest botle neck I have encountered while designing the pipeline has to do with the concentration and relevancy threshold. Both of which are needed to be set to almost very high or very low. To avoid the Gpu memeory problems. Since much of the experiment heavily relied on the automated pieplines
+as well as the esr as a phenomenon needed to be identified with the excatly right conditions and the model to be coherent enough to be considered valid was one of the serious bottle neck I have faced. decreasing the search space and the parallel threads while doing the batch have also seriously constrained how many features I was able to check and checking through one after another honbestly took a while 
+while generating the json files the gpus ran for a period of 6 hours to just identify which of the features actually fired. which was very concerning. 
+I was able to fix a feature and generated how the activations are fired for that feature id from the labeled ones downloaded from sae for example for the feature 11 
+
+I ran multiple experiments with the above generated pipeline. For each of the prompt I pick few features and identified how the activations fired for that feature 
+
 
 
 <hr>
+
+<div class="gfsae-wrapper" id="gfsae-wrapper">
+    <button class="gfsae-toggle-btn" id="gfsae-themeToggle" onclick="gfsae_toggleTheme()">Light</button>
+
+    <main class="gfsae-container">
+        <h1>🔍 GoodFire 8B SAE Feature Lookup</h1>
+        <p class="gfsae-subtitle">Layer 19 Sparse Autoencoder Feature Labels</p>
+
+        <div class="gfsae-controls">
+            <input type="text" id="gfsae-searchInput" placeholder="Search features by ID or description...">
+            <select id="gfsae-splitFilter">
+                <option value="all">All Splits</option>
+                <option value="train">Train</option>
+                <option value="val">Validation</option>
+            </select>
+        </div>
+
+        <div class="gfsae-stats" id="gfsae-stats">Loading...</div>
+
+        <div id="gfsae-content">
+            <div class="gfsae-loading">Loading features...</div>
+        </div>
+
+        <div class="gfsae-footer">GoodFire/Llama-3.1-8B-Instruct-SAE-l19 &middot; Layer 19</div>
+    </main>
+</div>
+
 <div class="footer">
 Original paper &amp; source: <a href="https://ae.studio/research/esr#key-ideas" target="_blank" rel="noopener">ae.studio/research/esr</a> &middot;
 Code: <a href="https://github.com/agencyenterprise/endogenous-steering-resistance/tree/main" target="_blank" rel="noopener">agencyenterprise/endogenous-steering-resistance</a>
@@ -3556,5 +5081,151 @@ Code: <a href="https://github.com/agencyenterprise/endogenous-steering-resistanc
       if (window.hljs) hljs.highlightAll();
     });
   </script>
+
+<script>
+    let gfsae_allFeatures = [];
+    let gfsae_filteredFeatures = [];
+    let gfsae_sortField = 'index';
+    let gfsae_sortDirection = 'asc';
+
+    function gfsae_toggleTheme() {
+        const wrapper = document.getElementById('gfsae-wrapper');
+        wrapper.classList.toggle('gfsae-light');
+        const btn = document.getElementById('gfsae-themeToggle');
+        btn.textContent = wrapper.classList.contains('gfsae-light') ? 'Dark' : 'Light';
+    }
+
+    async function gfsae_loadData() {
+        try {
+            const response = await fetch('goodfire_8b_sae_labels.json');
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            const data = await response.json();
+            gfsae_allFeatures = data.vectors || [];
+            gfsae_filteredFeatures = [...gfsae_allFeatures];
+            gfsae_renderTable();
+            gfsae_updateStats();
+        } catch (error) {
+            document.getElementById('gfsae-content').innerHTML = `
+                <div class="gfsae-error">
+                    <strong>Failed to load JSON</strong><br>
+                    ${error.message}<br><br>
+                    Make sure the file <code>jsonfolder/goodfire_8b_sae_labels.json</code> exists relative to this HTML file.
+                </div>
+            `;
+            document.getElementById('gfsae-stats').textContent = 'Error loading data';
+        }
+    }
+
+    function gfsae_updateStats() {
+        const total = gfsae_allFeatures.length;
+        const showing = gfsae_filteredFeatures.length;
+        document.getElementById('gfsae-stats').innerHTML =
+            `Showing <span>${showing}</span> of <span>${total}</span> features`;
+    }
+
+    function gfsae_filterFeatures() {
+        const query = document.getElementById('gfsae-searchInput').value.toLowerCase().trim();
+        const splitFilter = document.getElementById('gfsae-splitFilter').value;
+
+        gfsae_filteredFeatures = gfsae_allFeatures.filter(f => {
+            const matchesSearch = !query ||
+                f.index.toString().includes(query) ||
+                f.labels.some(l => l.toLowerCase().includes(query));
+
+            const matchesSplit = splitFilter === 'all' || f.split === splitFilter;
+
+            return matchesSearch && matchesSplit;
+        });
+
+        gfsae_sortFeatures();
+        gfsae_renderTable();
+        gfsae_updateStats();
+    }
+
+    function gfsae_sortFeatures() {
+        gfsae_filteredFeatures.sort((a, b) => {
+            let valA, valB;
+            if (gfsae_sortField === 'index') {
+                valA = a.index;
+                valB = b.index;
+            } else if (gfsae_sortField === 'split') {
+                valA = a.split;
+                valB = b.split;
+            } else {
+                valA = a.labels.join(' ').toLowerCase();
+                valB = b.labels.join(' ').toLowerCase();
+            }
+
+            if (valA < valB) return gfsae_sortDirection === 'asc' ? -1 : 1;
+            if (valA > valB) return gfsae_sortDirection === 'asc' ? 1 : -1;
+            return 0;
+        });
+    }
+
+    function gfsae_toggleSort(field) {
+        if (gfsae_sortField === field) {
+            gfsae_sortDirection = gfsae_sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            gfsae_sortField = field;
+            gfsae_sortDirection = 'asc';
+        }
+        gfsae_sortFeatures();
+        gfsae_renderTable();
+    }
+
+    function gfsae_renderTable() {
+        const container = document.getElementById('gfsae-content');
+
+        if (gfsae_filteredFeatures.length === 0) {
+            container.innerHTML = '<div class="gfsae-no-results">No features match your search.</div>';
+            return;
+        }
+
+        const rows = gfsae_filteredFeatures.map(f => {
+            const labels = f.labels.map(l => `<div>${gfsae_escapeHtml(l)}</div>`).join('');
+            const splitClass = f.split === 'train' ? 'gfsae-split-train' : 'gfsae-split-val';
+            return `
+                <tr>
+                    <td class="gfsae-feature-id">#${f.index}</td>
+                    <td>${labels}</td>
+                    <td><span class="gfsae-split-badge ${splitClass}">${f.split}</span></td>
+                </tr>
+            `;
+        }).join('');
+
+        const sortArrow = '<span class="gfsae-sort-arrow"></span>';
+        const thIndex = gfsae_sortField === 'index' ? `gfsae-sort-${gfsae_sortDirection}` : '';
+        const thLabel = gfsae_sortField === 'labels' ? `gfsae-sort-${gfsae_sortDirection}` : '';
+        const thSplit = gfsae_sortField === 'split' ? `gfsae-sort-${gfsae_sortDirection}` : '';
+
+        container.innerHTML = `
+            <table>
+                <thead>
+                    <tr>
+                        <th class="${thIndex}" onclick="gfsae_toggleSort('index')" style="width: 100px;">Feature ID${sortArrow}</th>
+                        <th class="${thLabel}" onclick="gfsae_toggleSort('labels')">Description${sortArrow}</th>
+                        <th class="${thSplit}" onclick="gfsae_toggleSort('split')" style="width: 120px;">Split${sortArrow}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${rows}
+                </tbody>
+            </table>
+        `;
+    }
+
+    function gfsae_escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    document.getElementById('gfsae-searchInput').addEventListener('input', gfsae_filterFeatures);
+    document.getElementById('gfsae-splitFilter').addEventListener('change', gfsae_filterFeatures);
+
+    gfsae_loadData();
+</script>
 </body>
 </html>

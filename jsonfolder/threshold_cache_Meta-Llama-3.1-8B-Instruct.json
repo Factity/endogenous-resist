@@ -1,0 +1,182 @@
+{
+  "57127": {
+    "threshold": 0.77,
+    "achieved_score": 1.0,
+    "config": {
+      "target_score": 0.5,
+      "n_trials": 1,
+      "prior_mean": 1.0,
+      "prior_std": 0.34,
+      "lower_bound": 0.0,
+      "upper_bound": 5.0
+    }
+  },
+  "27274": {
+    "threshold": 1.23,
+    "achieved_score": 0.8,
+    "config": {
+      "target_score": 0.5,
+      "n_trials": 1,
+      "prior_mean": 1.0,
+      "prior_std": 0.34,
+      "lower_bound": 0.0,
+      "upper_bound": 5.0
+    }
+  },
+  "37119": {
+    "threshold": 1.2,
+    "achieved_score": 1.0,
+    "config": {
+      "target_score": 0.5,
+      "n_trials": 1,
+      "prior_mean": 1.0,
+      "prior_std": 0.34,
+      "lower_bound": 0.0,
+      "upper_bound": 5.0
+    }
+  },
+  "27325": {
+    "threshold": 1.2,
+    "achieved_score": 0.8,
+    "config": {
+      "target_score": 0.5,
+      "n_trials": 1,
+      "prior_mean": 1.0,
+      "prior_std": 0.34,
+      "lower_bound": 0.0,
+      "upper_bound": 5.0
+    }
+  },
+  "55652": {
+    "threshold": 0.77,
+    "achieved_score": 0.0,
+    "config": {
+      "target_score": 0.5,
+      "n_trials": 1,
+      "prior_mean": 1.0,
+      "prior_std": 0.34,
+      "lower_bound": 0.0,
+      "upper_bound": 5.0
+    }
+  },
+  "60438": {
+    "threshold": 0.77,
+    "achieved_score": 0.8,
+    "config": {
+      "target_score": 0.5,
+      "n_trials": 1,
+      "prior_mean": 1.0,
+      "prior_std": 0.34,
+      "lower_bound": 0.0,
+      "upper_bound": 5.0
+    }
+  },
+  "3999": {
+    "threshold": 1.23,
+    "achieved_score": 0.8,
+    "config": {
+      "target_score": 0.5,
+      "n_trials": 1,
+      "prior_mean": 1.0,
+      "prior_std": 0.34,
+      "lower_bound": 0.0,
+      "upper_bound": 5.0
+    }
+  },
+  "7151": {
+    "threshold": 1.23,
+    "achieved_score": 0.9,
+    "config": {
+      "target_score": 0.5,
+      "n_trials": 1,
+      "prior_mean": 1.0,
+      "prior_std": 0.34,
+      "lower_bound": 0.0,
+      "upper_bound": 5.0
+    }
+  },
+  "43137": {
+    "threshold": 1.2,
+    "achieved_score": 1.0,
+    "config": {
+      "target_score": 0.5,
+      "n_trials": 1,
+      "prior_mean": 1.0,
+      "prior_std": 0.34,
+      "lower_bound": 0.0,
+      "upper_bound": 5.0
+    }
+  },
+  "65392": {
+    "threshold": 0.86,
+    "achieved_score": 1.0,
+    "config": {
+      "target_score": 0.5,
+      "n_trials": 5,
+      "prior_mean": 1.0,
+      "prior_std": 0.34,
+      "lower_bound": 0.0,
+      "upper_bound": 5.0
+    }
+  },
+  "52052": {
+    "threshold": 1.29,
+    "achieved_score": 1.0,
+    "config": {
+      "target_score": 0.5,
+      "n_trials": 5,
+      "prior_mean": 1.0,
+      "prior_std": 0.34,
+      "lower_bound": 0.0,
+      "upper_bound": 5.0
+    }
+  },
+  "16332": {
+    "threshold": 1.71,
+    "achieved_score": 0.2,
+    "config": {
+      "target_score": 0.5,
+      "n_trials": 5,
+      "prior_mean": 1.0,
+      "prior_std": 0.34,
+      "lower_bound": 0.0,
+      "upper_bound": 5.0
+    }
+  },
+  "10606": {
+    "threshold": 1.26,
+    "achieved_score": 0.0,
+    "config": {
+      "target_score": 0.5,
+      "n_trials": 5,
+      "prior_mean": 1.0,
+      "prior_std": 0.34,
+      "lower_bound": 0.0,
+      "upper_bound": 5.0
+    }
+  },
+  "8563": {
+    "threshold": 1.34,
+    "achieved_score": 1.0,
+    "config": {
+      "target_score": 0.5,
+      "n_trials": 5,
+      "prior_mean": 1.0,
+      "prior_std": 0.34,
+      "lower_bound": 0.0,
+      "upper_bound": 5.0
+    }
+  },
+  "7148": {
+    "threshold": 1.66,
+    "achieved_score": 0.0,
+    "config": {
+      "target_score": 0.5,
+      "n_trials": 5,
+      "prior_mean": 1.0,
+      "prior_std": 0.34,
+      "lower_bound": 0.0,
+      "upper_bound": 5.0
+    }
+  }
+}

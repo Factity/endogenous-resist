@@ -1,0 +1,1028 @@
+[
+  {
+    "prompt": "Hello, how are you?",
+    "feature_index_in_sae": 27274,
+    "feature_label": "Feature 27274 activates on inputs that contain a user instruction, prompt, or question asking the model to produce or transform text, answer a query, or generate code. It captures the general intent to elicit a generated response from the model, independent of the specific topic or content type.",
+    "sequence_length": 37,
+    "max_activation": 0.19384765625,
+    "mean_activation": 0.01446533203125,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0
+      },
+      {
+        "token": "Hello",
+        "activation": 0.0
+      },
+      {
+        "token": ",",
+        "activation": 0.0
+      },
+      {
+        "token": " how",
+        "activation": 0.0
+      },
+      {
+        "token": " are",
+        "activation": 0.0
+      },
+      {
+        "token": " you",
+        "activation": 0.08074951171875
+      },
+      {
+        "token": "?",
+        "activation": 0.1708984375
+      }
+    ]
+  },
+  {
+    "prompt": "Hello, how are you?",
+    "feature_index_in_sae": 57127,
+    "feature_label": "The feature fires on prompts that contain placeholder tokens such as NAME_1, NAME_2, etc., which are used to stand in for proper nouns or characters. It signals that the request involves a template‑style or anonymized narrative or description.",
+    "sequence_length": 37,
+    "max_activation": 0.434814453125,
+    "mean_activation": 0.07626425253378379,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.434814453125
+      },
+      {
+        "token": "Hello",
+        "activation": 0.0
+      },
+      {
+        "token": ",",
+        "activation": 0.0
+      },
+      {
+        "token": " how",
+        "activation": 0.09869384765625
+      },
+      {
+        "token": " are",
+        "activation": 0.0
+      },
+      {
+        "token": " you",
+        "activation": 0.01727294921875
+      },
+      {
+        "token": "?",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "Hello, how are you?",
+    "feature_index_in_sae": 37119,
+    "feature_label": "The feature fires on inputs that ask for language‑learning material, explanations, or tasks that are explicitly tied to a CEFR proficiency level (e.g., B2, C1) or to teaching English as a second language. It captures requests for content, comparisons, or activities that need to be calibrated to a specific CEFR level.",
+    "sequence_length": 37,
+    "max_activation": 0.433837890625,
+    "mean_activation": 0.1519874366554054,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0
+      },
+      {
+        "token": "Hello",
+        "activation": 0.0
+      },
+      {
+        "token": ",",
+        "activation": 0.20556640625
+      },
+      {
+        "token": " how",
+        "activation": 0.08050537109375
+      },
+      {
+        "token": " are",
+        "activation": 0.126220703125
+      },
+      {
+        "token": " you",
+        "activation": 0.433837890625
+      },
+      {
+        "token": "?",
+        "activation": 0.297607421875
+      }
+    ]
+  },
+  {
+    "prompt": "Hello, how are you?",
+    "feature_index_in_sae": 27325,
+    "feature_label": "The feature fires strongly when the input is a JSON‑formatted conversation log, i.e., a list of objects each having a 'role' (user/assistant) and a 'content' field. It detects this structured chat representation.",
+    "sequence_length": 37,
+    "max_activation": 0.53955078125,
+    "mean_activation": 0.08066208298141891,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.29345703125
+      },
+      {
+        "token": "Hello",
+        "activation": 0.0
+      },
+      {
+        "token": ",",
+        "activation": 0.0
+      },
+      {
+        "token": " how",
+        "activation": 0.0
+      },
+      {
+        "token": " are",
+        "activation": 0.1090087890625
+      },
+      {
+        "token": " you",
+        "activation": 0.0
+      },
+      {
+        "token": "?",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "Hello, how are you?",
+    "feature_index_in_sae": 55652,
+    "feature_label": "Feature 55652 fires strongly when the model produces a multi‑sentence, detailed answer that explains, instructs, or expands on the user’s request—often including steps, comparisons, or elaborated descriptions.",
+    "sequence_length": 37,
+    "max_activation": 0.34619140625,
+    "mean_activation": 0.0986888988597973,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0
+      },
+      {
+        "token": "Hello",
+        "activation": 0.0
+      },
+      {
+        "token": ",",
+        "activation": 0.3408203125
+      },
+      {
+        "token": " how",
+        "activation": 0.0
+      },
+      {
+        "token": " are",
+        "activation": 0.0
+      },
+      {
+        "token": " you",
+        "activation": 0.2342529296875
+      },
+      {
+        "token": "?",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "Hello, how are you?",
+    "feature_index_in_sae": 60438,
+    "feature_label": "Feature 60438 fires when the user asks for a detailed explanation, overview, or article on a specific topic. It triggers the model to generate a multi‑paragraph, often bullet‑pointed, generic informational response covering the requested subject.",
+    "sequence_length": 37,
+    "max_activation": 0.5302734375,
+    "mean_activation": 0.08222920185810811,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0819091796875
+      },
+      {
+        "token": "Hello",
+        "activation": 0.1248779296875
+      },
+      {
+        "token": ",",
+        "activation": 0.0
+      },
+      {
+        "token": " how",
+        "activation": 0.2137451171875
+      },
+      {
+        "token": " are",
+        "activation": 0.1978759765625
+      },
+      {
+        "token": " you",
+        "activation": 0.0
+      },
+      {
+        "token": "?",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "Hello, how are you?",
+    "feature_index_in_sae": 3999,
+    "feature_label": "Feature 3999 fires when the user input is framed as a direct instruction or command asking the model to perform a specific task (e.g., write, translate, answer Yes/No, choose an option, generate a tweet, complete a story). It detects the presence of an imperative request for a concrete output.",
+    "sequence_length": 37,
+    "max_activation": 0.56787109375,
+    "mean_activation": 0.1073097022804054,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.06488037109375
+      },
+      {
+        "token": "Hello",
+        "activation": 0.0
+      },
+      {
+        "token": ",",
+        "activation": 0.0
+      },
+      {
+        "token": " how",
+        "activation": 0.0
+      },
+      {
+        "token": " are",
+        "activation": 0.0
+      },
+      {
+        "token": " you",
+        "activation": 0.0
+      },
+      {
+        "token": "?",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "Hello, how are you?",
+    "feature_index_in_sae": 7151,
+    "feature_label": "Feature 7151 activates on text that contains meta‑instructions or policy‑related statements directed at the language model, such as jailbreak prompts, safety warnings, or role‑defining cues. It looks for phrasing that tells the model how it should behave or warns about harmful content.",
+    "sequence_length": 37,
+    "max_activation": 0.487548828125,
+    "mean_activation": 0.14278267525337837,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.405517578125
+      },
+      {
+        "token": "Hello",
+        "activation": 0.0
+      },
+      {
+        "token": ",",
+        "activation": 0.0
+      },
+      {
+        "token": " how",
+        "activation": 0.0
+      },
+      {
+        "token": " are",
+        "activation": 0.291015625
+      },
+      {
+        "token": " you",
+        "activation": 0.0
+      },
+      {
+        "token": "?",
+        "activation": 0.04339599609375
+      }
+    ]
+  },
+  {
+    "prompt": "Hello, how are you?",
+    "feature_index_in_sae": 43137,
+    "feature_label": "Feature 43137 activates on inputs that contain an explicit user instruction or request for the model to perform a specific task (e.g., translate, summarize, answer a question, generate text, give advice). The pattern is language‑agnostic and appears across many domains and formats.",
+    "sequence_length": 37,
+    "max_activation": 0.46728515625,
+    "mean_activation": 0.09301427892736487,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0
+      },
+      {
+        "token": "Hello",
+        "activation": 0.0
+      },
+      {
+        "token": ",",
+        "activation": 0.0
+      },
+      {
+        "token": " how",
+        "activation": 0.0947265625
+      },
+      {
+        "token": " are",
+        "activation": 0.42041015625
+      },
+      {
+        "token": " you",
+        "activation": 0.0
+      },
+      {
+        "token": "?",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "What is the capital of France?",
+    "feature_index_in_sae": 27274,
+    "feature_label": "Feature 27274 activates on inputs that contain a user instruction, prompt, or question asking the model to produce or transform text, answer a query, or generate code. It captures the general intent to elicit a generated response from the model, independent of the specific topic or content type.",
+    "sequence_length": 38,
+    "max_activation": 0.19384765625,
+    "mean_activation": 0.016299599095394735,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0
+      },
+      {
+        "token": "What",
+        "activation": 0.0
+      },
+      {
+        "token": " is",
+        "activation": 0.0
+      },
+      {
+        "token": " the",
+        "activation": 0.0
+      },
+      {
+        "token": " capital",
+        "activation": 0.0
+      },
+      {
+        "token": " of",
+        "activation": 0.08074951171875
+      },
+      {
+        "token": " France",
+        "activation": 0.1708984375
+      },
+      {
+        "token": "?",
+        "activation": 0.029541015625
+      }
+    ]
+  },
+  {
+    "prompt": "What is the capital of France?",
+    "feature_index_in_sae": 57127,
+    "feature_label": "The feature fires on prompts that contain placeholder tokens such as NAME_1, NAME_2, etc., which are used to stand in for proper nouns or characters. It signals that the request involves a template‑style or anonymized narrative or description.",
+    "sequence_length": 38,
+    "max_activation": 0.5595703125,
+    "mean_activation": 0.10976209138569079,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.434814453125
+      },
+      {
+        "token": "What",
+        "activation": 0.0
+      },
+      {
+        "token": " is",
+        "activation": 0.0
+      },
+      {
+        "token": " the",
+        "activation": 0.09869384765625
+      },
+      {
+        "token": " capital",
+        "activation": 0.0
+      },
+      {
+        "token": " of",
+        "activation": 0.01727294921875
+      },
+      {
+        "token": " France",
+        "activation": 0.0
+      },
+      {
+        "token": "?",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "What is the capital of France?",
+    "feature_index_in_sae": 37119,
+    "feature_label": "The feature fires on inputs that ask for language‑learning material, explanations, or tasks that are explicitly tied to a CEFR proficiency level (e.g., B2, C1) or to teaching English as a second language. It captures requests for content, comparisons, or activities that need to be calibrated to a specific CEFR level.",
+    "sequence_length": 38,
+    "max_activation": 0.433837890625,
+    "mean_activation": 0.12500481856496712,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0
+      },
+      {
+        "token": "What",
+        "activation": 0.0
+      },
+      {
+        "token": " is",
+        "activation": 0.20556640625
+      },
+      {
+        "token": " the",
+        "activation": 0.08050537109375
+      },
+      {
+        "token": " capital",
+        "activation": 0.126220703125
+      },
+      {
+        "token": " of",
+        "activation": 0.433837890625
+      },
+      {
+        "token": " France",
+        "activation": 0.297607421875
+      },
+      {
+        "token": "?",
+        "activation": 0.2109375
+      }
+    ]
+  },
+  {
+    "prompt": "What is the capital of France?",
+    "feature_index_in_sae": 27325,
+    "feature_label": "The feature fires strongly when the input is a JSON‑formatted conversation log, i.e., a list of objects each having a 'role' (user/assistant) and a 'content' field. It detects this structured chat representation.",
+    "sequence_length": 38,
+    "max_activation": 0.53955078125,
+    "mean_activation": 0.09221448396381579,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.29345703125
+      },
+      {
+        "token": "What",
+        "activation": 0.0
+      },
+      {
+        "token": " is",
+        "activation": 0.0
+      },
+      {
+        "token": " the",
+        "activation": 0.0
+      },
+      {
+        "token": " capital",
+        "activation": 0.1090087890625
+      },
+      {
+        "token": " of",
+        "activation": 0.0
+      },
+      {
+        "token": " France",
+        "activation": 0.0
+      },
+      {
+        "token": "?",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "What is the capital of France?",
+    "feature_index_in_sae": 55652,
+    "feature_label": "Feature 55652 fires strongly when the model produces a multi‑sentence, detailed answer that explains, instructs, or expands on the user’s request—often including steps, comparisons, or elaborated descriptions.",
+    "sequence_length": 38,
+    "max_activation": 0.3408203125,
+    "mean_activation": 0.06973427220394737,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0
+      },
+      {
+        "token": "What",
+        "activation": 0.0
+      },
+      {
+        "token": " is",
+        "activation": 0.3408203125
+      },
+      {
+        "token": " the",
+        "activation": 0.0
+      },
+      {
+        "token": " capital",
+        "activation": 0.0
+      },
+      {
+        "token": " of",
+        "activation": 0.2342529296875
+      },
+      {
+        "token": " France",
+        "activation": 0.0
+      },
+      {
+        "token": "?",
+        "activation": 0.251953125
+      }
+    ]
+  },
+  {
+    "prompt": "What is the capital of France?",
+    "feature_index_in_sae": 60438,
+    "feature_label": "Feature 60438 fires when the user asks for a detailed explanation, overview, or article on a specific topic. It triggers the model to generate a multi‑paragraph, often bullet‑pointed, generic informational response covering the requested subject.",
+    "sequence_length": 38,
+    "max_activation": 0.5302734375,
+    "mean_activation": 0.10785554584703948,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0819091796875
+      },
+      {
+        "token": "What",
+        "activation": 0.1248779296875
+      },
+      {
+        "token": " is",
+        "activation": 0.0
+      },
+      {
+        "token": " the",
+        "activation": 0.2137451171875
+      },
+      {
+        "token": " capital",
+        "activation": 0.1978759765625
+      },
+      {
+        "token": " of",
+        "activation": 0.0
+      },
+      {
+        "token": " France",
+        "activation": 0.0
+      },
+      {
+        "token": "?",
+        "activation": 0.0545654296875
+      }
+    ]
+  },
+  {
+    "prompt": "What is the capital of France?",
+    "feature_index_in_sae": 3999,
+    "feature_label": "Feature 3999 fires when the user input is framed as a direct instruction or command asking the model to perform a specific task (e.g., write, translate, answer Yes/No, choose an option, generate a tweet, complete a story). It detects the presence of an imperative request for a concrete output.",
+    "sequence_length": 38,
+    "max_activation": 0.56787109375,
+    "mean_activation": 0.1015625,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.06488037109375
+      },
+      {
+        "token": "What",
+        "activation": 0.0
+      },
+      {
+        "token": " is",
+        "activation": 0.0
+      },
+      {
+        "token": " the",
+        "activation": 0.0
+      },
+      {
+        "token": " capital",
+        "activation": 0.0
+      },
+      {
+        "token": " of",
+        "activation": 0.0
+      },
+      {
+        "token": " France",
+        "activation": 0.0
+      },
+      {
+        "token": "?",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "What is the capital of France?",
+    "feature_index_in_sae": 7151,
+    "feature_label": "Feature 7151 activates on text that contains meta‑instructions or policy‑related statements directed at the language model, such as jailbreak prompts, safety warnings, or role‑defining cues. It looks for phrasing that tells the model how it should behave or warns about harmful content.",
+    "sequence_length": 38,
+    "max_activation": 0.487548828125,
+    "mean_activation": 0.13851607473273025,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.405517578125
+      },
+      {
+        "token": "What",
+        "activation": 0.0
+      },
+      {
+        "token": " is",
+        "activation": 0.0
+      },
+      {
+        "token": " the",
+        "activation": 0.0
+      },
+      {
+        "token": " capital",
+        "activation": 0.291015625
+      },
+      {
+        "token": " of",
+        "activation": 0.0
+      },
+      {
+        "token": " France",
+        "activation": 0.04339599609375
+      },
+      {
+        "token": "?",
+        "activation": 0.0107421875
+      }
+    ]
+  },
+  {
+    "prompt": "What is the capital of France?",
+    "feature_index_in_sae": 43137,
+    "feature_label": "Feature 43137 activates on inputs that contain an explicit user instruction or request for the model to perform a specific task (e.g., translate, summarize, answer a question, generate text, give advice). The pattern is language‑agnostic and appears across many domains and formats.",
+    "sequence_length": 38,
+    "max_activation": 0.46728515625,
+    "mean_activation": 0.09740247224506579,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0
+      },
+      {
+        "token": "What",
+        "activation": 0.0
+      },
+      {
+        "token": " is",
+        "activation": 0.0
+      },
+      {
+        "token": " the",
+        "activation": 0.0947265625
+      },
+      {
+        "token": " capital",
+        "activation": 0.42041015625
+      },
+      {
+        "token": " of",
+        "activation": 0.0
+      },
+      {
+        "token": " France",
+        "activation": 0.0
+      },
+      {
+        "token": "?",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "Explain quantum mechanics.",
+    "feature_index_in_sae": 27274,
+    "feature_label": "Feature 27274 activates on inputs that contain a user instruction, prompt, or question asking the model to produce or transform text, answer a query, or generate code. It captures the general intent to elicit a generated response from the model, independent of the specific topic or content type.",
+    "sequence_length": 36,
+    "max_activation": 0.19384765625,
+    "mean_activation": 0.014867146809895834,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0
+      },
+      {
+        "token": "Ex",
+        "activation": 0.0
+      },
+      {
+        "token": "plain",
+        "activation": 0.0
+      },
+      {
+        "token": " quantum",
+        "activation": 0.0
+      },
+      {
+        "token": " mechanics",
+        "activation": 0.0
+      },
+      {
+        "token": ".",
+        "activation": 0.08074951171875
+      }
+    ]
+  },
+  {
+    "prompt": "Explain quantum mechanics.",
+    "feature_index_in_sae": 57127,
+    "feature_label": "The feature fires on prompts that contain placeholder tokens such as NAME_1, NAME_2, etc., which are used to stand in for proper nouns or characters. It signals that the request involves a template‑style or anonymized narrative or description.",
+    "sequence_length": 36,
+    "max_activation": 0.58447265625,
+    "mean_activation": 0.0998348659939236,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.434814453125
+      },
+      {
+        "token": "Ex",
+        "activation": 0.0
+      },
+      {
+        "token": "plain",
+        "activation": 0.0
+      },
+      {
+        "token": " quantum",
+        "activation": 0.09869384765625
+      },
+      {
+        "token": " mechanics",
+        "activation": 0.0
+      },
+      {
+        "token": ".",
+        "activation": 0.01727294921875
+      }
+    ]
+  },
+  {
+    "prompt": "Explain quantum mechanics.",
+    "feature_index_in_sae": 37119,
+    "feature_label": "The feature fires on inputs that ask for language‑learning material, explanations, or tasks that are explicitly tied to a CEFR proficiency level (e.g., B2, C1) or to teaching English as a second language. It captures requests for content, comparisons, or activities that need to be calibrated to a specific CEFR level.",
+    "sequence_length": 36,
+    "max_activation": 0.433837890625,
+    "mean_activation": 0.1326175265842014,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0
+      },
+      {
+        "token": "Ex",
+        "activation": 0.0
+      },
+      {
+        "token": "plain",
+        "activation": 0.20556640625
+      },
+      {
+        "token": " quantum",
+        "activation": 0.08050537109375
+      },
+      {
+        "token": " mechanics",
+        "activation": 0.126220703125
+      },
+      {
+        "token": ".",
+        "activation": 0.433837890625
+      }
+    ]
+  },
+  {
+    "prompt": "Explain quantum mechanics.",
+    "feature_index_in_sae": 27325,
+    "feature_label": "The feature fires strongly when the input is a JSON‑formatted conversation log, i.e., a list of objects each having a 'role' (user/assistant) and a 'content' field. It detects this structured chat representation.",
+    "sequence_length": 36,
+    "max_activation": 0.53955078125,
+    "mean_activation": 0.08290269639756945,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.29345703125
+      },
+      {
+        "token": "Ex",
+        "activation": 0.0
+      },
+      {
+        "token": "plain",
+        "activation": 0.0
+      },
+      {
+        "token": " quantum",
+        "activation": 0.0
+      },
+      {
+        "token": " mechanics",
+        "activation": 0.1090087890625
+      },
+      {
+        "token": ".",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "Explain quantum mechanics.",
+    "feature_index_in_sae": 55652,
+    "feature_label": "Feature 55652 fires strongly when the model produces a multi‑sentence, detailed answer that explains, instructs, or expands on the user’s request—often including steps, comparisons, or elaborated descriptions.",
+    "sequence_length": 36,
+    "max_activation": 0.35107421875,
+    "mean_activation": 0.07664320203993055,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0
+      },
+      {
+        "token": "Ex",
+        "activation": 0.0
+      },
+      {
+        "token": "plain",
+        "activation": 0.3408203125
+      },
+      {
+        "token": " quantum",
+        "activation": 0.0
+      },
+      {
+        "token": " mechanics",
+        "activation": 0.0
+      },
+      {
+        "token": ".",
+        "activation": 0.2342529296875
+      }
+    ]
+  },
+  {
+    "prompt": "Explain quantum mechanics.",
+    "feature_index_in_sae": 60438,
+    "feature_label": "Feature 60438 fires when the user asks for a detailed explanation, overview, or article on a specific topic. It triggers the model to generate a multi‑paragraph, often bullet‑pointed, generic informational response covering the requested subject.",
+    "sequence_length": 36,
+    "max_activation": 0.5302734375,
+    "mean_activation": 0.11876424153645833,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0819091796875
+      },
+      {
+        "token": "Ex",
+        "activation": 0.1248779296875
+      },
+      {
+        "token": "plain",
+        "activation": 0.0
+      },
+      {
+        "token": " quantum",
+        "activation": 0.2137451171875
+      },
+      {
+        "token": " mechanics",
+        "activation": 0.1978759765625
+      },
+      {
+        "token": ".",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "Explain quantum mechanics.",
+    "feature_index_in_sae": 3999,
+    "feature_label": "Feature 3999 fires when the user input is framed as a direct instruction or command asking the model to perform a specific task (e.g., write, translate, answer Yes/No, choose an option, generate a tweet, complete a story). It detects the presence of an imperative request for a concrete output.",
+    "sequence_length": 36,
+    "max_activation": 0.56787109375,
+    "mean_activation": 0.1031375461154514,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.06488037109375
+      },
+      {
+        "token": "Ex",
+        "activation": 0.0
+      },
+      {
+        "token": "plain",
+        "activation": 0.0
+      },
+      {
+        "token": " quantum",
+        "activation": 0.0
+      },
+      {
+        "token": " mechanics",
+        "activation": 0.0
+      },
+      {
+        "token": ".",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "Explain quantum mechanics.",
+    "feature_index_in_sae": 7151,
+    "feature_label": "Feature 7151 activates on text that contains meta‑instructions or policy‑related statements directed at the language model, such as jailbreak prompts, safety warnings, or role‑defining cues. It looks for phrasing that tells the model how it should behave or warns about harmful content.",
+    "sequence_length": 36,
+    "max_activation": 0.487548828125,
+    "mean_activation": 0.1445685492621528,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.405517578125
+      },
+      {
+        "token": "Ex",
+        "activation": 0.0
+      },
+      {
+        "token": "plain",
+        "activation": 0.0
+      },
+      {
+        "token": " quantum",
+        "activation": 0.0
+      },
+      {
+        "token": " mechanics",
+        "activation": 0.291015625
+      },
+      {
+        "token": ".",
+        "activation": 0.0
+      }
+    ]
+  },
+  {
+    "prompt": "Explain quantum mechanics.",
+    "feature_index_in_sae": 43137,
+    "feature_label": "Feature 43137 activates on inputs that contain an explicit user instruction or request for the model to perform a specific task (e.g., translate, summarize, answer a question, generate text, give advice). The pattern is language‑agnostic and appears across many domains and formats.",
+    "sequence_length": 36,
+    "max_activation": 0.46728515625,
+    "mean_activation": 0.1062655978732639,
+    "tokens": [
+      {
+        "token": "<|begin_of_text|>",
+        "activation": 0.0
+      },
+      {
+        "token": "Ex",
+        "activation": 0.0
+      },
+      {
+        "token": "plain",
+        "activation": 0.0
+      },
+      {
+        "token": " quantum",
+        "activation": 0.0947265625
+      },
+      {
+        "token": " mechanics",
+        "activation": 0.42041015625
+      },
+      {
+        "token": ".",
+        "activation": 0.0
+      }
+    ]
+  }
+]

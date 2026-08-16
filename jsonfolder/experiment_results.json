@@ -1,0 +1,58 @@
+{
+  "experiment_config": {
+    "prompts_file": "/kaggle/input/datasets/mukulnamagiri/prompt/prompts.txt",
+    "model_name": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+    "labels_file": "/kaggle/working/llama-8b-goodfire-l19.csv",
+    "total_sae_features": 65536,
+    "judge_model_name": "meta-llama/Meta-Llama-3-8B-Instruct",
+    "n_features": 5,
+    "n_trials_per_feature": 5,
+    "n_simultaneous_features": 1,
+    "threshold_n_trials": 10,
+    "max_completion_tokens": 256,
+    "target_score_normalized": 0.5,
+    "threshold_lower_bound": 0.0,
+    "threshold_upper_bound": 5.0,
+    "threshold_prior_mean": 1.0,
+    "threshold_prior_std": 0.34,
+    "seed_start": 0,
+    "n_possible_seeds": 1000000
+  },
+  "results_by_feature": [
+    {
+      "feature_index_in_sae": 52280,
+      "feature_label": "Feature 52280 fires when the model references its knowledge\u2011cutoff limitation, typically stating that its training data only goes up to September\u202f2021 or that it cannot provide current information. It is triggered by user questions about recent events, weather, or attempts to bypass policies, prompting the assistant to mention the cutoff.",
+      "threshold": null,
+      "trials": [],
+      "error": "'tuple' object has no attribute 'dtype'"
+    },
+    {
+      "feature_index_in_sae": 55076,
+      "feature_label": "Feature 55076 activates strongly whenever the model outputs a substantive reply to a user request, covering factual explanations, advice, lists, creative writing, role\u2011play, or even a refusal. It is essentially a detector for the presence of an assistant-generated answer.",
+      "threshold": null,
+      "trials": [],
+      "error": "'tuple' object has no attribute 'dtype'"
+    },
+    {
+      "feature_index_in_sae": 12250,
+      "feature_label": "The feature strongly activates when the text includes anonymized name placeholders of the form\u202fNAME_# (e.g., NAME_1, NAME_2). It captures this pattern across a variety of prompt styles, indicating it detects synthetic or masked entity tokens.",
+      "threshold": null,
+      "trials": [],
+      "error": "'tuple' object has no attribute 'dtype'"
+    },
+    {
+      "feature_index_in_sae": 23622,
+      "feature_label": "The feature lights up when the assistant produces a vague, generic, or nonsensical reply\u2014often short, filled with placeholders (e.g., NAME_1) or repetitive boilerplate\u2014indicating low informational content or quality.",
+      "threshold": null,
+      "trials": [],
+      "error": "'tuple' object has no attribute 'dtype'"
+    },
+    {
+      "feature_index_in_sae": 56314,
+      "feature_label": "The feature activates on inputs that are presented as a JSON array of objects containing a \"content\" key (and optionally other keys like \"role\"). It detects the structural pattern of messages wrapped in JSON rather than plain text.",
+      "threshold": null,
+      "trials": [],
+      "error": "'tuple' object has no attribute 'dtype'"
+    }
+  ]
+}

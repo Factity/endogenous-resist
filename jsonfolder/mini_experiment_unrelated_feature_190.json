@@ -1,0 +1,32 @@
+{
+  "feature_index": 190,
+  "feature_label": "Feature 190 fires strongly on inputs that are about programming code – either containing a code snippet, requesting code to be written, or asking to identify the language of a snippet. It also lights up on tasks that treat the text as code-like or require code‑related processing.",
+  "natural_activation_avg_max": 0.24397786458333334,
+  "threshold": 0.46,
+  "trials": [
+    {
+      "prompt": "Explain quantum mechanics.",
+      "seed": 211641,
+      "threshold": 0.46,
+      "baseline_response": "Quantum Mechanics is a branch of physics that studies the behavior of matter and energy at an atomic and subatomic level, where classical physics no longer applies. It's a fundamental theory that describes how particles like electrons, photons, and atoms interact with each other.\n\n**Key Principles:**\n\n1. **Wave-Particle Duality:** Quantum objects can exhibit both wave-like and particle-like properties depending on how they're observed.\n2. **Uncertainty Principle:** It's impossible to know certain properties of a quantum object, such as position and momentum, simultaneously with infinite precision.\n3. **Superposition:** Quantum objects can exist in multiple states (or positions) simultaneously, which means they have multiple probabilities of being measured in different states.\n4. **Entanglement:** Quantum objects can become connected in such a way that their properties are correlated, even when separated by large distances.\n5. **Probabilistic Nature:** Quantum mechanics uses probability amplitudes to predict the likelihood of measuring specific outcomes, rather than definite predictions.\n\n**Quantum Phenomena:**\n\n1. **Quantization:** Energy comes in discrete packets called quanta, rather than being continuous.\n2. **Tunneling:** Particles can pass through barriers or gaps without having enough energy to overcome them classically",
+      "steered_response": "Quantum Mechanics is a branch of physics that studies the behavior of matter and energy at an atomic and subatomic level, where classical laws no longer apply. It's a fundamental theory that describes how particles like electrons, photons, and atoms interact with each other.\n\n**Key Principles:**\n\n1. **Wave-Particle Duality:** Quantum objects can exhibit both wave-like and particle-like properties depending on how they're observed.\n2. **Uncertainty Principle:** It's impossible to know certain properties of a quantum object, such as position and momentum, simultaneously with infinite precision.\n3. **Superposition:** A quantum object can exist in multiple states simultaneously, which means it can be in more than one place or have multiple values for a particular property.\n4. **Entanglement:** When two or more quantum objects are connected, their properties become correlated, regardless of distance between them.\n5. **Probability:** In quantum mechanics, probabilities replace definite outcomes, describing the likelihood of finding a system in a particular state.\n\n**Some Key Concepts:**\n\n*   **Schrödinger Equation:** This equation describes how a quantum system changes over time, taking into account its initial conditions and interactions.\n*   **Hilbert Space:** A mathematical space used to represent the possible states of",
+      "judge_score": 100
+    },
+    {
+      "prompt": "Hello, how are you?",
+      "seed": 833554,
+      "threshold": 0.46,
+      "baseline_response": "I'm functioning properly. How can I assist you today?",
+      "steered_response": "I'm functioning properly. How can I assist you today?",
+      "judge_score": 0
+    },
+    {
+      "prompt": "What is the capital of France?",
+      "seed": 935696,
+      "threshold": 0.46,
+      "baseline_response": "The capital of France is Paris.",
+      "steered_response": "The capital of France is Paris.",
+      "judge_score": 100
+    }
+  ]
+}

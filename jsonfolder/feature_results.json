@@ -1,0 +1,102 @@
+[
+  {
+    "feature_index_in_sae": 27274,
+    "feature_label": "Feature 27274 activates on inputs that contain a u",
+    "threshold": 1.23,
+    "avg_score": 66.66666666666667,
+    "n_trials": 3,
+    "scores": [
+      100,
+      100,
+      0
+    ]
+  },
+  {
+    "feature_index_in_sae": 57127,
+    "feature_label": "The feature fires on prompts that contain placehol",
+    "threshold": 0.77,
+    "avg_score": 60.0,
+    "n_trials": 3,
+    "scores": [
+      0,
+      100,
+      80
+    ]
+  },
+  {
+    "feature_index_in_sae": 37119,
+    "feature_label": "The feature fires on inputs that ask for language‑",
+    "threshold": 1.2,
+    "avg_score": 50.0,
+    "n_trials": 3,
+    "scores": [
+      0,
+      100
+    ]
+  },
+  {
+    "feature_index_in_sae": 27325,
+    "feature_label": "The feature fires strongly when the input is a JSO",
+    "threshold": 1.2,
+    "avg_score": 100.0,
+    "n_trials": 3,
+    "scores": [
+      100,
+      100
+    ]
+  },
+  {
+    "feature_index_in_sae": 55652,
+    "feature_label": "Feature 55652 fires strongly when the model produc",
+    "threshold": 0.77,
+    "avg_score": 50.0,
+    "n_trials": 3,
+    "scores": [
+      0,
+      100
+    ]
+  },
+  {
+    "feature_index_in_sae": 60438,
+    "feature_label": "Feature 60438 fires when the user asks for a detai",
+    "threshold": 0.77,
+    "avg_score": 90.0,
+    "n_trials": 3,
+    "scores": [
+      100,
+      80
+    ]
+  },
+  {
+    "feature_index_in_sae": 3999,
+    "feature_label": "Feature 3999 fires when the user input is framed a",
+    "threshold": 1.23,
+    "avg_score": 50.0,
+    "n_trials": 3,
+    "scores": [
+      0,
+      100
+    ]
+  },
+  {
+    "feature_index_in_sae": 7151,
+    "feature_label": "Feature 7151 activates on text that contains meta‑",
+    "threshold": 1.23,
+    "avg_score": 50.0,
+    "n_trials": 3,
+    "scores": [
+      100,
+      0
+    ]
+  },
+  {
+    "feature_index_in_sae": 43137,
+    "feature_label": "Feature 43137 activates on inputs that contain an ",
+    "threshold": 1.2,
+    "avg_score": 100.0,
+    "n_trials": 3,
+    "scores": [
+      100
+    ]
+  }
+]
