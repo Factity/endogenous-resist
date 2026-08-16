@@ -504,20 +504,15 @@
 </head>
 <body>
 
-<!-- 
-  EMBEDDING TIP: 
-  If your JSON lives in a different folder, set data-json-url explicitly:
-  <div class="gfsae-wrapper" id="gfsae-wrapper" data-json-url="./jsonfolder/goodfire_8b_sae_labels.json">
--->
 <div class="gfsae-wrapper" id="gfsae-wrapper">
     <button class="gfsae-toggle-btn" id="gfsae-themeToggle" onclick="gfsae_toggleTheme()">Light</button>
 
     <main class="gfsae-container">
         <h1>🔍 GoodFire 8B SAE Feature Lookup</h1>
-        <p class="gfsae-subtitle">Layer 19 Sparse Autoencoder Feature Labels</p>
+        <p class="gfsae-subtitle">Layer 19 Sparse Autoencoder Feature Labels — now with <strong>semantic similarity search</strong></p>
 
         <div class="gfsae-controls">
-            <input type="text" id="gfsae-searchInput" placeholder="Search features by ID or description...">
+            <input type="text" id="gfsae-searchInput" placeholder="Search by description (e.g. 'programming', 'emotion', 'code')">
             <select id="gfsae-splitFilter">
                 <option value="all">All Splits</option>
                 <option value="train">Train</option>
@@ -545,6 +540,75 @@
     let gfsae_filteredFeatures = [];
     let gfsae_sortField = 'index';
     let gfsae_sortDirection = 'asc';
+
+    // ---------- TF‑IDF similarity ----------
+    let gfsae_idf = {};                     // term -> idf
+    let gfsae_featureVectors = [];          // parallel to gfsae_allFeatures, each: { term: normalized_weight }
+
+    function gfsae_tokenize(text) {
+        // Convert to lowercase, split on non‑alphanumeric, keep tokens of length >=2
+        return text.toLowerCase().split(/[^a-z0-9]+/).filter(t => t.length >= 2);
+    }
+
+    function gfsae_buildIDF() {
+        const docFreq = {};
+        const totalDocs = gfsae_allFeatures.length;
+        for (const f of gfsae_allFeatures) {
+            const text = (f.labels || []).join(' ');
+            const tokens = gfsae_tokenize(text);
+            const unique = new Set(tokens);
+            for (const t of unique) {
+                docFreq[t] = (docFreq[t] || 0) + 1;
+            }
+        }
+        for (const t in docFreq) {
+            // Smoothing to avoid zero
+            gfsae_idf[t] = Math.log((totalDocs + 1) / (docFreq[t] + 1)) + 1;
+        }
+    }
+
+    function gfsae_computeTFIDF(text) {
+        const tokens = gfsae_tokenize(text);
+        const tf = {};
+        for (const t of tokens) {
+            tf[t] = (tf[t] || 0) + 1;
+        }
+        const vec = {};
+        for (const t in tf) {
+            if (gfsae_idf[t]) {
+                vec[t] = tf[t] * gfsae_idf[t];
+            }
+        }
+        // Normalize to unit vector
+        let norm = 0;
+        for (const t in vec) {
+            norm += vec[t] * vec[t];
+        }
+        if (norm > 0) {
+            norm = Math.sqrt(norm);
+            for (const t in vec) {
+                vec[t] /= norm;
+            }
+        }
+        return vec;
+    }
+
+    function gfsae_cosineSimilarity(vec1, vec2) {
+        let dot = 0;
+        for (const t in vec1) {
+            if (vec2[t]) {
+                dot += vec1[t] * vec2[t];
+            }
+        }
+        return dot; // both are normalized, so dot = cosine
+    }
+
+    function gfsae_precomputeVectors() {
+        gfsae_featureVectors = gfsae_allFeatures.map(f => {
+            const text = (f.labels || []).join(' ');
+            return gfsae_computeTFIDF(text);
+        });
+    }
 
     /* ---------- Theme ---------- */
     function gfsae_toggleTheme() {
@@ -575,6 +639,9 @@
                 }
                 const data = await response.json();
                 gfsae_allFeatures = data.vectors || [];
+                // Precompute TF‑IDF vectors and IDF
+                gfsae_buildIDF();
+                gfsae_precomputeVectors();
                 gfsae_filteredFeatures = [...gfsae_allFeatures];
                 gfsae_renderTable();
                 gfsae_updateStats();
@@ -608,22 +675,38 @@
             `Showing <span>${showing}</span> of <span>${total}</span> features`;
     }
 
-    /* ---------- Filtering ---------- */
+    /* ---------- Filtering (with TF‑IDF similarity) ---------- */
     function gfsae_filterFeatures() {
-        const query = document.getElementById('gfsae-searchInput').value.toLowerCase().trim();
+        const query = document.getElementById('gfsae-searchInput').value.trim();
         const splitFilter = document.getElementById('gfsae-splitFilter').value;
 
-        gfsae_filteredFeatures = gfsae_allFeatures.filter(f => {
-            const matchesSearch = !query ||
-                f.index.toString().includes(query) ||
-                (f.labels || []).some(l => l.toLowerCase().includes(query));
-
-            const matchesSplit = splitFilter === 'all' || f.split === splitFilter;
-
-            return matchesSearch && matchesSplit;
+        // First, filter by split
+        let filtered = gfsae_allFeatures.filter(f => {
+            return splitFilter === 'all' || f.split === splitFilter;
         });
 
-        gfsae_sortFeatures();
+        // If there's a query, compute cosine similarity for each feature and sort descending
+        if (query) {
+            const queryVec = gfsae_computeTFIDF(query);
+            // Compute similarity for each feature in filtered set
+            const withScore = filtered.map((f, idx) => {
+                // find original index to get precomputed vector
+                const origIdx = gfsae_allFeatures.indexOf(f);
+                const vec = gfsae_featureVectors[origIdx];
+                const sim = gfsae_cosineSimilarity(queryVec, vec);
+                return { feature: f, score: sim };
+            });
+            // Sort by similarity descending
+            withScore.sort((a, b) => b.score - a.score);
+            // Extract features
+            filtered = withScore.map(item => item.feature);
+        } else {
+            // No query: keep original order (by index)
+            // But we might want to apply sorting later
+        }
+
+        gfsae_filteredFeatures = filtered;
+        gfsae_sortFeatures(); // will sort by the current sort field (index, labels, split)
         gfsae_renderTable();
         gfsae_updateStats();
     }
@@ -638,7 +721,7 @@
             } else if (gfsae_sortField === 'split') {
                 valA = a.split;
                 valB = b.split;
-            } else {
+            } else { // labels
                 valA = (a.labels || []).join(' ').toLowerCase();
                 valB = (b.labels || []).join(' ').toLowerCase();
             }
