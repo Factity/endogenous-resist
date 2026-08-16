@@ -6,7 +6,7 @@
     <title>GoodFire 8B SAE Feature Lookup – Semantic Search</title>
     <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet" />
     <style>
-        /* same styles as before – omitted for brevity, but include all styles from the previous version */
+        /* ===== all styles (same as before) ===== */
         .gfsae-wrapper {
             margin: 0;
             padding: 20px;
@@ -298,6 +298,20 @@
         .gfsae-status.error {
             color: #f87171;
         }
+        /* empty state placeholder */
+        .gfsae-empty-hint {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8b949e;
+            font-style: italic;
+            font-size: 1.2rem;
+        }
+        .gfsae-empty-hint small {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
     </style>
     <base target="_blank" />
 </head>
@@ -377,7 +391,7 @@
             return div.innerHTML;
         }
 
-        // ---------- LOAD DATA (fixed for your JSON structure) ----------
+        // ---------- LOAD DATA (handles your nested JSON) ----------
         async function loadData() {
             const paths = [
                 wrapper.dataset.jsonUrl,
@@ -475,10 +489,18 @@
             }
         }
 
-        // ---------- SEARCH ----------
+        // ---------- SEARCH (empty => show nothing) ----------
         async function performSearch() {
             const query = searchInput.value.trim();
             const split = splitFilter.value;
+
+            // --- If query is empty, show nothing ---
+            if (!query) {
+                filteredFeatures = [];
+                renderTable();      // will show empty hint
+                updateStats();
+                return;
+            }
 
             let results = [];
 
@@ -541,10 +563,21 @@
             renderTable();
         };
 
-        // ---------- RENDER ----------
+        // ---------- RENDER (shows empty hint when no results) ----------
         function renderTable() {
             if (!filteredFeatures.length) {
-                contentEl.innerHTML = '<div class="gfsae-no-results">No features match your search.</div>';
+                // If we have loaded data but no query, show a helpful message
+                const hasQuery = searchInput.value.trim().length > 0;
+                const message = hasQuery ?
+                    'No features match your search.' :
+                    'Type a search term to find features.';
+                const hint = hasQuery ? '' : '<small>Semantic search works best with descriptive phrases.</small>';
+                contentEl.innerHTML = `
+                    <div class="gfsae-empty-hint">
+                        ${message}
+                        ${hint}
+                    </div>
+                `;
                 return;
             }
 
@@ -592,8 +625,8 @@
 
             await buildSemanticIndex();
 
-            filteredFeatures = [...allFeatures];
-            applySort();
+            // Start with empty state
+            filteredFeatures = [];
             renderTable();
             updateStats();
 
