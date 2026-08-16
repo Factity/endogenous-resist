@@ -1,245 +1,606 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GoodFire 8B SAE Feature Lookup</title>
-    <!-- Load Fuse.js from CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GoodFire 8B SAE Feature Lookup – Semantic Search</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet" />
     <style>
-
+        /* ===== same styles as before – included for completeness ===== */
+        .gfsae-wrapper {
+            margin: 0;
+            padding: 20px;
+            background-color: #000;
+            color: #eee;
+            font-family: 'Kalam', cursive, sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        .gfsae-wrapper main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 10px;
+        }
+        .gfsae-wrapper h1,
+        .gfsae-wrapper h2,
+        .gfsae-wrapper h3,
+        .gfsae-wrapper h4,
+        .gfsae-wrapper h5,
+        .gfsae-wrapper h6 {
+            font-weight: 400;
+            margin: 2em 0 0.5em;
+            line-height: 1.3;
+        }
+        .gfsae-wrapper h1 {
+            font-size: 2rem;
+        }
+        .gfsae-wrapper h2 {
+            font-size: 1.6rem;
+            border-bottom: 1px solid #333;
+            padding-bottom: 0.2em;
+        }
+        .gfsae-wrapper h3 {
+            font-size: 1.3rem;
+        }
+        .gfsae-wrapper hr {
+            border: 0;
+            border-top: 1px solid #333;
+            margin: 2em 0;
+        }
+        .gfsae-wrapper a {
+            color: #8ab4f8;
+        }
+        .gfsae-wrapper img {
+            max-width: 100%;
+            border: 1px solid #444;
+            margin: 1em 0;
+            display: block;
+            border-radius: 4px;
+        }
+        .gfsae-wrapper pre {
+            background: #111;
+            border: 1px solid #333;
+            padding: 10px 12px;
+            overflow-x: auto;
+            margin: 1em 0;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+        }
+        .gfsae-wrapper pre code {
+            font-family: monospace;
+            font-size: inherit;
+        }
+        .gfsae-wrapper table {
+            border-collapse: collapse;
+            margin: 1.5em 0;
+            width: 100%;
+            font-size: 0.95rem;
+        }
+        .gfsae-wrapper th,
+        .gfsae-wrapper td {
+            border: 1px solid #444;
+            padding: 10px 12px;
+            text-align: left;
+        }
+        .gfsae-wrapper th {
+            background: #1a1a1a;
+            font-weight: 400;
+        }
+        .gfsae-wrapper ul,
+        .gfsae-wrapper ol {
+            padding-left: 1.5em;
+        }
+        .gfsae-toggle-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #333;
+            color: #eee;
+            border: 1px solid #555;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Kalam', cursive;
+            z-index: 999;
+        }
+        .gfsae-wrapper.gfsae-light {
+            background-color: #fff;
+            color: #222;
+        }
+        .gfsae-wrapper.gfsae-light a {
+            color: #1a0dab;
+        }
+        .gfsae-wrapper.gfsae-light img {
+            border-color: #ccc;
+        }
+        .gfsae-wrapper.gfsae-light pre {
+            background: #f5f5f5;
+            border-color: #ccc;
+            color: #333;
+        }
+        .gfsae-wrapper.gfsae-light th {
+            background: #eee;
+            color: #222;
+        }
+        .gfsae-wrapper.gfsae-light table,
+        .gfsae-wrapper.gfsae-light th,
+        .gfsae-wrapper.gfsae-light td {
+            border-color: #ccc;
+        }
+        .gfsae-wrapper.gfsae-light .gfsae-toggle-btn {
+            background: #eee;
+            color: #222;
+            border-color: #ccc;
+        }
+        .gfsae-wrapper.gfsae-light hr {
+            border-top-color: #ddd;
+        }
+        .gfsae-subtitle {
+            color: #8b949e;
+            margin-bottom: 32px;
+            font-size: 1rem;
+        }
+        .gfsae-footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #8b949e;
+            font-size: 13px;
+        }
+        .gfsae-controls {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .gfsae-wrapper input[type="text"] {
+            flex: 1;
+            min-width: 220px;
+            padding: 10px 14px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background: #111;
+            color: #eee;
+            font-family: 'Kalam', cursive, sans-serif;
+            font-size: 1rem;
+            outline: none;
+        }
+        .gfsae-wrapper input[type="text"]:focus {
+            border-color: #8ab4f8;
+        }
+        .gfsae-wrapper select {
+            padding: 10px 14px;
+            border: 1px solid #444;
+            border-radius: 4px;
+            background: #111;
+            color: #eee;
+            font-family: 'Kalam', cursive, sans-serif;
+            font-size: 1rem;
+            outline: none;
+            cursor: pointer;
+        }
+        .gfsae-stats {
+            color: #8b949e;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .gfsae-stats span {
+            color: #8ab4f8;
+            font-weight: 700;
+        }
+        .gfsae-feature-id {
+            font-family: SF Mono, Monospace, monospace;
+            font-weight: 700;
+            color: #8ab4f8;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+        .gfsae-split-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-family: SF Mono, Monospace, monospace;
+        }
+        .gfsae-split-train {
+            background: #065f46;
+            color: #34d399;
+        }
+        .gfsae-split-val {
+            background: #7c2d12;
+            color: #fb923c;
+        }
+        .gfsae-wrapper th {
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .gfsae-wrapper th:hover {
+            background: #2a2a2a;
+        }
+        .gfsae-sort-arrow {
+            margin-left: 6px;
+            opacity: 0.5;
+        }
+        .gfsae-sort-asc .gfsae-sort-arrow::after {
+            content: ' ▲';
+            opacity: 1;
+        }
+        .gfsae-sort-desc .gfsae-sort-arrow::after {
+            content: ' ▼';
+            opacity: 1;
+        }
+        .gfsae-no-results {
+            text-align: center;
+            padding: 40px;
+            color: #8b949e;
+            font-style: italic;
+        }
+        .gfsae-loading {
+            text-align: center;
+            padding: 60px;
+            color: #8b949e;
+        }
+        .gfsae-error {
+            text-align: center;
+            padding: 40px;
+            color: #f87171;
+            background: #450a0a;
+            border-radius: 4px;
+            margin-top: 20px;
+            border: 1px solid #5c1a1a;
+        }
+        .gfsae-error code {
+            color: #fca5a5;
+            background: #7f1d1d;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+        .gfsae-wrapper.gfsae-light input[type="text"] {
+            background: #fff;
+            color: #222;
+            border-color: #ccc;
+        }
+        .gfsae-wrapper.gfsae-light select {
+            background: #fff;
+            color: #222;
+            border-color: #ccc;
+        }
+        .gfsae-wrapper.gfsae-light th:hover {
+            background: #ddd;
+        }
+        @media (max-width: 640px) {
+            .gfsae-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .gfsae-wrapper input[type="text"] {
+                min-width: unset;
+                width: 100%;
+            }
+            .gfsae-wrapper select {
+                width: 100%;
+            }
+        }
+        /* status indicator for semantic search */
+        .gfsae-status {
+            display: inline-block;
+            margin-left: 12px;
+            font-size: 0.8rem;
+            color: #8b949e;
+        }
+        .gfsae-status.loaded {
+            color: #4caf50;
+        }
+        .gfsae-status.error {
+            color: #f87171;
+        }
     </style>
-<base target="_blank">
+    <base target="_blank" />
 </head>
 <body>
 
-<div class="gfsae-wrapper" id="gfsae-wrapper">
-    <button class="gfsae-toggle-btn" id="gfsae-themeToggle" onclick="gfsae_toggleTheme()">Light</button>
+    <div class="gfsae-wrapper" id="gfsae-wrapper">
+        <button class="gfsae-toggle-btn" id="gfsae-themeToggle" onclick="gfsae_toggleTheme()">Light</button>
 
-    <main class="gfsae-container">
-        <h1>🔍 GoodFire 8B SAE Feature Lookup</h1>
-        <p class="gfsae-subtitle">Layer 19 Sparse Autoencoder Feature Labels — with <strong>Fuse.js fuzzy search</strong></p>
+        <main class="gfsae-container">
+            <h1>🔍 GoodFire 8B SAE Feature Lookup</h1>
+            <p class="gfsae-subtitle">
+                Layer 19 Sparse Autoencoder Feature Labels – <strong>semantic vector search</strong> (local AI)
+            </p>
 
-        <div class="gfsae-controls">
-            <input type="text" id="gfsae-searchInput" placeholder="Search by description (e.g. 'programming', 'emotion')">
-            <select id="gfsae-splitFilter">
-                <option value="all">All Splits</option>
-                <option value="train">Train</option>
-                <option value="val">Validation</option>
-            </select>
-        </div>
+            <div class="gfsae-controls">
+                <input type="text" id="gfsae-searchInput" placeholder="Describe what you're looking for…" />
+                <select id="gfsae-splitFilter">
+                    <option value="all">All Splits</option>
+                    <option value="train">Train</option>
+                    <option value="val">Validation</option>
+                </select>
+                <span class="gfsae-status" id="gfsae-status">⏳ initializing…</span>
+            </div>
 
-        <div class="gfsae-stats" id="gfsae-stats">Loading...</div>
+            <div class="gfsae-stats" id="gfsae-stats">Loading features…</div>
 
-        <div id="gfsae-content">
-            <div class="gfsae-loading">Loading features...</div>
-        </div>
+            <div id="gfsae-content">
+                <div class="gfsae-loading">Loading features &amp; embedding model…</div>
+            </div>
 
-        <div class="gfsae-footer">GoodFire/Llama-3.1-8B-Instruct-SAE-l19 &middot; Layer 19</div>
-    </main>
-</div>
+            <div class="gfsae-footer">GoodFire/Llama-3.1-8B-Instruct-SAE-l19 · Layer 19</div>
+        </main>
+    </div>
 
-<script>
-    /* ---------- Config ---------- */
-    const GFSAE_WRAPPER = document.getElementById('gfsae-wrapper');
-    const GFSAE_JSON_URL = GFSAE_WRAPPER?.dataset?.jsonUrl;
+    <!-- Import map for ferrovec and its dependencies -->
+    <script type="importmap">
+        {
+            "imports": {
+                "ferrovec": "https://cdn.jsdelivr.net/npm/ferrovec@0.2.0/dist/index.js",
+                "@xenova/transformers": "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/transformers.min.js"
+            }
+        }
+    </script>
 
-    /* ---------- State ---------- */
-    let gfsae_allFeatures = [];
-    let gfsae_filteredFeatures = [];
-    let gfsae_sortField = 'index';
-    let gfsae_sortDirection = 'asc';
-    let gfsae_fuse = null; // will hold the Fuse instance
+    <script type="module">
+        // ---------- IMPORTS ----------
+        import { Ferrovec } from 'ferrovec';
 
-    /* ---------- Theme ---------- */
-    function gfsae_toggleTheme() {
-        GFSAE_WRAPPER.classList.toggle('gfsae-light');
-        const btn = document.getElementById('gfsae-themeToggle');
-        btn.textContent = GFSAE_WRAPPER.classList.contains('gfsae-light') ? 'Dark' : 'Light';
-    }
+        // ---------- DOM refs ----------
+        const wrapper = document.getElementById('gfsae-wrapper');
+        const searchInput = document.getElementById('gfsae-searchInput');
+        const splitFilter = document.getElementById('gfsae-splitFilter');
+        const statsEl = document.getElementById('gfsae-stats');
+        const contentEl = document.getElementById('gfsae-content');
+        const statusEl = document.getElementById('gfsae-status');
 
-    /* ---------- Data Loading ---------- */
-    async function gfsae_loadData() {
-        const urlsToTry = GFSAE_JSON_URL
-            ? [GFSAE_JSON_URL]
-            : [
+        // ---------- STATE ----------
+        let allFeatures = [];
+        let filteredFeatures = [];
+        let sortField = 'index';
+        let sortDirection = 'asc';
+        let db = null; // ferrovec instance
+        let isSemanticReady = false;
+        let fallbackMode = false; // true if semantic fails
+
+        // ---------- THEME ----------
+        window.gfsae_toggleTheme = function() {
+            wrapper.classList.toggle('gfsae-light');
+            const btn = document.getElementById('gfsae-themeToggle');
+            btn.textContent = wrapper.classList.contains('gfsae-light') ? 'Dark' : 'Light';
+        };
+
+        // ---------- UTILITY ----------
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ---------- LOAD DATA ----------
+        async function loadData() {
+            const paths = [
+                wrapper.dataset.jsonUrl,
                 'goodfire_8b_sae_labels.json',
                 './goodfire_8b_sae_labels.json',
                 'jsonfolder/goodfire_8b_sae_labels.json',
                 './jsonfolder/goodfire_8b_sae_labels.json'
-              ];
+            ].filter(Boolean);
 
-        let lastError = null;
-
-        for (const url of urlsToTry) {
-            try {
-                console.log(`[GFSAE] Trying to fetch: ${url}`);
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            let lastError = null;
+            for (const url of paths) {
+                try {
+                    console.log(`[GFSAE] Fetching ${url}`);
+                    const resp = await fetch(url);
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                    const data = await resp.json();
+                    allFeatures = data.vectors || [];
+                    if (!allFeatures.length) throw new Error('No "vectors" array found.');
+                    console.log(`✅ Loaded ${allFeatures.length} features from ${url}`);
+                    return true;
+                } catch (err) {
+                    lastError = err;
+                    console.warn(`Failed from ${url}: ${err.message}`);
                 }
-                const data = await response.json();
-                gfsae_allFeatures = data.vectors || [];
-
-                // ---------- Build Fuse index ----------
-                // Keys to search: the 'labels' array (combined into one string)
-                const fuseOptions = {
-                    keys: ['labels'],
-                    threshold: 0.4,           // lower = stricter matching
-                    distance: 100,
-                    useExtendedSearch: false,
-                    includeScore: true,
-                    shouldSort: true,
-                };
-                gfsae_fuse = new Fuse(gfsae_allFeatures, fuseOptions);
-
-                // Initially, show all (no search filter applied)
-                gfsae_filteredFeatures = [...gfsae_allFeatures];
-                gfsae_renderTable();
-                gfsae_updateStats();
-                console.log(`[GFSAE] Success! Loaded ${gfsae_allFeatures.length} features from ${url}`);
-                return; // success — stop trying
-            } catch (err) {
-                lastError = err;
-                console.warn(`[GFSAE] Failed to load from ${url}: ${err.message}`);
             }
-        }
-
-        // If we get here, all URLs failed
-        const attempted = urlsToTry.map(u => `<code>${u}</code>`).join('<br>');
-        document.getElementById('gfsae-content').innerHTML = `
-            <div class="gfsae-error">
-                <strong>Failed to load JSON</strong><br><br>
-                Last error: ${lastError.message}<br><br>
-                Tried the following paths:<br>
-                ${attempted}<br><br>
-                <strong>Fix:</strong> Make sure <code>goodfire_8b_sae_labels.json</code> is in the same folder as this HTML file, or set <code>data-json-url</code> on the wrapper div.
-            </div>
-        `;
-        document.getElementById('gfsae-stats').textContent = 'Error loading data';
-    }
-
-    /* ---------- Stats ---------- */
-    function gfsae_updateStats() {
-        const total = gfsae_allFeatures.length;
-        const showing = gfsae_filteredFeatures.length;
-        document.getElementById('gfsae-stats').innerHTML =
-            `Showing <span>${showing}</span> of <span>${total}</span> features`;
-    }
-
-    /* ---------- Filtering with Fuse.js ---------- */
-    function gfsae_filterFeatures() {
-        const query = document.getElementById('gfsae-searchInput').value.trim();
-        const splitFilter = document.getElementById('gfsae-splitFilter').value;
-
-        // Step 1: Fuse search (if query non‑empty)
-        let results = [];
-        if (query && gfsae_fuse) {
-            // Search all features with Fuse
-            const fuseResults = gfsae_fuse.search(query);
-            results = fuseResults.map(r => r.item);
-        } else {
-            results = [...gfsae_allFeatures];
-        }
-
-        // Step 2: Apply split filter
-        if (splitFilter !== 'all') {
-            results = results.filter(f => f.split === splitFilter);
-        }
-
-        gfsae_filteredFeatures = results;
-        gfsae_sortFeatures(); // re‑apply current sorting
-        gfsae_renderTable();
-        gfsae_updateStats();
-    }
-
-    /* ---------- Sorting ---------- */
-    function gfsae_sortFeatures() {
-        gfsae_filteredFeatures.sort((a, b) => {
-            let valA, valB;
-            if (gfsae_sortField === 'index') {
-                valA = a.index;
-                valB = b.index;
-            } else if (gfsae_sortField === 'split') {
-                valA = a.split;
-                valB = b.split;
-            } else { // labels
-                valA = (a.labels || []).join(' ').toLowerCase();
-                valB = (b.labels || []).join(' ').toLowerCase();
-            }
-
-            if (valA < valB) return gfsae_sortDirection === 'asc' ? -1 : 1;
-            if (valA > valB) return gfsae_sortDirection === 'asc' ? 1 : -1;
-            return 0;
-        });
-    }
-
-    function gfsae_toggleSort(field) {
-        if (gfsae_sortField === field) {
-            gfsae_sortDirection = gfsae_sortDirection === 'asc' ? 'desc' : 'asc';
-        } else {
-            gfsae_sortField = field;
-            gfsae_sortDirection = 'asc';
-        }
-        gfsae_sortFeatures();
-        gfsae_renderTable();
-    }
-
-    /* ---------- Rendering ---------- */
-    function gfsae_renderTable() {
-        const container = document.getElementById('gfsae-content');
-
-        if (gfsae_filteredFeatures.length === 0) {
-            container.innerHTML = '<div class="gfsae-no-results">No features match your search.</div>';
-            return;
-        }
-
-        const rows = gfsae_filteredFeatures.map(f => {
-            const labels = (f.labels || []).map(l => `<div>${gfsae_escapeHtml(l)}</div>`).join('');
-            const splitClass = f.split === 'train' ? 'gfsae-split-train' : 'gfsae-split-val';
-            return `
-                <tr>
-                    <td class="gfsae-feature-id">#${f.index}</td>
-                    <td>${labels}</td>
-                    <td><span class="gfsae-split-badge ${splitClass}">${f.split}</span></td>
-                </tr>
+            contentEl.innerHTML = `
+                <div class="gfsae-error">
+                    <strong>Failed to load JSON</strong><br><br>
+                    Last error: ${lastError?.message || 'Unknown'}<br><br>
+                    Tried: ${paths.join(', ')}<br><br>
+                    <button onclick="location.reload()" style="padding:8px 20px;font-size:1rem;cursor:pointer;">🔄 Retry</button>
+                </div>
             `;
-        }).join('');
+            statsEl.textContent = 'Error loading data';
+            return false;
+        }
 
-        const sortArrow = '<span class="gfsae-sort-arrow"></span>';
-        const thIndex = gfsae_sortField === 'index' ? `gfsae-sort-${gfsae_sortDirection}` : '';
-        const thLabel = gfsae_sortField === 'labels' ? `gfsae-sort-${gfsae_sortDirection}` : '';
-        const thSplit = gfsae_sortField === 'split' ? `gfsae-sort-${gfsae_sortDirection}` : '';
+        // ---------- BUILD SEMANTIC INDEX ----------
+        async function buildSemanticIndex() {
+            try {
+                statusEl.textContent = '⏳ loading model…';
+                statusEl.className = 'gfsae-status';
 
-        container.innerHTML = `
-            <table>
-                <thead>
+                // Open (or create) a ferrovec database
+                db = await Ferrovec.open('gfsae-features');
+
+                // Check if we already have entries
+                // Ferrovec doesn't provide a count method directly, but we can try a dummy query
+                // If the db is empty, we insert all.
+                // To avoid re-inserting on every page load, we'll store a flag in sessionStorage.
+                const alreadyIndexed = sessionStorage.getItem('gfsae_indexed') === 'true';
+                if (!alreadyIndexed) {
+                    // Insert each feature's labels (join them)
+                    const insertPromises = allFeatures.map(f => {
+                        const text = (f.labels || []).join(' ');
+                        return db.insert(text, { id: String(f.index) });
+                    });
+                    await Promise.all(insertPromises);
+                    sessionStorage.setItem('gfsae_indexed', 'true');
+                    console.log(`🔍 Indexed ${allFeatures.length} features`);
+                } else {
+                    console.log('ℹ️ Using cached index');
+                }
+
+                isSemanticReady = true;
+                statusEl.textContent = '✅ semantic search ready';
+                statusEl.className = 'gfsae-status loaded';
+                return true;
+            } catch (err) {
+                console.error('Semantic index failed:', err);
+                statusEl.textContent = '⚠️ semantic unavailable (fallback)';
+                statusEl.className = 'gfsae-status error';
+                fallbackMode = true;
+                return false;
+            }
+        }
+
+        // ---------- SEARCH ----------
+        async function performSearch() {
+            const query = searchInput.value.trim();
+            const split = splitFilter.value;
+
+            let results = [];
+
+            if (query && isSemanticReady && !fallbackMode) {
+                // Use ferrovec semantic search
+                try {
+                    const raw = await db.query(query, 200); // get up to 200
+                    // raw is array of { id, score, metadata }
+                    // map back to features
+                    const idSet = new Set(raw.map(r => r.id));
+                    results = allFeatures.filter(f => idSet.has(String(f.index)));
+                    // preserve order from raw
+                    const orderMap = {};
+                    raw.forEach((r, i) => { orderMap[r.id] = i; });
+                    results.sort((a, b) => orderMap[String(a.index)] - orderMap[String(b.index)]);
+                } catch (err) {
+                    console.warn('Semantic query failed, falling back to substring', err);
+                    fallbackMode = true;
+                    statusEl.textContent = '⚠️ fallback (substring)';
+                    statusEl.className = 'gfsae-status error';
+                    // fall through to fallback
+                }
+            }
+
+            // Fallback: substring match (case‑insensitive)
+            if (!results || !results.length) {
+                const lowerQuery = query.toLowerCase();
+                results = allFeatures.filter(f =>
+                    (f.labels || []).some(label => label.toLowerCase().includes(lowerQuery))
+                );
+            }
+
+            // Apply split filter
+            if (split !== 'all') {
+                results = results.filter(f => f.split === split);
+            }
+
+            filteredFeatures = results;
+            applySort();
+            renderTable();
+            updateStats();
+        }
+
+        // ---------- SORTING ----------
+        function applySort() {
+            filteredFeatures.sort((a, b) => {
+                let va, vb;
+                if (sortField === 'index') { va = a.index;
+                    vb = b.index; } else if (sortField === 'split') { va = a.split;
+                    vb = b.split; } else { va = (a.labels || []).join(' ').toLowerCase();
+                    vb = (b.labels || []).join(' ').toLowerCase(); }
+                if (va < vb) return sortDirection === 'asc' ? -1 : 1;
+                if (va > vb) return sortDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+        }
+
+        window.gfsae_toggleSort = function(field) {
+            if (sortField === field) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortField = field;
+                sortDirection = 'asc';
+            }
+            applySort();
+            renderTable();
+        };
+
+        // ---------- RENDER ----------
+        function renderTable() {
+            if (!filteredFeatures.length) {
+                contentEl.innerHTML = '<div class="gfsae-no-results">No features match your search.</div>';
+                return;
+            }
+
+            const rows = filteredFeatures.map(f => {
+                const labels = (f.labels || []).map(l => `<div>${escapeHtml(l)}</div>`).join('');
+                const splitClass = f.split === 'train' ? 'gfsae-split-train' : 'gfsae-split-val';
+                return `
                     <tr>
-                        <th class="${thIndex}" onclick="gfsae_toggleSort('index')" style="width: 100px;">Feature ID${sortArrow}</th>
-                        <th class="${thLabel}" onclick="gfsae_toggleSort('labels')">Description${sortArrow}</th>
-                        <th class="${thSplit}" onclick="gfsae_toggleSort('split')" style="width: 120px;">Split${sortArrow}</th>
+                        <td class="gfsae-feature-id">#${f.index}</td>
+                        <td>${labels}</td>
+                        <td><span class="gfsae-split-badge ${splitClass}">${f.split}</span></td>
                     </tr>
-                </thead>
-                <tbody>
-                    ${rows}
-                </tbody>
-            </table>
-        `;
-    }
+                `;
+            }).join('');
 
-    function gfsae_escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
+            const arrow = '<span class="gfsae-sort-arrow"></span>';
+            const clsIndex = sortField === 'index' ? `gfsae-sort-${sortDirection}` : '';
+            const clsLabel = sortField === 'labels' ? `gfsae-sort-${sortDirection}` : '';
+            const clsSplit = sortField === 'split' ? `gfsae-sort-${sortDirection}` : '';
 
-    /* ---------- Event Listeners ---------- */
-    document.getElementById('gfsae-searchInput').addEventListener('input', gfsae_filterFeatures);
-    document.getElementById('gfsae-splitFilter').addEventListener('change', gfsae_filterFeatures);
+            contentEl.innerHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="${clsIndex}" onclick="gfsae_toggleSort('index')" style="width:100px;">Feature ID${arrow}</th>
+                            <th class="${clsLabel}" onclick="gfsae_toggleSort('labels')">Description${arrow}</th>
+                            <th class="${clsSplit}" onclick="gfsae_toggleSort('split')" style="width:120px;">Split${arrow}</th>
+                        </tr>
+                    </thead>
+                    <tbody>${rows}</tbody>
+                </table>
+            `;
+        }
 
-    /* ---------- Boot ---------- */
-    gfsae_loadData();
-</script>
+        function updateStats() {
+            const total = allFeatures.length;
+            const showing = filteredFeatures.length;
+            statsEl.innerHTML = `Showing <span>${showing}</span> of <span>${total}</span> features`;
+        }
+
+        // ---------- INIT ----------
+        async function init() {
+            const dataOk = await loadData();
+            if (!dataOk) return;
+
+            // Build semantic index
+            await buildSemanticIndex();
+
+            // Initial display: all features
+            filteredFeatures = [...allFeatures];
+            applySort();
+            renderTable();
+            updateStats();
+
+            // Set up event listeners
+            searchInput.addEventListener('input', performSearch);
+            splitFilter.addEventListener('change', performSearch);
+
+            // If semantic failed, we already have fallback in place
+            if (fallbackMode) {
+                // notify user
+                statusEl.textContent = '⚠️ using substring search';
+                statusEl.className = 'gfsae-status error';
+            }
+        }
+
+        // Go!
+        init();
+    </script>
+
 </body>
 </html>
