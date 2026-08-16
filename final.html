@@ -2360,6 +2360,7 @@ Like we have explained in the above section about the concreteness filtering and
 
 
 </p>
+<img src="Pasted image (5).png" alt="concreteness filter">
 
 
 
@@ -2698,7 +2699,20 @@ async def filter_concrete_features(
 
 
 <h3>Relevance filtering</h3>
+<p>We perform relevance filtering after identifying the concrete features. This process consists of four main steps:</p>
+
+<ol>
+<li>Identify the feature activations associated with the given prompt.</li>
+<li>Use the judge model and the prompt provided below to assign relevance scores, applying a max-aggregation strategy.</li>
+<li>Compute each feature’s relevance to the prompt to identify unrelated features.</li>
+<li>Filter out the irrelevant features before insertion.</li>
+</ol>
 <h3>Relevance Filtering Utilities</h3>
+
+
+
+
+
 
 <details class="code-block">
 <summary><span class="cb-name">relevance_filtering.py</span><span class="cb-meta"><span class="cb-kind">module</span><span class="cb-tag">Relevance filtering</span><span class="cb-toggle-label"></span></span></summary>
@@ -3007,7 +3021,496 @@ async def sample_filtered_features_with_retry(
 </div>
 </details>
 
+<div>
+  <h3>Mathematical Summary of SAE and Steering</h3>
+  <p>
+    The sparse autoencoder (SAE) maps residual stream vectors 
+    \(\mathbf{x}\in\mathbb{R}^{d_{\text{model}}}\) to sparse feature activations 
+    \(\mathbf{f}\in\mathbb{R}^{d_{\text{sae}}}\) via 
+    \(\mathbf{f}=\mathrm{ReLU}((\mathbf{x}-\mathbf{b}_{\text{dec}})\mathbf{W}_{\text{enc}}+\mathbf{b}_{\text{enc}})\). 
+    Each feature \(i\) has a steering direction 
+    \(\mathbf{d}_i=\mathbf{W}_{\text{dec}}[i,:]\in\mathbb{R}^{d_{\text{model}}}\). 
+    Given interventions \(\{(i_r,v_r)\}\), the steering delta is 
+    \(\boldsymbol{\Delta}=\sum_r v_r\mathbf{d}_{i_r}\). 
+    During generation, a forward hook at the steering layer adds this delta to the hidden state: 
+    \(\mathbf{h}'_L=\mathbf{h}_L+\boldsymbol{\Delta}\). 
+    For relevance filtering, hidden states at a chosen layer are encoded to produce a sequence of activations 
+    \(\mathbf{F}=[\mathbf{f}^{(1)};\dots;\mathbf{f}^{(T)}]\in\mathbb{R}^{T\times d_{\text{sae}}}\). 
+    This mathematical pipeline underlies feature steering and subsequent analysis.
+  </p>
+</div>
 
+<img src="Pasted image (6).png" alt="concreteness filter">
+
+
+<h3>Steering Engine & SAE Implementation</h3>
+
+<details class="code-block">
+<summary><span class="cb-name">steering_engine.py</span><span class="cb-meta"><span class="cb-kind">module</span><span class="cb-tag">SAE &amp; HF steering engine</span><span class="cb-toggle-label"></span></span></summary>
+<pre><code class="language-python">import torch.nn as nn
+class GoodfireSAE(nn.Module):
+    """Standard ReLU SAE: feats = relu((x - b_dec) @ W_enc + b_enc); the
+    steering direction for feature i is decoder column W_dec[i]. This is
+    the architecture used in Anthropic's and Goodfire's published SAEs.
+    If your checkpoint is a different formulation (JumpReLU with a learned
+    per-feature threshold, gated SAEs, etc.) you'll need to adjust `encode`
+    accordingly -- the diagnostic cell in "Configure & run" below tells you
+    which keys/shapes you're actually working with, which is the thing to
+    check first if `.load()` raises a KeyError.
+    """
+    _KEY_ALIASES = {
+        "W_enc": ["W_enc", "encoder.weight", "encoder_weight", "enc.weight", "encoder_linear.weight"],
+        "b_enc": ["b_enc", "encoder.bias", "encoder_bias", "enc.bias", "encoder_linear.bias"],
+        "W_dec": ["W_dec", "decoder.weight", "decoder_weight", "dec.weight", "decoder_linear.weight"],
+        "b_dec": ["b_dec", "decoder.bias", "decoder_bias", "dec.bias", "pre_bias", "b_pre", "decoder_linear.bias"],
+    }
+    def __init__(self, d_model: int, d_sae: int):
+        super().__init__()
+        self.d_model = d_model
+        self.d_sae = d_sae
+        self.W_enc = nn.Parameter(torch.zeros(d_model, d_sae))
+        self.b_enc = nn.Parameter(torch.zeros(d_sae))
+        self.W_dec = nn.Parameter(torch.zeros(d_sae, d_model))
+        self.b_dec = nn.Parameter(torch.zeros(d_model))
+    @classmethod
+    def load(cls, filepath: str, d_model: int, d_sae: int) -&gt; "GoodfireSAE":
+        raw = torch.load(filepath, map_location="cpu")
+        state = raw.get("state_dict", raw) if isinstance(raw, dict) else raw
+        if not isinstance(state, dict):
+            raise TypeError(
+                f"Expected a state-dict-like object in {filepath}, got {type(state)}. "
+                "Inspect it by hand (see the diagnostic cell in Configure &amp; run) before "
+                "adapting this loader."
+            )
+        resolved, missing = {}, []
+        for canonical, aliases in cls._KEY_ALIASES.items():
+            found = next((a for a in aliases if a in state), None)
+            if found:
+                resolved[canonical] = state[found]
+            else:
+                missing.append(canonical)
+        if missing:
+            raise KeyError(
+                f"Couldn't find checkpoint keys for {missing} in {filepath}.\n"
+                f"Actual keys found (first 60): {sorted(state.keys())[:60]}\n"
+                f"Add the real name(s) to GoodfireSAE._KEY_ALIASES above and re-run."
+            )
+        sae = cls(d_model, d_sae)
+        with torch.no_grad():
+            w_enc, w_dec = resolved["W_enc"], resolved["W_dec"]
+            # Accept either [d_model, d_sae] or [d_sae, d_model] -- checkpoint
+            # conventions vary; transpose if needed.
+            sae.W_enc.copy_(w_enc if tuple(w_enc.shape) == (d_model, d_sae) else w_enc.T)
+            sae.W_dec.copy_(w_dec if tuple(w_dec.shape) == (d_sae, d_model) else w_dec.T)
+            sae.b_enc.copy_(resolved["b_enc"].reshape(-1))
+            sae.b_dec.copy_(resolved["b_dec"].reshape(-1))
+        return sae
+    def encode(self, x: torch.Tensor) -&gt; torch.Tensor:
+        """x: [..., d_model] -&gt; feats: [..., d_sae]"""
+        pre_acts = (x - self.b_dec) @ self.W_enc + self.b_enc
+        return torch.relu(pre_acts)
+    def decoder_direction(self, feature_idx: int) -&gt; torch.Tensor:
+        """The vector added to the residual stream, scaled by `value`."""
+        return self.W_dec[feature_idx]
+def _default_dtype() -&gt; torch.dtype:
+    # T4 (Turing/SM75) has no bf16 tensor cores -- fall back to fp16 there.
+    if torch.cuda.is_available() and torch.cuda.get_device_capability(0)[0] &gt;= 8:
+        return torch.bfloat16
+    return torch.float16
+MODEL_REPETITION_PENALTIES = {"70b": 1.3, "8b": 1.15}
+DEFAULT_REPETITION_PENALTY = 1.1
+def get_repetition_penalty(model_path: str) -&gt; float:
+    model_lower = model_path.lower()
+    for size_key, penalty in MODEL_REPETITION_PENALTIES.items():
+        if size_key in model_lower:
+            return penalty
+    return DEFAULT_REPETITION_PENALTY
+class HFSteeringEngine:
+    """Plain-transformers steering engine (replaces VLLMSteeringEngine).
+    Public interface (`initialize`, `generate`, `generate_with_conversation`,
+    `get_feature_activations`) is what `run_experiment` and the relevance
+    filtering functions below call -- nothing about the orchestration code
+    needs to know it isn't vLLM anymore.
+    """
+    def __init__(
+        self,
+        model_path: str,
+        sae_filepath: str,
+        d_model: int,
+        expansion_factor: int,
+        steering_layer: int,
+        feature_layer: Optional[int] = None,
+        repetition_penalty: Optional[float] = None,
+        max_memory: Optional[Dict[int, str]] = None,
+        dtype: Optional[torch.dtype] = None,
+        hf_token: Optional[str] = None,
+    ):
+        self.model_path = model_path
+        self.sae_filepath = sae_filepath
+        self.d_model = d_model
+        self.d_sae = d_model * expansion_factor
+        self.steering_layer = steering_layer
+        self.feature_layer = feature_layer if feature_layer is not None else steering_layer
+        self._repetition_penalty_override = repetition_penalty
+        self.max_memory = max_memory  # e.g. {0: "13GiB", 1: "13GiB"} -- leaves headroom per T4 for the judge
+        self.dtype = dtype or _default_dtype()
+        self.hf_token = hf_token or os.environ.get("HF_TOKEN")
+        self.model = None
+        self.tokenizer = None
+        self.sae: Optional[GoodfireSAE] = None
+        # HF's generate() reseeds the global RNG rather than seeding
+        # per-request like vLLM did -- serialize generation calls so a seed
+        # actually means something under concurrency (n_simultaneous_features &gt; 1).
+        self._gen_lock = asyncio.Lock()
+    async def initialize(self):
+        def _load():
+            from transformers import AutoTokenizer
+            tok = AutoTokenizer.from_pretrained(self.model_path, token=self.hf_token)
+            # Routed through _load_causal_lm_dtype_compat (see
+            # "Version-compatibility helpers" above) so this works whether the
+            # installed transformers wants `dtype=` or the older `torch_dtype=`.
+            model = _load_causal_lm_dtype_compat(
+                self.model_path,
+                dtype=self.dtype,
+                device_map="auto",
+                max_memory=self.max_memory,
+                low_cpu_mem_usage=True,
+                attn_implementation="sdpa",  # well-supported on Turing, no flash-attn/xformers build needed
+                token=self.hf_token,
+            )
+            model.eval()
+            sae = GoodfireSAE.load(self.sae_filepath, self.d_model, self.d_sae)
+            return tok, model, sae
+        self.tokenizer, self.model, self.sae = await asyncio.to_thread(_load)
+        layer_device = self._layer_device(self.steering_layer)
+        self.sae = self.sae.to(device=layer_device, dtype=self.dtype)
+        device_map = getattr(self.model, "hf_device_map", None)
+        print(
+            f"HFSteeringEngine ready: {self.model_path}\n"
+            f"  devices used: {sorted(set(device_map.values())) if device_map else 'n/a'}\n"
+            f"  steering layer {self.steering_layer} -&gt; {layer_device}"
+        )
+    def _decoder_layers(self):
+        # Llama-family layout in `transformers`. If model_path isn't a Llama
+        # architecture, this attribute path needs adjusting.
+        return self.model.model.layers
+    def _layer_device(self, layer_idx: int) -&gt; torch.device:
+        return next(self._decoder_layers()[layer_idx].parameters()).device
+    def _make_steering_hook(self, feature_interventions: List[Dict[str, float]]):
+        layer_device = self._layer_device(self.steering_layer)
+        delta = torch.zeros(self.d_model, device=layer_device, dtype=self.dtype)
+        for fi in feature_interventions:
+            direction = self.sae.decoder_direction(int(fi["feature_id"])).to(layer_device, self.dtype)
+            delta = delta + float(fi["value"]) * direction
+        def hook(module, inputs, output):
+            if isinstance(output, tuple):
+                hidden = output[0] + delta.to(output[0].dtype)
+                return (hidden,) + output[1:]
+            return output + delta.to(output.dtype)
+        return hook
+    async def _generate_ids(
+        self,
+        prompt_token_ids: List[int],
+        temperature: float,
+        max_tokens: int,
+        seed: Optional[int],
+        feature_interventions: Optional[List[Dict[str, float]]],
+    ) -&gt; List[int]:
+        def _run():
+            input_ids = torch.tensor([prompt_token_ids], device=self.model.device)
+            handle = None
+            if feature_interventions:
+                hook = self._make_steering_hook(feature_interventions)
+                handle = self._decoder_layers()[self.steering_layer].register_forward_hook(hook)
+            try:
+                if seed is not None:
+                    torch.manual_seed(seed)
+                    if torch.cuda.is_available():
+                        torch.cuda.manual_seed_all(seed)
+                rep_penalty = (
+                    self._repetition_penalty_override
+                    if self._repetition_penalty_override is not None
+                    else get_repetition_penalty(self.model_path)
+                )
+                do_sample = temperature &gt; 0
+                gen_kwargs = dict(
+                    do_sample=do_sample,
+                    max_new_tokens=max_tokens,
+                    repetition_penalty=rep_penalty,
+                    pad_token_id=self.tokenizer.eos_token_id,
+                )
+                if do_sample:
+                    # Only meaningful -- and only accepted without a warning --
+                    # when do_sample=True. Passing it alongside do_sample=False
+                    # just triggers a "temperature is set but do_sample=False"
+                    # warning for a value that's silently ignored anyway.
+                    gen_kwargs["temperature"] = max(temperature, 1e-5)
+                with torch.no_grad():
+                    out = self.model.generate(input_ids, **gen_kwargs)
+                return out[0, input_ids.shape[1]:].tolist()
+            finally:
+                if handle is not None:
+                    handle.remove()
+        async with self._gen_lock:
+            return await asyncio.to_thread(_run)
+    async def generate(
+        self,
+        messages: List[Dict[str, str]],
+        feature_interventions: Optional[List[Dict[str, float]]] = None,
+        temperature: float = 0.6,
+        max_tokens: int = 512,
+        seed: Optional[int] = None,
+        prefill: Optional[str] = None,
+    ) -&gt; str:
+        # to_token_id_list normalizes whatever apply_chat_template returns
+        # (List[int], tokenizers.Encoding, a torch.Tensor, ...) into a plain
+        # List[int] -- see "Version-compatibility helpers" above for why
+        # this is needed rather than assuming the historical List[int]
+        # contract.
+        raw = self.tokenizer.apply_chat_template(messages, add_generation_prompt=True)
+        prompt_token_ids = to_token_id_list(raw)
+        if prefill:
+            prefill_ids = to_token_id_list(self.tokenizer.encode(prefill, add_special_tokens=False))
+            prompt_token_ids = prompt_token_ids + prefill_ids
+        new_ids = await self._generate_ids(prompt_token_ids, temperature, max_tokens, seed, feature_interventions)
+        text = self.tokenizer.decode(new_ids, skip_special_tokens=True)
+        return (prefill + text) if prefill else text
+    async def generate_with_conversation(
+        self,
+        conversation: List[Dict[str, str]],
+        feature_interventions: Optional[List[Dict[str, float]]] = None,
+        temperature: float = 0.6,
+        max_tokens: int = 512,
+        seed: Optional[int] = None,
+        prefill: Optional[str] = None,
+    ) -&gt; str:
+        return await self.generate(
+            messages=conversation,
+            feature_interventions=feature_interventions,
+            temperature=temperature,
+            max_tokens=max_tokens,
+            seed=seed,
+            prefill=prefill,
+        )
+    async def get_feature_activations(self, prompt: str) -&gt; torch.Tensor:
+        """Returns [seq_len, d_sae] feature activations at self.feature_layer,
+        no generation -- replaces what is_feature_decode=True did in the fork."""
+        conversation = [{"role": "user", "content": prompt}]
+        # See generate() above -- same to_token_id_list normalization, same
+        # reason (this is the exact call site that originally crashed with
+        # "Could not infer dtype of tokenizers.Encoding").
+        raw = self.tokenizer.apply_chat_template(conversation, add_generation_prompt=False)
+        prompt_token_ids = to_token_id_list(raw)
+        def _run():
+            input_ids = torch.tensor([prompt_token_ids], device=self.model.device)
+            with torch.no_grad():
+                out = self.model(input_ids, output_hidden_states=True)
+            # hidden_states[0] = embeddings; hidden_states[i] = output of layer (i-1), 1-indexed.
+            hidden = out.hidden_states[self.feature_layer + 1][0]  # [seq_len, d_model]
+            hidden = hidden.to(self.sae.W_enc.device, self.sae.W_enc.dtype)
+            return self.sae.encode(hidden).float().cpu()
+        return await asyncio.to_thread(_run)</code></pre>
+</details>
+
+<!-- Explanations -->
+
+<details class="code-block">
+<summary><span class="cb-name">GoodfireSAE</span><span class="cb-meta"><span class="cb-kind">class</span><span class="cb-tag">Sparse autoencoder</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>GoodfireSAE</code></h3>
+<p><strong>Signature:</strong> <code>class GoodfireSAE(nn.Module)</code></p>
+<p><strong>Purpose:</strong> Implements a standard ReLU sparse autoencoder. It provides encoding of hidden states into sparse feature activations and exposes decoder directions for steering.</p>
+<p><strong>Constructor parameters:</strong></p>
+<ul>
+<li><code>d_model</code> – dimension of the transformer residual stream.</li>
+<li><code>d_sae</code> – number of SAE features (dictionary size).</li>
+</ul>
+<p><strong>Key attributes:</strong> <code>W_enc</code>, <code>b_enc</code>, <code>W_dec</code>, <code>b_dec</code> as <code>nn.Parameter</code> tensors.</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">GoodfireSAE.__init__()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Constructor</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>__init__()</code></h3>
+<p><strong>Signature:</strong> <code>def __init__(self, d_model: int, d_sae: int)</code></p>
+<p><strong>Purpose:</strong> Initializes the SAE parameters with zero tensors of appropriate shapes. The encoder weight has shape <code>[d_model, d_sae]</code>, encoder bias <code>[d_sae]</code>, decoder weight <code>[d_sae, d_model]</code>, and decoder bias <code>[d_model]</code>.</p>
+<p><strong>Inputs:</strong> <code>d_model</code>, <code>d_sae</code></p>
+<p><strong>Returns:</strong> None (sets attributes).</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">GoodfireSAE.load()</span><span class="cb-meta"><span class="cb-kind">classmethod</span><span class="cb-tag">Loading</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>load()</code></h3>
+<p><strong>Signature:</strong> <code>@classmethod def load(cls, filepath: str, d_model: int, d_sae: int) -&gt; "GoodfireSAE"</code></p>
+<p><strong>Purpose:</strong> Loads a state dict from disk and constructs a <code>GoodfireSAE</code> instance, handling key aliases and possible transposition of weight matrices.</p>
+<p><strong>Inputs:</strong> <code>filepath</code> – path to checkpoint; <code>d_model</code>, <code>d_sae</code> – dimensions for initializing the SAE.</p>
+<p><strong>Returns:</strong> A <code>GoodfireSAE</code> with weights copied from the checkpoint.</p>
+<p><strong>Implementation details:</strong></p>
+<ul>
+<li>Loads the file with <code>torch.load</code>, unwraps <code>state_dict</code> if present.</li>
+<li>Searches for each canonical key using <code>_KEY_ALIASES</code>; if a key is missing, raises <code>KeyError</code> with actual keys.</li>
+<li>Transposes <code>W_enc</code> or <code>W_dec</code> if their shapes don't match expected orientation.</li>
+<li>Copies biases after flattening.</li>
+</ul>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">GoodfireSAE.encode()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Forward</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>encode()</code></h3>
+<p><strong>Signature:</strong> <code>def encode(self, x: torch.Tensor) -&gt; torch.Tensor</code></p>
+<p><strong>Purpose:</strong> Computes sparse feature activations from input hidden states using the formula <code>relu((x - b_dec) @ W_enc + b_enc)</code>.</p>
+<p><strong>Input:</strong> <code>x</code> – tensor of shape <code>[..., d_model]</code>.</p>
+<p><strong>Returns:</strong> Tensor of shape <code>[..., d_sae]</code> containing non‑negative activations.</p>
+<p><strong>Implementation note:</strong> Matrix multiplication <code>(x - self.b_dec) @ self.W_enc</code> is performed.</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">GoodfireSAE.decoder_direction()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Steering</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>decoder_direction()</code></h3>
+<p><strong>Signature:</strong> <code>def decoder_direction(self, feature_idx: int) -&gt; torch.Tensor</code></p>
+<p><strong>Purpose:</strong> Returns the steering vector for a given feature index, i.e., the corresponding row of <code>W_dec</code> (shape <code>[d_model]</code>).</p>
+<p><strong>Input:</strong> <code>feature_idx</code> – integer index of the feature.</p>
+<p><strong>Returns:</strong> Tensor of shape <code>[d_model]</code>.</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">_default_dtype()</span><span class="cb-meta"><span class="cb-kind">function</span><span class="cb-tag">Utility</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>_default_dtype()</code></h3>
+<p><strong>Signature:</strong> <code>def _default_dtype() -&gt; torch.dtype</code></p>
+<p><strong>Purpose:</strong> Chooses the default floating‑point dtype based on GPU compute capability. Returns <code>torch.bfloat16</code> for devices with capability ≥ 8, else <code>torch.float16</code> (e.g., T4).</p>
+<p><strong>Returns:</strong> <code>torch.dtype</code>.</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">get_repetition_penalty()</span><span class="cb-meta"><span class="cb-kind">function</span><span class="cb-tag">Utility</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>get_repetition_penalty()</code></h3>
+<p><strong>Signature:</strong> <code>def get_repetition_penalty(model_path: str) -&gt; float</code></p>
+<p><strong>Purpose:</strong> Returns a repetition penalty based on model size found in the model path. For "70b" returns 1.3, for "8b" returns 1.15; default 1.1.</p>
+<p><strong>Input:</strong> <code>model_path</code> – string containing model identifier.</p>
+<p><strong>Returns:</strong> <code>float</code> repetition penalty.</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">HFSteeringEngine</span><span class="cb-meta"><span class="cb-kind">class</span><span class="cb-tag">Steering engine</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>HFSteeringEngine</code></h3>
+<p><strong>Signature:</strong> <code>class HFSteeringEngine</code></p>
+<p><strong>Purpose:</strong> A plain‑transformers replacement for the original vLLM‑based steering engine. Loads a Hugging Face causal LM and a <code>GoodfireSAE</code>, applies steering via forward hooks, and provides generation and activation‑extraction methods.</p>
+<p><strong>Constructor parameters:</strong> <code>model_path</code>, <code>sae_filepath</code>, <code>d_model</code>, <code>expansion_factor</code>, <code>steering_layer</code>, optional <code>feature_layer</code>, <code>repetition_penalty</code>, <code>max_memory</code>, <code>dtype</code>, <code>hf_token</code>.</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">HFSteeringEngine.__init__()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Constructor</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>__init__()</code></h3>
+<p><strong>Signature:</strong> <code>def __init__(self, model_path, sae_filepath, d_model, expansion_factor, steering_layer, feature_layer=None, repetition_penalty=None, max_memory=None, dtype=None, hf_token=None)</code></p>
+<p><strong>Purpose:</strong> Stores configuration and initializes attributes to <code>None</code>. Sets <code>d_sae = d_model * expansion_factor</code>, default feature layer to steering layer, and chooses dtype if not provided.</p>
+<p><strong>Inputs:</strong> model path, SAE file, dimensions, layers, optional overrides.</p>
+<p><strong>Returns:</strong> None (sets attributes).</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">HFSteeringEngine.initialize()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Loading</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>initialize()</code></h3>
+<p><strong>Signature:</strong> <code>async def initialize(self)</code></p>
+<p><strong>Purpose:</strong> Loads tokenizer, model, and SAE in a background thread. Moves SAE to the device of the steering layer and prints setup info.</p>
+<p><strong>Implementation details:</strong></p>
+<ul>
+<li>Uses <code>_load_causal_lm_dtype_compat</code> for compatibility.</li>
+<li>Sets <code>attn_implementation="sdpa"</code> for Turing compatibility.</li>
+<li>After loading, moves SAE to same device as steering layer.</li>
+</ul>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">HFSteeringEngine._decoder_layers()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Internal</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>_decoder_layers()</code></h3>
+<p><strong>Signature:</strong> <code>def _decoder_layers(self)</code></p>
+<p><strong>Purpose:</strong> Returns the transformer decoder layers (Llama family layout: <code>model.model.layers</code>).</p>
+<p><strong>Returns:</strong> ModuleList of transformer layers.</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">HFSteeringEngine._layer_device()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Internal</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>_layer_device()</code></h3>
+<p><strong>Signature:</strong> <code>def _layer_device(self, layer_idx: int) -&gt; torch.device</code></p>
+<p><strong>Purpose:</strong> Returns the device of the first parameter in the specified layer.</p>
+<p><strong>Input:</strong> <code>layer_idx</code> – index of the target layer.</p>
+<p><strong>Returns:</strong> <code>torch.device</code>.</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">HFSteeringEngine._make_steering_hook()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Steering</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>_make_steering_hook()</code></h3>
+<p><strong>Signature:</strong> <code>def _make_steering_hook(self, feature_interventions: List[Dict[str, float]])</code></p>
+<p><strong>Purpose:</strong> Creates a forward hook that adds a linear combination of decoder directions to the hidden state at the steering layer.</p>
+<p><strong>Input:</strong> <code>feature_interventions</code> – list of dicts with keys <code>feature_id</code> and <code>value</code>.</p>
+<p><strong>Returns:</strong> A hook function that modifies the layer output.</p>
+<p><strong>Implementation:</strong> Computes delta = sum(value_i * decoder_direction(feature_id_i)) on the steering layer's device; the hook adds delta to output[0] (or output if tensor).</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">HFSteeringEngine._generate_ids()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Generation</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>_generate_ids()</code></h3>
+<p><strong>Signature:</strong> <code>async def _generate_ids(self, prompt_token_ids, temperature, max_tokens, seed, feature_interventions) -&gt; List[int]</code></p>
+<p><strong>Purpose:</strong> Runs model generation in a separate thread. Applies steering hook if interventions provided, sets random seed for reproducibility, uses repetition penalty, and returns generated token IDs.</p>
+<p><strong>Returns:</strong> List of new token IDs (excluding prompt).</p>
+<p><strong>Concurrency:</strong> Serializes generation calls via <code>self._gen_lock</code> to preserve seeding semantics.</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">HFSteeringEngine.generate()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Generation</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>generate()</code></h3>
+<p><strong>Signature:</strong> <code>async def generate(self, messages, feature_interventions=None, temperature=0.6, max_tokens=512, seed=None, prefill=None) -&gt; str</code></p>
+<p><strong>Purpose:</strong> Generates text from chat messages. Applies chat template, optional prefill, then delegates to <code>_generate_ids</code> and decodes the result.</p>
+<p><strong>Returns:</strong> Decoded string (including prefill if provided).</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">HFSteeringEngine.generate_with_conversation()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Generation</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>generate_with_conversation()</code></h3>
+<p><strong>Signature:</strong> <code>async def generate_with_conversation(self, conversation, ...) -&gt; str</code></p>
+<p><strong>Purpose:</strong> Wrapper around <code>generate</code> that accepts a conversation list directly. Forwards all arguments.</p>
+</div>
+</details>
+
+<details class="code-block">
+<summary><span class="cb-name">HFSteeringEngine.get_feature_activations()</span><span class="cb-meta"><span class="cb-kind">method</span><span class="cb-tag">Activations</span><span class="cb-toggle-label"></span></span></summary>
+<div>
+<h3><code>get_feature_activations()</code></h3>
+<p><strong>Signature:</strong> <code>async def get_feature_activations(self, prompt: str) -&gt; torch.Tensor</code></p>
+<p><strong>Purpose:</strong> Computes SAE feature activations for a prompt without generation. Used for relevance filtering.</p>
+<p><strong>Returns:</strong> Tensor of shape <code>[seq_len, d_sae]</code>.</p>
+<p><strong>Implementation:</strong> Encodes prompt as user message, runs forward pass with <code>output_hidden_states=True</code>, extracts hidden states at <code>feature_layer + 1</code>, and passes through SAE <code>encode</code>.</p>
+</div>
+</details>
 
 
 <hr>
